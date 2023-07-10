@@ -15,7 +15,7 @@ const SideBar = () => {
   const router = useRouter();
   const sideItems = [
     {
-      href: "/Dashboard",
+      href: "/dashboard",
       title: "Dashboard",
       image: dashboard,
     },
@@ -60,6 +60,14 @@ const SideBar = () => {
   const handleCollapse = () => {
     setIsMenuOpened(!isMenuOpened);
   }
+  const signOut=(e) =>{
+    e.preventDefault();
+    localStorage.removeItem("userLoginToken");
+    localStorage.removeItem("role");
+    localStorage.removeItem("otp");
+    localStorage.removeItem("userData");
+    router.push("/login");
+  }
   return (
     <div style={{ display: "flex" }} className='menu-width'>
       <aside className={!isMenuOpened ? "left-side-menu left-sidebar--opened" : "left-side-menu left-sidebar--collapsed"}
@@ -74,8 +82,9 @@ const SideBar = () => {
               }}
             >
               <div className='' onClick={handleCollapse} style={{ cursor: "pointer", marginLeft: "20px", marginTop: "40px" }}>
-                <Image src={menu} width={30} height={30} className="img-icon" />
+                <Image src={menu} alt='menu' width={30} height={30} className="img-icon" />
               </div>
+             
             </div>
             {!isMenuOpened ?
               <ul className="metismenu in nav" id="side-menu">
@@ -104,13 +113,20 @@ const SideBar = () => {
                     </Link>
                   </li>
                 ))}
+                <div className='' onClick={signOut} style={{ cursor: "pointer", marginLeft: "20px", marginTop: "40px" }}>
+                Logout
+              </div>
               </ul>
               :
               <ul className="metismenu in nav" id="side-menu">
                 {sideItems.map((item, index) => (
                   <li key={index}>
                     <Link className="side-nav-link-re nav-link" style={{ color: "white", fontSize: "16px", marginBottom: "8px" }} href={item.href}  >
-                      <div className="side-menu-block">
+                      <div className={
+                        router.asPath === item.href
+                          ? `side-menu-block1`
+                          : `side-menu-block`
+                      }>
                         <div className="side-menu-image-background">
                           <Image src={item.image} alt={item.title} width={30} height={30} className="img-icon" />
                         </div>

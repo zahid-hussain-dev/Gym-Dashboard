@@ -1,6 +1,8 @@
 import Layout from "../components/Layout";
 import { useRouter } from "next/router";
 import Navbar from "../components/Navbar";
+import { Provider } from "react-redux";
+import store from "../store/ConfigureStore";
 import "../styles/global.css";
 import "../app/globals.css";
 
@@ -11,7 +13,8 @@ export default function App({ Component, pageProps }) {
 
   return (
     <>
-      {router.asPath === "/OtpValidate" || router.asPath === "/Signup" || router.asPath === "/Login" ?
+    <Provider store={store}>
+      {router.asPath === "/otpValidate" || router.asPath === "/signup" || router.asPath === "/login" ?
         <>
           <Navbar />
           <Component {...pageProps} />
@@ -21,7 +24,7 @@ export default function App({ Component, pageProps }) {
           <Component {...pageProps} />
         </Layout>
       }
-
+      </Provider>
     </>
   );
 }

@@ -46,7 +46,10 @@
   min-height: 80vh;
   margin-top: 0px;
 } */
-
+@font-face {
+  font-family: gilroy;
+  src: url("../public/assests/Fonts/Gilroy.ttf");
+}
 .left-side-menu {
   /* width: 260px; */
   /* background: #fff; */
@@ -242,7 +245,7 @@ body {
   overflow-x: hidden;
 }
 
-body {
+/* body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
@@ -250,7 +253,7 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
-}
+} */
 
 a {
   color: inherit;
