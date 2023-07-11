@@ -7,6 +7,7 @@ import { setuserId, setloginData } from "store/slices/user/userSlice";
 import { axiosInterceptor } from '../../axios/axiosInterceptor';
 import swal from "sweetalert";
 import { useRouter } from 'next/router';
+import Loader from '../../components/styledComponents/loader/loader';
 // import "../../styles/global.css";
 import Link from 'next/link';
 
@@ -62,6 +63,7 @@ export default function OtpValidate() {
                                 onChange={(e) => {
                                     setuserOtp(e.target.value);
                                 }}
+                                onKeyPress={handleKeyPress}
                                 id="otp"
                                 type="text"
                                 pattern="[0-9.]+"
@@ -108,6 +110,7 @@ export default function OtpValidate() {
                     </div>
                 </div>
             </div>
+            <Loader isLoading={loading}></Loader>
         </div>
     )
 }
