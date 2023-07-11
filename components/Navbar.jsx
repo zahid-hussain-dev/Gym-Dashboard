@@ -5,7 +5,6 @@ import user from "@/public/assests/SVGs/user.svg";
 import { useRouter } from 'next/router';
 const Navbar = () => {
   const router = useRouter()
-
   return (
     <div style={{ background: "white", height: "fit-content", width: "auto", padding: "8px" }}>
       <div
@@ -35,7 +34,7 @@ const Navbar = () => {
             </div>
             <div >
               <div style={{ marginRight: "20px" }}>
-                {router.asPath === "/OtpValidate" || router.asPath === "/Signup" || router.asPath === "/Login" ?
+                {router.asPath === "/otpValidate" || router.asPath === "/signup" || router.asPath === "/login" ?
                   <React.Fragment></React.Fragment> :
 
                   <Image style={{ verticalAlign: "middle", cursor: "pointer" }} src={user} height="25" width="30" alt="asset-planet-logo" />
