@@ -6,13 +6,13 @@ export default function Layout({ children }) {
   return (
     <div style={{ display: "flex", width:"100%" }}>
 
-      <div style={{ display: "flex", height:"100vh" }} >
+      <div style={{ display: "flex", height:"100vh", }} >
         <SideBar />
       </div>
 
       <div style={{width:"100%"}}>
         <Navbar />
-        <main style={{ display: "flex" }}>{children}</main>
+        <main style={{ display: "contents" }}>{children}</main>
       </div>
 
     </div>

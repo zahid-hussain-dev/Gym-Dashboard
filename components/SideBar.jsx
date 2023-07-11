@@ -49,11 +49,11 @@ const SideBar = () => {
       title: "Inventory",
       image: dashboard,
     },
-    {
-      href: "",
-      title: "Logout",
-      image: dashboard,
-    },
+    // {
+    //   href: "",
+    //   title: "Logout",
+    //   image: dashboard,
+    // },
 
   ];
   const [isMenuOpened, setIsMenuOpened] = useState(false);
@@ -113,9 +113,6 @@ const SideBar = () => {
                     </Link>
                   </li>
                 ))}
-                <div className='' onClick={signOut} style={{ cursor: "pointer", marginLeft: "20px", marginTop: "40px" }}>
-                Logout
-              </div>
               </ul>
               :
               <ul className="metismenu in nav" id="side-menu">

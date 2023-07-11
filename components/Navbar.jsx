@@ -3,6 +3,7 @@ import Image from "next/image";
 import logo from "@/public/assests/Images/asset-planet-background.png";
 import user from "@/public/assests/SVGs/user.svg";
 import { useRouter } from 'next/router';
+import DropdownUser from "@/components/styledComponents/dropdown/dropdownUser";
 const Navbar = () => {
   const router = useRouter()
   return (
@@ -36,8 +37,10 @@ const Navbar = () => {
               <div style={{ marginRight: "20px" }}>
                 {router.asPath === "/otpValidate" || router.asPath === "/signup" || router.asPath === "/login" ?
                   <React.Fragment></React.Fragment> :
-
-                  <Image style={{ verticalAlign: "middle", cursor: "pointer" }} src={user} height="25" width="30" alt="asset-planet-logo" />
+                  <React.Fragment>
+                    <DropdownUser />
+                    {/* <Image style={{ verticalAlign: "middle", cursor: "pointer" }} src={user} height="25" width="30" alt="asset-planet-logo" /> */}
+                  </React.Fragment>
                 }
               </div>
             </div>

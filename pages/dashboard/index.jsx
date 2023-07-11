@@ -1,9 +1,10 @@
-import React from 'react'
+import React from 'react';
+import Dashboard from '../../components/Dashboard/Dashboard';
 const index = () => {
   return (
-    <div>
-      dahsboard folder
-    </div>
+    <React.Fragment>
+      <Dashboard/>
+    </React.Fragment>
   )
 }
 
