@@ -6,6 +6,7 @@ const userSlice = createSlice({
     showDropdown: false,
     loginData:{},
     userId:"",
+    showCollapse:true,
 
   },
   reducers: {
@@ -18,10 +19,13 @@ const userSlice = createSlice({
     setuserId(state, action) {
       state.userId = action.payload;
     },
+    setShowCollapse(state, action) {
+      state.showCollapse = action.payload;
+    },
 
   },
 });
 
-export const { setshowDropdown,setloginData,setuserId } = userSlice.actions;
+export const { setshowDropdown,setloginData,setuserId,setShowCollapse } = userSlice.actions;
 
 export default userSlice.reducer;

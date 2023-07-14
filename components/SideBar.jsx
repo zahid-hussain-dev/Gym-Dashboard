@@ -10,9 +10,14 @@ import report from "@/public/assests/Images/reports.png";
 import client from "@/public/assests/Images/client.png";
 import organizer from "@/public/assests/Images/organized-Bliss.png";
 import form from "@/public/assests/Images/form.png";
+import { setShowCollapse } from '@/store/slices/user/userSlice';
+import { useDispatch, useSelector } from "react-redux";
 
 const SideBar = () => {
   const router = useRouter();
+  const showCollapse = useSelector((state) => state.user.showCollapse);
+  const dispatch = useDispatch();
+
   const sideItems = [
     {
       href: "/dashboard",
@@ -59,6 +64,7 @@ const SideBar = () => {
   const [isMenuOpened, setIsMenuOpened] = useState(false);
   const handleCollapse = () => {
     setIsMenuOpened(!isMenuOpened);
+    dispatch(setShowCollapse(!showCollapse));
   }
   const signOut=(e) =>{
     e.preventDefault();

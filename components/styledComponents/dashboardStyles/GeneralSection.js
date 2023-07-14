@@ -2,22 +2,22 @@ import styled from "styled-components";
 
 export const MainSection = styled.div`
   background: #F9F9F9;
-  paddingTop: 35px;
-  marginTop: 100px ;
+  padding-top: 35px;
+  margin-top: 100px ;
   width: 100%;
   `;
-  export const BudgetMainSection = styled.div`
+export const BudgetMainSection = styled.div`
   background: #F9F9F9;
-  paddingTop: 35px;
+  padding-top: 35px;
   width: 100%;
-  marginTop: 20px ;
+  margin-top: 20px ;
 
   `;
 export const CollapsableSection = styled.div`
   display: flex;
-  flexDirection: row;
-  alignItems: center;
-  paddingTop: 12px;
+  flex-direction: row;
+  align-items: center;
+  padding-top: 12px;
   `;
 
 export const GeneralSection = styled.div`
@@ -34,7 +34,7 @@ display: flex;
   `;
 export const ExpandableSection = styled.div`
   display: flex;
-   justifyContent: space-around;
+   justify-content: space-around;
   `;
 export const HeaderText = styled.div`
   height: 70px;
@@ -109,7 +109,7 @@ export const cardImg = styled.div`
    justify-content: center;
    margin-left: -15px;
    `;
-   export const cardPriceSection = styled.div`
+export const cardPriceSection = styled.div`
    border-radius: 15px;
    background-image: linear-gradient(to bottom right, #39b54a, #0d723b);
    width: 25%;
@@ -119,11 +119,23 @@ export const cardImg = styled.div`
    position: relative;
    left: 15px;
    `;
-   export const cardPrice = styled.div`
+export const cardPrice = styled.div`
    border-radius: 13px;
    background: white;
    box-shadow: 2px 5px 8px 6px lightgray;
    width: 75%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   `;
+export const Select = styled.select`
+   border-radius: 10px;
+   border:none;
+   background: white;
+   padding:5px;
+   box-shadow: 2px 5px 8px 6px lightgray;
+   width: 300px;
+   font-size:20px;
    display: flex;
    align-items: center;
    justify-content: center;

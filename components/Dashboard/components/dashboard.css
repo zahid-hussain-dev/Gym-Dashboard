@@ -821,7 +821,7 @@
 .dropdown-section {
   display: flex;
   padding: 20px;
-  justify-content: center;
+  justify-content: space-evenly;
 
 }
 .MainTop{
