@@ -86,7 +86,7 @@ export const CardHeading = styled.p`
    line-height: 2vw;
 //    padding-top: 8px;   
    `;
-export const CardLowerSection = styled.p`
+export const CardLowerSection = styled.div`
    height: 100%;
 display: flex;
 justify-content: space-between; 
@@ -104,24 +104,24 @@ export const CardItemsRight = styled.div`
    align-items: center;
    justify-content: center;  
    `;
-export const CardSection = styled.p`
+export const CardSection = styled.div`
    height: 100%;
     display: flex;
      justify-content: space-around ;
    `;
-export const ImageSection = styled.p`
+export const ImageSection = styled.div`
    display: flex;
 justify-content: center;
 align-items: center;
 height: 50%;
    `;
-export const ImageHeader = styled.p`
+export const ImageHeader = styled.div`
    display: flex;
    justify-content: center;
    align-items: center;
    height: 15%;
    `;
-export const ImagePrice = styled.p`
+export const ImagePrice = styled.div`
    display: flex;
    justify-content: center;
    align-items: center;
