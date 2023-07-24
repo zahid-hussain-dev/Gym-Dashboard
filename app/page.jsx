@@ -3,7 +3,7 @@ import Image from 'next/image';
 import styles from './page.module.css';
 // import "@/styles/global.css";
 import { useState } from 'react';
-import { useRouter,redirect } from 'next/navigation';
+import { useRouter, redirect } from 'next/navigation';
 import { Button } from "@/components/styledComponents/button/Button";
 import { Input } from "@/components/styledComponents/input/Input";
 import { InputGroup } from "@/components/styledComponents/inputGroup/InputGroup";
@@ -19,7 +19,7 @@ export default function Home() {
   return (
     token ? (
       router.push("/dashboard")
-    ) : ( router.push("/login"))
-    
+    ) : (router.push("/login"))
+
   )
 }

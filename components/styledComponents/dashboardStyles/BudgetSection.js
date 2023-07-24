@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const BudgetMainSection = styled.div`
-background: #F9F9F9;
+// background: #F9F9F9;
 padding-top: 35px;
 width: 100%;
 margin-top: 20px ;

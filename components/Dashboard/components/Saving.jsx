@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
-import * as Style from '../../styledComponents/dashboardStyles/Liquidicity';
+import * as Style from '../../styledComponents/dashboardStyles/SavingSection';
 import plus from "../../../public/assests/SVGs/plus.svg";
 import minus from "../../../public/assests/SVGs/minus.svg";
-import { LiquidityData } from '../dashboradConstant';
 import Image from 'next/image';
 import "./dashboard.css";
-import LiquidityRow from './LiquidityRow';
-const Liquidity = () => {
+import SavingCharts from './SavingCharts';
+const Saving = () => {
     const [statsVisible, setStatsVisible] = useState("expanded");
 
     const getCollapsableRow = (attribute = "", title = "") => {
@@ -38,37 +37,31 @@ const Liquidity = () => {
     };
     return (
         <div>
-            {getCollapsableRow("liquidityRowVisible", "Liquidity")}
+            {getCollapsableRow("savingsRowVisible", "Savings")}
 
             <div id="expand-container">
-                <div
-                    id="expand-contract"
-                    class={`${statsVisible}`}
-                >
-                    <div
-                        justify="center"
-                        style={{ padding: "20px", display: "flex" }}
-                    >
-                        {/* Liquidity Row  */}
-                        <div className="liquidity-container">
-                            <Style.LiquidicityRow
-                            >
-                                <p className="liquidity-header-text">Liquidity</p>
-                            </Style.LiquidicityRow>
-
-                            <div style={{ height: "80%", marginBottom: "14%" }} >
-                                <div style={{ height: "100%" }}>
-                                    {LiquidityData.map((item, index) => 
-                                        <LiquidityRow key={index} title={item.title} pc1={item.pc1} pc2={item.pc2} pc3={item.pc3} opt1={item.opt1} opt2={item.opt2} opt3={item.opt3} />
-                                    )}
-                                </div>
-                            </div>
-                        </div>
+                <div id="expand-contract" class={`${statsVisible}`}>
+                    <div style={{ height: "50px" }}>
+                        <Style.SavingHeader>
+                            <Style.SavingBoxHeaderText>Savings & Goals</Style.SavingBoxHeaderText>
+                        </Style.SavingHeader>
                     </div>
+
+                    <div style={{ height: "50px", marginTop: "10px" }}>
+                        <Style.SavingHeader >
+                            <Style.SavingBox>
+                                <Style.SavingBoxHeader>
+                                    Savings $ 1,295
+                                </Style.SavingBoxHeader>
+                            </Style.SavingBox>
+                        </Style.SavingHeader>
+                    </div>
+                    <SavingCharts />
                 </div>
             </div>
+
         </div>
     )
 }
 
-export default Liquidity
+export default Saving

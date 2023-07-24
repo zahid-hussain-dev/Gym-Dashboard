@@ -25,7 +25,7 @@ const SideBar = () => {
       image: dashboard,
     },
     {
-      href: "",
+      href: "/clientInformtion",
       title: "Client Information",
       image: client,
     },
@@ -102,7 +102,7 @@ const SideBar = () => {
                         : `side-nav-link-re nav-link`
                     } style={{ color: "white", fontSize: "16px", marginBottom: "8px" }} href={item.href}  >
                       <div className={
-                        router.asPath === item.href
+                        router.asPath === item.href 
                           ? `side-menu-block1`
                           : `side-menu-block`
                       }>

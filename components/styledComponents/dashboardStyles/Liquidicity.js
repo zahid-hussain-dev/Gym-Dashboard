@@ -59,9 +59,30 @@ height: 70%;
 width: 35%;
 margin-left: 3%;
    `;
-   export const LiquidicityOptions = styled.div`
+export const LiquidicityOptions = styled.div`
    display: flex;
    justify-content: center;
    align-items: center;
    margin-left: 5px;
    `;
+export const GreenGradient = styled.div`
+   background-image: linear-gradient(to right top, #39b54a, #0d723b);
+   margin-top: 6px;
+   margin-bottom: 6px;
+   border-radius: 20px;
+
+   `;
+export const GreenBlueGradient = styled.div`
+   background-image: linear-gradient(to right top, #60f877, #48d3bd);
+   margin-top: 6px;
+   margin-bottom: 6px;
+   border-radius: 20px;
+
+   `;
+export const SimpleGradient = styled.div`
+   margin-top: 6px;
+   margin-bottom: 6px;
+   border-radius: 20px;
+   background: red,
+   
+   `

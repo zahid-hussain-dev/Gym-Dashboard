@@ -6,6 +6,7 @@ import cancel from "../../../public/assests/SVGs/cancel.svg";
 import eye from "../../../public/assests/SVGs/eye.svg";
 import Image from 'next/image';
 import ViewUpdateModal from './ViewModal';
+import { NotificationsUpdate, NotificationsUpdateSnoozed } from '../dashboradConstant';
 import "./dashboard.css";
 
 const Notifications = () => {
@@ -42,22 +43,20 @@ const Notifications = () => {
       </Style.CollapsableSection>
     );
   };
-  const notificationRowUpdated = (text = "Update Inflation Projection") => {
+  const NotificationRowUpdated = (props) => {
     return (
       <Style.NotificationRow >
         <Style.NotificationText
         >
-          <div className="notification-text">{text}</div>
+          <div className="notification-text">{props.text}</div>
         </Style.NotificationText>
         <div style={{
           marginLeft: "auto",
         }}>
           <Image src={eye} alt='eye' height={15} width={30} />
-          {/* <Icon type="eye" className="icon-style"></Icon> */}
         </div>
         <div >
           <Image src={cancel} alt='cancel' height={15} width={30} />
-          {/* <Icon type="close" className="icon-style"></Icon> */}
         </div>
       </Style.NotificationRow>
     );
@@ -98,20 +97,11 @@ const Notifications = () => {
                     style={{ background: "white", minHeight: "280px" }}
                   >
                     {/* {this.notificationRowFilled()} */}
-                    {notificationRowUpdated(
-                      "Asset Planet has added new Asset to the list"
+                    {NotificationsUpdate.map((item, index) =>
+                      <NotificationRowUpdated key={index} text={item.text} />
+
                     )}
-                    {notificationRowUpdated(
-                      "Asset Planet has developed a new category in the Inventory App"
-                    )}
-                    {notificationRowUpdated(
-                      "Remember, Monday is a bank holiday. Enjoy the day off!"
-                    )}
-                    {notificationRowUpdated(
-                      "Asset Planet has gifted another free month to you. Thank you for the referral!"
-                    )}
-                    {notificationRowUpdated()}
-                    {notificationRowUpdated()}
+
                     {notificationRowViewAll()}
                   </div>
                 </div>
@@ -132,23 +122,9 @@ const Notifications = () => {
                   >
 
                     {/* {this.notificationRowFilled()} */}
-                    {notificationRowUpdated(
-                      "Your Inventory App Sync is complete"
-                    )}
-                    {notificationRowUpdated(
-                      "Your Life Insurance policy will expire in 90 days"
-                    )}
-                    {notificationRowUpdated(
-                      "Your Retirement Goal date is within 90 days"
-                    )}
-                    {notificationRowUpdated(
-                      "Your Ford F150 has a loan payment due within 10 days"
-                    )}
-                    {notificationRowUpdated(
-                      "There is a New Client being shared with you"
-                    )}
-                    {notificationRowUpdated(
-                      "Your Inflation input has not been udpated in over 1 year"
+                    {NotificationsUpdateSnoozed.map((item, index) =>
+                      <NotificationRowUpdated key={index} text={item.text} />
+
                     )}
                     {notificationRowViewAll()}
                   </div>
