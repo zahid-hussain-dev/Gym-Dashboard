@@ -20,12 +20,12 @@ export const ClientInfo = [
         img: taxInflation,
     },
     {
-        href: '/rates_of_return',
+        href: '/clientInformtion/returnRates',
         title: 'Rates of Return',
         img: rates,
     },
     {
-        href: '/client_contacts',
+        href: '/clientInformtion/clientContacts',
         title: 'Client Contacts',
         img: clients,
     },

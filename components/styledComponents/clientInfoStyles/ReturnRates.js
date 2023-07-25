@@ -1,4 +1,5 @@
 import styled from "styled-components";
+
 export const ButtonContainer = styled.div`
   display: flex;
   justify-content: end;
@@ -14,23 +15,19 @@ export const TableHeader = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 25rem;
+  width: 35rem;
   min-width: 17rem;
-  font-family: "Roboto", sans-serif;
-
 `;
 
 export const TableBodyRow = styled.div`
   height: 2.8rem;
-  width: 25rem;
+  width: 35rem;
   min-width: 17rem;
   /* background-color: lightgray; */
-  background-color: ${({ backgroundcolor }) => backgroundcolor || "white"};
+  background-color: ${({ backgroundColor }) => backgroundColor || "white"};
   display: flex;
   justify-content: space-around;
   align-items: center;
-  font-family: "Roboto", sans-serif;
-
 `;
 export const TableContainer = styled.div`
   display: flex;

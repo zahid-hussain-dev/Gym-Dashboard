@@ -1,9 +1,8 @@
-import React from 'react'
-
+import React, { useState } from 'react'
 const index = () => {
     return (
         <div>
-            clients Plan
+          client plans
         </div>
     )
 }

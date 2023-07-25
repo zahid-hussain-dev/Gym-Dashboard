@@ -41,7 +41,7 @@ const Goals = () => {
             {getCollapsableRow("cardsRowVisible", "Goals")}
 
             <div id="expand-container">
-                <div id="expand-contract" class={`${statsVisible}`}>
+                <div id="expand-contract" className={`${statsVisible}`}>
                     <Style.PercentageCardSection>
                         {percentCardData.map((item, index) => (
                         <PercentageCard key={index} name={item.cardName} have={item.have} need={item.need} days={item.days} percentage={item.percentage} />

@@ -48,7 +48,7 @@ const GeneralSection = () => {
                                         <Style.SectionHeader
                                         >
                                             <Style.cardName >
-                                                <span class="left">{item.cardName}</span>
+                                                <span className="left">{item.cardName}</span>
                                             </Style.cardName>
                                             <Style.cardImg >
                                                 <Image alt={item.cardName} src={item.image} height="50" width="60" />

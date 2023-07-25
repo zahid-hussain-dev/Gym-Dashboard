@@ -79,7 +79,7 @@ const Observation = () => {
             <div id="expand-container">
                 <div
                     id="expand-contract"
-                    class={`${statsVisible}`}
+                    className={`${statsVisible}`}
                 >
                     <Style.MainBox>
                         {/* Observation Row */}

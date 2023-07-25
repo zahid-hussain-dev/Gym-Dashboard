@@ -3,7 +3,7 @@ import * as Style from "../../../components/styledComponents/clientInfoStyles/Ta
 import Table from "../../../components/styledComponents/table/table";
 import { allData, tableBodyData, tableColumnsData, TableBodyRow, TableHeader, } from '../../../components/ClientInfo/TaxandReturnConstant';
 import { defaultStyles } from "../../../components/ClientInfo/style-constants/utils";
-import { Button }from "../../../components/styledComponents/clientInfoStyles/button";
+import { Button } from "../../../components/styledComponents/clientInfoStyles/button";
 import { Text } from "../../../components/styledComponents/clientInfoStyles/text";
 const index = () => {
   const { styles } = defaultStyles;
@@ -16,7 +16,7 @@ const index = () => {
         </Button>
       </Style.ButtonContainer>
 
-      <div style={{ display: "flex", flexWrap: "wrap" }}>
+      <Style.TableContainer>
         {allData &&
           allData.map((data, idx) => (
             <div key={idx} style={{ padding: "1rem 0rem 0 1rem" }}>
@@ -44,14 +44,14 @@ const index = () => {
                 ))}
             </div>
           ))}
-      </div>
+      </Style.TableContainer>
 
-      <div style={{ margin: "3rem 1rem" }}>
+      <Style.MainTable>
         <Table
           tableColumnsData={tableColumnsData}
           tableBodyData={tableBodyData}
         />
-      </div>
+      </Style.MainTable>
 
     </div>
   )

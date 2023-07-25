@@ -43,7 +43,7 @@ const Liquidity = () => {
             <div id="expand-container">
                 <div
                     id="expand-contract"
-                    class={`${statsVisible}`}
+                    className={`${statsVisible}`}
                 >
                     <div
                         justify="center"

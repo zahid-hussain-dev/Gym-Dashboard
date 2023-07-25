@@ -45,7 +45,7 @@ const SideBar = () => {
       image: insurance,
     },
     {
-      href: "",
+      href: "/reportsandSchedule",
       title: "Reports / Schedules",
       image: report,
     },

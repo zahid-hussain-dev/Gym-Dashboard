@@ -40,7 +40,7 @@ const Saving = () => {
             {getCollapsableRow("savingsRowVisible", "Savings")}
 
             <div id="expand-container">
-                <div id="expand-contract" class={`${statsVisible}`}>
+                <div id="expand-contract" className={`${statsVisible}`}>
                     <div style={{ height: "50px" }}>
                         <Style.SavingHeader>
                             <Style.SavingBoxHeaderText>Savings & Goals</Style.SavingBoxHeaderText>
