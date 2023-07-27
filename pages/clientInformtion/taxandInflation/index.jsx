@@ -1,5 +1,6 @@
 import React from 'react'
 import * as Style from "../../../components/styledComponents/clientInfoStyles/TaxandReturn";
+import { useRouter } from 'next/navigation';
 import Table from "../../../components/styledComponents/table/table";
 import { allData, tableBodyData, tableColumnsData, TableBodyRow, TableHeader, } from '../../../components/ClientInfo/TaxandReturnConstant';
 import { defaultStyles } from "../../../components/ClientInfo/style-constants/utils";
@@ -7,11 +8,11 @@ import { Button } from "../../../components/styledComponents/clientInfoStyles/bu
 import { Text } from "../../../components/styledComponents/clientInfoStyles/text";
 const index = () => {
   const { styles } = defaultStyles;
-
+  const router = useRouter();
   return (
     <div>
       <Style.ButtonContainer>
-        <Button onClick={() => console.log("clicked")}>
+        <Button onClick={() => {router.push("/clientInformtion/taxandInflation/edit/1")}}>
           Edit
         </Button>
       </Style.ButtonContainer>

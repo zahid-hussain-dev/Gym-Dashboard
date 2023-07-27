@@ -1,11 +1,12 @@
 import React from "react";
-import { Text } from "../../text";
-import { defaultStyles } from "../../../../constants/style-constants/utils";
+import { Text } from "../../clientInfoStyles/text";
+import { defaultStyles } from "../../../../components/ClientInfo/style-constants/utils";
 import Modal from "../modal";
-import { Button } from "../../button";
+import { Button } from "../../clientInfoStyles/button";
 import * as Style from "./styles/update-modal";
-import { Icon } from "antd";
-import { InputGroup } from "../../input/styles/input";
+import Image from "next/image";
+import closeIcon from "../../../../public/assests/SVGs/cancel.svg"
+import { InputGroup } from "../../IconInput/styles/input";
 
 function UpdateModal({ show, close, fields, updateRow,modalTitle }) {
   const { styles } = defaultStyles;
@@ -18,7 +19,7 @@ function UpdateModal({ show, close, fields, updateRow,modalTitle }) {
     <Modal show={show}>
       <Style.HeaderConatiner>
         <Text style={styles.text.formHeaderText}>{modalTitle}</Text>
-        <Icon type="close" onClick={close}></Icon>
+        <Image src={closeIcon} alt="close" width={30} height={30} onClick={close}/>
       </Style.HeaderConatiner>
 
       <Style.FieldsContainer>
@@ -26,7 +27,7 @@ function UpdateModal({ show, close, fields, updateRow,modalTitle }) {
           fields.map((data, index) => {
             const { value, Component, title, name, onChange,style } = data;
             return (
-              <InputGroup>
+              <InputGroup key={index}>
                 <Text style={styles.text.labelText} padding="2rem 0 1rem 0 ">
                   {title || value.title}
                 </Text>

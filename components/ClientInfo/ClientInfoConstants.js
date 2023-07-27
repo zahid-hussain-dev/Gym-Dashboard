@@ -30,7 +30,7 @@ export const ClientInfo = [
         img: clients,
     },
     {
-        href: '/custom_components',
+        href: '/clientInformtion/customComponets',
         title: 'Custom Components',
         img: clients,
     },

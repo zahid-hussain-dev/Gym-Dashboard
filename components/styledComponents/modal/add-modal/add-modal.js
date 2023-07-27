@@ -1,13 +1,13 @@
 import React from "react";
-import { Text } from "../../text";
-import { defaultStyles } from "../../../../constants/style-constants/utils";
+import { Text } from "../../clientInfoStyles/text";
+import { defaultStyles } from "../../../../components/ClientInfo/style-constants/utils";
+import { Button } from "../../clientInfoStyles/button";
 import Modal from "../modal";
-import { Button } from "../../button";
 import * as Style from "./styles/add-modal";
-import { Icon } from "antd";
-import { InputGroup } from "../../input/styles/input";
-
-function AddModal({ show, close, fields, submitData, modalTitle,obj }) {
+import Image from "next/image";
+import closeIcon from "../../../../public/assests/SVGs/cancel.svg"
+import { InputGroup } from "../../IconInput/styles/input";
+function AddModal({ show, close, fields, submitData, modalTitle, obj }) {
   const { styles } = defaultStyles;
 
   const handleSubmit = () => {
@@ -24,22 +24,22 @@ function AddModal({ show, close, fields, submitData, modalTitle,obj }) {
     <Modal show={show}>
       <Style.HeaderConatiner>
         <Text style={styles.text.formHeaderText}>{modalTitle}</Text>
-        <Icon type="close" onClick={close}></Icon>
+        <Image src={closeIcon} alt="close" width={30} height={30} onClick={close} />
       </Style.HeaderConatiner>
 
       <Style.FieldsContainer>
         {fields &&
           fields.map((data, index) => {
             console.log("dataaa", data);
-            if (obj==="nestedObj") {
+            if (obj === "nestedObj") {
               return (
-                <div style={{ display: "flex", columnGap: "2rem" }}>
+                <div key={index} style={{ display: "flex", columnGap: "2rem" }}>
                   {Object.keys(data).map((key, index1) => {
                     console.log("keyyy", data[key]);
                     const { value, Component, title, onChange, name, style } =
                       data[key];
                     return (
-                      <InputGroup>
+                      <InputGroup key={index1}>
                         <Text
                           style={styles.text.labelText}
                           padding="2rem 0 1rem 0 "
@@ -54,7 +54,7 @@ function AddModal({ show, close, fields, submitData, modalTitle,obj }) {
                           style={style}
                           index={index}
                           obj={obj}
-                          onChange={(event)=>onChange(index,event.target)}
+                          onChange={(event) => onChange(index, event.target)}
                         />
                       </InputGroup>
                     );
