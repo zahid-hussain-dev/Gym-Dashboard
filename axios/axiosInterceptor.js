@@ -1,13 +1,15 @@
 import axios from 'axios';
 import Base64 from '../utils/base64';
 // import {getCurrentUser} from './user';
-const base_URL = "https://devapi.assetplanet.com";
+// const base_URL = "https://devapi.assetplanet.com";
+const base_URL= "http://192.168.100.18:3000";
+
 
 const BackendURL = base_URL;
-const assetPlanetClientName = "asset_planet_resource";
-const assetPlanetClientPassword = "a_p_creds";
+const gymAppClientName = "gym_app";
+const gymAppClientPassword = "gym-be";
 const basicCreds = Base64.btoa(
-    assetPlanetClientName + ":" + assetPlanetClientPassword
+    gymAppClientName + ":" + gymAppClientPassword
 );
 
 const currentUser = async () => {
@@ -75,9 +77,8 @@ const axiosInterceptor = () => {
         );
         let token = null;
         switch (config.url) {
-            case '/auth/signin':
-            case '/auth/verifyOTP':
-            case '/auth/signUp':
+            case '/api/auth/signIn':
+            case '/api/auth/signUp':
                 token = await currentUser();
                 config.headers = {
                     ...config.headers,

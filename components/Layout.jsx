@@ -8,8 +8,7 @@ export default function Layout({ children }) {
   const showCollapse = useSelector((state) => state.user.showCollapse);
 
   return (
-    <div style={{ display: "flex", width: "100%" }}>
-
+    <div style={{ display: "flex", width: "100%", background:"#1F1D13" }}>
       <div style={{ display: "flex", height: "100vh", }} >
         <SideBar />
       </div>

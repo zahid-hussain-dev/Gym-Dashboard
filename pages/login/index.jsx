@@ -2,14 +2,12 @@ import React, { useState } from 'react'
 import { InputGroup } from '../../components/styledComponents/inputGroup/InputGroup';
 import { Input } from '../../components/styledComponents/input/Input';
 import { Button } from '../../components/styledComponents/button/Button';
-import PhoneNumber from "../../components/styledComponents/Countrycode";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { setuserId, setloginData } from "store/slices/user/userSlice";
 import { axiosInterceptor } from '../../axios/axiosInterceptor';
 import swal from "sweetalert";
 import Loader from '../../components/styledComponents/loader/loader';
-// import "../../styles/global.css";
 import Link from 'next/link';
 
 const index = () => {
@@ -22,18 +20,12 @@ const index = () => {
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       console.log("here on key enter")
-      if (userData.hasOwnProperty('userName') || userData.hasOwnProperty('password')) {
-        delete userData.phone
-      }
       dispatch(setloginData(userData));
       loginSuccess();
     }
   };
 
   const handleLogin = async () => {
-    if (userData.hasOwnProperty('userName') || userData.hasOwnProperty('password')) {
-      delete userData.phone
-    }
     dispatch(setloginData(userData));
     loginSuccess();
   };
@@ -42,22 +34,20 @@ const index = () => {
     try {
       setLoading(true)
       const res = await axiosInterceptor().post(
-        `/auth/signin`,
+        `/api/auth/signIn`,
         userData,
       );
-      console.log("responsse of login", res.data.id)
+      console.log("responsse of login", res)
       dispatch(setuserId(res.data.id))
       setLoading(false)
-
-      if (userData.hasOwnProperty('phone')) {
-        router.push("/otpValidate");
-      }
-      if (res.status === 200 && res.data.access_token) {
+      if (res.status === 200 && res.data.token) {
         console.log("resonse.data login", res.data)
-        localStorage.setItem("userData", JSON.stringify(res.data));
+        localStorage.setItem("userData", JSON.stringify(res.data.user));
         localStorage.setItem("role", JSON.stringify(res.data.user.roles))
-        localStorage.setItem("userLoginToken", res.data.access_token)
-        dispatch(setuserId(res.data.id))
+        localStorage.setItem("Userrole", JSON.stringify(res.data.user.roles[0].name))
+
+        localStorage.setItem("userLoginToken", res.data.token)
+        dispatch(setuserId(res.data.user.id))
         router.push("/dashboard");
       }
       else {
@@ -68,37 +58,31 @@ const index = () => {
 
     } catch (error) {
       setLoading(false)
-      swal('Oops!', error.data.message, 'error')
+      swal('Oops!', "Some Thing went Wrong", 'error')
       console.log(error)
-      // dispatch(postLoginFailure(error.response.data.message))
     }
   }
 
   return (
-    <div style={{ marginTop: "20px" }}>
-      {/* <div style={{padding:"50px",background:"black",overflow:"hidden"}}>hellow</div> */}
+    <div style={{ marginTop: "4rem", marginBottom:"20px" }}>
       <div className="login-card border">
         <h2 className="login-heading">Login</h2>
         <div>
           <InputGroup>
-            <label>Username</label>
+            <label style={{color:"white"}}>Email</label>
             <Input
               onChange={(e) => {
                 setUserData({ ...userData, [e.target.name]: e.target.value });
               }}
               id="username"
-              type="text"
-              placeholder="Username"
-              name="username"
+              type="email"
+              placeholder="Email"
+              name="email"
             ></Input>
           </InputGroup>
 
-          {/* {username ?(
-          <div style={{ color: "red",textAlign:"left" }}>Please enter username</div>
-        ):<div></div>} */}
-
           <InputGroup>
-            <label>Password</label>
+            <label style={{color:"white"}}>Password</label>
             <Input
               onChange={(e) => {
                 setUserData({ ...userData, [e.target.name]: e.target.value });
@@ -111,34 +95,11 @@ const index = () => {
             ></Input>
           </InputGroup>
 
-          <div> OR</div>
-          <InputGroup>
-            <label>Phone</label>
-            <PhoneNumber
-              id="phone"
-              name="phone"
-              onKeyPress={handleKeyPress}
-              onChange={(e) => {
-                // if (username === true) {
-                //   // setUserData({ phone: e.target.value });
-                //   console.log("not setting")
-                // }
-                // else {
-                setUserData({ phone: e.target.value });
-                // }
-                // console.log("userdata", e.target.value)
-              }}
-              size="large"
-              placeholder="phone"
-            ></PhoneNumber>
-
-          </InputGroup>
           <Button
+          style={{marginTop:"1rem"}}
             onClick={() => {
               handleLogin();
-              // console.log("userData....",userData)
             }}
-          // disabled={user.loading}
           >
             Login
           </Button>

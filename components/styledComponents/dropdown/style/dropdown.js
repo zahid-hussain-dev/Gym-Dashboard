@@ -13,7 +13,7 @@ export const DropdownButton = styled.button`
   border: none;
   cursor: pointer;
   &:hover {
-    background-color: #39b54a;
+    background-color: black;
     border-radius:0.5rem;
   }
 `;
@@ -21,20 +21,21 @@ export const DropdownContent = styled.div`
   position: absolute;
   top: 100%;
   right:2%;
-  background-color: transparent;
+  background-color: black;
+  color:white;
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
   display: ${({ open }) => (open ? 'block' : 'none')};
 `;
 export const DropdownItem = styled.a`
-  color: black;
+  color: white;
   padding: 12px 16px;
   text-decoration: none;
   display: block;
   cursor: pointer;
   &:hover {
-    background-color: #39b54a;
+    background-color: #E3DC22;
     color:white;
   }
 `;

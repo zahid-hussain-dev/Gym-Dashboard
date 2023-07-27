@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const InputGroup = styled.div`
-  margin-bottom: 15px;
+  margin-bottom: 12px;
   text-align: left;
   font-family: gilroy;
   label {
