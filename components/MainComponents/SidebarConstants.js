@@ -36,7 +36,7 @@ export const sideItemsCoach = [
     },
     {
         href: "/",
-        title: "Gymnast",
+        title: "Private Booking",
         image: dashboardSVG,
     },
 
