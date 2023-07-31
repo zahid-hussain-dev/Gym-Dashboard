@@ -33,7 +33,7 @@ const SideBar = () => {
       setSidebarItems(sideItemsGym)
     }
     else if (userRole === "gymnast") {
-      setSidebarItems(sideItemsGymnast)
+      setSidebarItems(sideItemsGymnast) 
     }
 
   }, [])
