@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react';
 import Link from "next/link";
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -7,67 +7,42 @@ import dashboard from "@/public/assests/Images/dashboard.png";
 import dashboardSVG from "@/public/assests/SVGs/dashboard-2-svgrepo-com.svg";
 import { setShowCollapse } from '@/store/slices/user/userSlice';
 import { useDispatch, useSelector } from "react-redux";
+import { sideItemsAdmin, sideItemsCoach, sideItemsGymnast, sideItemsGym } from "./MainComponents/SidebarConstants";
 
 const SideBar = () => {
   const router = useRouter();
   const showCollapse = useSelector((state) => state.user.showCollapse);
   const dispatch = useDispatch();
 
-  const sideItems = [
-    {
-      href: "/dashboard",
-      title: "Dashboard",
-      image: dashboardSVG,
-    },
-    {
-      href: "/",
-      title: "Coaches",
-      image: dashboardSVG,
-    },
-    {
-      href: "/",
-      title: "Gym",
-      image: dashboardSVG,
-    },
-    {
-      href: "/",
-      title: "Gymnaste",
-      image: dashboardSVG,
-    },
+
+  const [role, setRole] = useState("");
+
+  const [sidebarItems, setSidebarItems] = useState([]);
+  useEffect(() => {
+    // Perform localStorage action
+    const userRole = JSON.parse(localStorage.getItem("Userrole"))
+    setRole(userRole);
+    if (userRole === "admin") {
+      setSidebarItems(sideItemsAdmin);
+
+    }
+    else if (userRole === "coach") {
+      setSidebarItems(sideItemsCoach)
+    }
+    else if (userRole === "gym") {
+      setSidebarItems(sideItemsGym)
+    }
+    else if (userRole === "gymnast") {
+      setSidebarItems(sideItemsGymnast)
+    }
+
+  }, [])
 
 
-  ];
-  const sideItemsCoach = [
-    {
-      href: "/",
-      title: "Add Schedule",
-      image: dashboardSVG,
-    },
-    {
-      href: "/",
-      title: "Gym",
-      image: dashboardSVG,
-    },
-    {
-      href: "/",
-      title: "Gymnaste",
-      image: dashboardSVG,
-    },
-
-
-  ];
   const [isMenuOpened, setIsMenuOpened] = useState(false);
   const handleCollapse = () => {
     setIsMenuOpened(!isMenuOpened);
     dispatch(setShowCollapse(!showCollapse));
-  }
-  const signOut = (e) => {
-    e.preventDefault();
-    localStorage.removeItem("userLoginToken");
-    localStorage.removeItem("role");
-    localStorage.removeItem("otp");
-    localStorage.removeItem("userData");
-    router.push("/login");
   }
   return (
     <div style={{ display: "flex" }} className='menu-width'>
@@ -89,7 +64,7 @@ const SideBar = () => {
             </div>
             {!isMenuOpened ?
               <ul className="metismenu in nav" id="side-menu">
-                {sideItems.map((item, index) => (
+                {sidebarItems.map((item, index) => (
                   <li key={index}>
                     <Link className={
                       router.asPath === item.href
@@ -117,7 +92,7 @@ const SideBar = () => {
               </ul>
               :
               <ul className="metismenu in nav" id="side-menu">
-                {sideItems.map((item, index) => (
+                {sidebarItems.map((item, index) => (
                   <li key={index}>
                     <Link className="side-nav-link-re nav-link" style={{ color: "white", fontSize: "16px", marginBottom: "8px" }} href={item.href}  >
                       <div className={
