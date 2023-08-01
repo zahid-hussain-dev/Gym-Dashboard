@@ -1,18 +1,34 @@
 'use client'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter, redirect } from 'next/navigation';
 
 export default function Home() {
   const router = useRouter();
-  const userLoginToken = localStorage.getItem("userLoginToken");
-  const [token, setToken] = useState(userLoginToken);
-  const handleClickLogin = () => {
-    router.push("/login");
-  };
-  return (
-    token ? (
-      router.push("/dashboard")
-    ) : (router.push("/login"))
+  const [token, setToken] = useState("");
+  const [userRole, setUserRole] = useState("");
+  useEffect(() => {
+    // Perform localStorage action
+    const userLoginToken = localStorage.getItem("userLoginToken");
+    setToken(userLoginToken);
 
-  )
+    const userRole1 = JSON.parse(localStorage.getItem("Userrole"))
+    setUserRole(userRole1);
+
+  }, [])
+
+  if (token && userRole === "admin") {
+    return (
+      router.push("/dashboard")
+    );
+  }
+  else if (token && userRole === "gym") {
+    router.push("/gym")
+  }
+  else if (token && userRole === "gymnast") {
+    router.push("/gymnast")
+  }
+  else if (token && userRole === "coach") {
+    router.push("/coaches")
+  }
+
 }

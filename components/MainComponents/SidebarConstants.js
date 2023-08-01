@@ -6,17 +6,17 @@ export const sideItemsAdmin = [
         image: dashboardSVG,
     },
     {
-        href: "/",
+        href: "/coaches",
         title: "Coaches",
         image: dashboardSVG,
     },
     {
-        href: "/",
+        href: "/gym",
         title: "Gym",
         image: dashboardSVG,
     },
     {
-        href: "/",
+        href: "/gymnast",
         title: "Gymnast",
         image: dashboardSVG,
     },
@@ -25,17 +25,17 @@ export const sideItemsAdmin = [
 ];
 export const sideItemsCoach = [
     {
-        href: "/",
+        href: "/coaches",
         title: "Schedule",
         image: dashboardSVG,
     },
     {
-        href: "/",
+        href: "/gym",
         title: "Gym",
         image: dashboardSVG,
     },
     {
-        href: "/",
+        href: "/gymnast",
         title: "Private Booking",
         image: dashboardSVG,
     },
@@ -44,7 +44,7 @@ export const sideItemsCoach = [
 ];
 export const sideItemsGym = [
     {
-        href: "/",
+        href: "/gym",
         title: "Gym",
         image: dashboardSVG,
     },
@@ -53,7 +53,7 @@ export const sideItemsGym = [
 ];
 export const sideItemsGymnast = [
     {
-        href: "/",
+        href: "/gymnast",
         title: "Booking",
         image: dashboardSVG,
     },
