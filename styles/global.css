@@ -76,10 +76,17 @@
   }
 }
 
+.left-side-menu {
+  transition: width 0.3s ease-in-out;
+}
 
-/* @media only screen and (max-width: 412px) {
-    .login-card {
-      margin: 15px 10px 6px 15px ;
-      
-    }
-    } */
+.left-sidebar--collapsed {
+  width: 80px; 
+  /* background-color: rgb(54, 54, 54); */
+}
+
+.left-sidebar--opened {
+  width: 200px; 
+}
+
+
