@@ -48,7 +48,18 @@ const index = () => {
 
         localStorage.setItem("userLoginToken", res.data.token)
         dispatch(setuserId(res.data.user.id))
-        router.push("/dashboard");
+        if (res.data.user.roles[0].name === "admin") {
+          router.push("/dashboard");
+        }
+        else if (res.data.user.roles[0].name === "coach") {
+          router.push("/coaches");
+        }
+        else if (res.data.user.roles[0].name === "gym") {
+          router.push("/gym");
+        }
+        else if (res.data.user.roles[0].name === "gymnast") {
+          router.push("/gymnast");
+        }
       }
       else {
         // history.push("/otpvalidation");
@@ -64,12 +75,12 @@ const index = () => {
   }
 
   return (
-    <div style={{ marginTop: "4rem", marginBottom:"20px" }}>
+    <div style={{ marginTop: "4rem", marginBottom: "20px" }}>
       <div className="login-card border">
         <h2 className="login-heading">Login</h2>
         <div>
           <InputGroup>
-            <label style={{color:"white"}}>Email</label>
+            <label style={{ color: "white" }}>Email</label>
             <Input
               onChange={(e) => {
                 setUserData({ ...userData, [e.target.name]: e.target.value });
@@ -82,7 +93,7 @@ const index = () => {
           </InputGroup>
 
           <InputGroup>
-            <label style={{color:"white"}}>Password</label>
+            <label style={{ color: "white" }}>Password</label>
             <Input
               onChange={(e) => {
                 setUserData({ ...userData, [e.target.name]: e.target.value });
@@ -96,7 +107,7 @@ const index = () => {
           </InputGroup>
 
           <Button
-          style={{marginTop:"1rem"}}
+            style={{ marginTop: "1rem" }}
             onClick={() => {
               handleLogin();
             }}
@@ -111,7 +122,7 @@ const index = () => {
           </div>
         </div>
       </div>
-      <Loader isLoading={loading}></Loader> 
+      <Loader isLoading={loading}></Loader>
 
     </div>
   )
