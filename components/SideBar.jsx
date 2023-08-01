@@ -76,7 +76,7 @@ const SideBar = () => {
                           ? `side-menu-block1`
                           : `side-menu-block`
                       }>
-                        <div className="">
+                        <div className="imgg">
                           <Image src={item.image} alt={item.title} width={30} height={30} className="img-icon" />
                         </div>
                         <span

@@ -16,7 +16,7 @@ export const sideItemsAdmin = [
         image: dashboardSVG,
     },
     {
-        href: "/",
+        href: "/gymnast",
         title: "Gymnast",
         image: dashboardSVG,
     },
