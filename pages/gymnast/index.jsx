@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Image from "next/image";
-import * as Style from '../../components/gymnast/Gymnast';
+import * as Style from '../../components/styledComponents/gymnast/Gymnast';
 
 const AddUserForm = ({ closeModal }) => {
   // ... (rest of the code remains the same)

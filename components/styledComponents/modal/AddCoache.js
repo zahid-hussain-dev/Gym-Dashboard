@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import * as Styled from '../../components/choaches/coaches';
+import * as Styled from '../choaches/coaches';
 import Image from "next/image";
-import close from "../../../Gym-Dashboard/public/assests/SVGs/close-svgrepo-com (2).svg";
+import close from "../../../public/assests/SVGs/close-svgrepo-com (2).svg";
 
 const AddUserForm = ({ closeModal }) => {
   const [formData, setFormData] = useState({

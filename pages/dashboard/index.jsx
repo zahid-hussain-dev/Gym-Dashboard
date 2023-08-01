@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import AddUserForm from '../../components/styledComponents/modal/AddUserForm';
-import AddCoache from '../../components/madal2/AddCoache'
+import AddCoache from '../../components/styledComponents/modal/AddCoache'
 import { Button } from '../../components/styledComponents/button/Button';
 const index = () => {
   const [role,setRole]= useState("");

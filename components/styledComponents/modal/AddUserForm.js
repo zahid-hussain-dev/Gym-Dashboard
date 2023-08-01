@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import * as Styled from '../../choaches/coaches';
+import * as Styled from '../choaches/coaches';
 import Image from "next/image";
 import close from "../../../public/assests/SVGs/close-svgrepo-com (2).svg";
 
