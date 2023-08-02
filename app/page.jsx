@@ -18,7 +18,7 @@ export default function Home() {
 
   if (token && userRole === "admin") {
     return (
-      router.push("/dashboard")
+      router.push("/coaches")
     );
   }
   else if (token && userRole === "gym") {
@@ -30,5 +30,8 @@ export default function Home() {
   else if (token && userRole === "coach") {
     router.push("/coaches")
   }
+  // else{
+  //   router.push("/login")
+  // }
 
 }

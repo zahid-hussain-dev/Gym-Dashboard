@@ -149,3 +149,20 @@ export const TableCell = styled.td`
   color:white;
   border:1px solid #d5b93b;
 `;
+export const SubTitle = styled.p`
+// min-width: 54px;
+width: fit-content;
+padding: 10px 16px;
+background:#E3DC22;
+color: black;
+border: 0;
+border-radius: 4px;
+font-family: gilroy;
+outline: none;
+font-size: 1.2rem;
+font-weight: 500;
+line-height: 1.5;
+letter-spacing: 0.087rem;
+
+
+`;

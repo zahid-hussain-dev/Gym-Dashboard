@@ -10,8 +10,8 @@ export const PopupContainer = styled.div`
   background-color: rgb(63, 63, 63);
   opacity: 0.9;
   padding: 10px;
-  width: 40%;
-  height: 250px;
+  width: 45%;
+  // height: 250px;
   margin: 0px auto;
   border-radius: 10px;
   margin-top: 80px;
@@ -36,7 +36,7 @@ export const InputData = styled.input`
   padding: 6px;
   border-radius: 2px;
   border: none;
-  width: 135px;
+  // width: 135px;
 `;
 
 export const PopupMainHeading = styled.div`

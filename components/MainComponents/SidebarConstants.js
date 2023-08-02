@@ -7,12 +7,12 @@ import coachWhiteSVG from "../../public/assests/SVGs/coach-white.svg";
 import gymWhiteSVG from "../../public/assests/SVGs/gym-white.svg";
 import gymnastWhiteSVG from "../../public/assests/SVGs/gymnast-white.svg";
 export const sideItemsAdmin = [
-    {
-        href: "/dashboard",
-        title: "Dashboard",
-        image: dashboardSVG,
-        imageWhite: dashboardWhiteSVG,
-    },
+    // {
+    //     href: "/dashboard",
+    //     title: "Dashboard",
+    //     image: dashboardSVG,
+    //     imageWhite: dashboardWhiteSVG,
+    // },
     {
         href: "/coaches",
         title: "Coaches",
@@ -39,16 +39,20 @@ export const sideItemsCoach = [
         href: "/coaches",
         title: "Schedule",
         image: dashboardSVG,
+        imageWhite: coachWhiteSVG,
+
     },
+    // {
+    //     href: "/gym",
+    //     title: "Gym",
+    //     image: dashboardSVG,
+    //     imageWhite: gymWhiteSVG,
+    // },
     {
-        href: "/gym",
-        title: "Gym",
-        image: dashboardSVG,
-    },
-    {
-        href: "/gymnast",
+        href: "/privateBookings",
         title: "Private Booking",
         image: dashboardSVG,
+        imageWhite: gymnastWhiteSVG,
     },
 
 
@@ -57,7 +61,8 @@ export const sideItemsGym = [
     {
         href: "/gym",
         title: "Gym",
-        image: dashboardSVG,
+        image: gymSVG,
+        imageWhite: gymWhiteSVG,
     },
 
 
@@ -66,7 +71,8 @@ export const sideItemsGymnast = [
     {
         href: "/gymnast",
         title: "Booking",
-        image: dashboardSVG,
+        image: gymnastSVG,
+        imageWhite: gymnastWhiteSVG,
     },
 
 

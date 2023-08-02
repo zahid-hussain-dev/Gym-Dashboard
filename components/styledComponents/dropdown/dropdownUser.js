@@ -28,6 +28,8 @@ const DropdownUser = () => {
         localStorage.removeItem("role");
         localStorage.removeItem("otp");
         localStorage.removeItem("userData");
+        localStorage.removeItem("Userrole");
+
         router.push("/login");
         setIsOpen(!isOpen);
     }

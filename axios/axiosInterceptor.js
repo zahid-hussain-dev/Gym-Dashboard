@@ -13,9 +13,9 @@ const basicCreds = Base64.btoa(
 );
 
 const currentUser = async () => {
-  let data = localStorage.getItem("userData");
+  let data = localStorage.getItem("userLoginToken");
   if (data) {
-    return data?.access_token;
+    return data;
   }
 };
 const axiosInterceptor = () => {
