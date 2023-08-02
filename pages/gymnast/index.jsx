@@ -33,7 +33,10 @@ const index = () => {
       const handleSelectChange = (event) => {
         setSelectedOption(event.target.value);
       };
-    
+      const tableCell = [
+        { timeSlote: '9 - 10',child:'wasiq' ,coach:'mudasir' },
+        { timeSlote: '10 - 11',child:'shakeel',coach:'rohab' },
+      ];
     return (
         <div>
 
@@ -45,18 +48,20 @@ const index = () => {
                 {/* Form content */}
                 <div className="Add-child-main">
                   <Style.AddChildWrapper className="Add-child">
-                    <div>
-                      <Style.Label className="label">Add New Child:</Style.Label>
+                 <Style.Wrapper>
+                 <Style.LabelHeader className="label">Add New Child:</Style.LabelHeader>
+                    <Style.Header>
                       <Style.InputData
                         className="input-dataa"
                         type="text"
                         id="message"
                         name="message"
                       />
-                    </div>
-                    <Style.AddChildButton type="submit">
+                      <Style.AddChildButton type="submit">
                       Add Child
                     </Style.AddChildButton>
+                    </Style.Header>
+                    </Style.Wrapper>
                   </Style.AddChildWrapper>
                   <Style.SecondForm className="second-form">
                     <Style.AddBookingHeading className="add-booking">Add Booking</Style.AddBookingHeading>
@@ -103,7 +108,26 @@ const index = () => {
               </Style.FormContainer>
 
             }
-
+<Style.TableContainer>
+        <Style.TableWrapper>
+          <thead>
+            <Style.TableRow>
+              <Style.TableHead>CHILD</Style.TableHead>
+              <Style.TableHead>COACH</Style.TableHead>
+              <Style.TableHead>TIME SLOT</Style.TableHead>
+            </Style.TableRow>
+          </thead>
+          <tbody>
+            {tableCell.map((data, index) => (
+              <Style.TableRow key={index}>
+                <Style.TableCell>{data.child}</Style.TableCell>
+                <Style.TableCell>{data.coach}</Style.TableCell>
+                <Style.TableCell>{data.timeSlote}</Style.TableCell>
+              </Style.TableRow>
+            ))}
+          </tbody>
+        </Style.TableWrapper>
+      </Style.TableContainer>
         </div>
     )
 }

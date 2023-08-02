@@ -77,8 +77,10 @@ const SideBar = () => {
                           : `side-menu-block`
                       }>
                         <div className="">
+                        {router.asPath === item.href ?
                           <Image src={item.image} alt={item.title} width={30} height={30} className="img-icon" />
-                        </div>
+                          :<Image src={item.imageWhite} alt={item.title} width={30} height={26} className="img-icon" />
+                        }                        </div>
                         <span
                           className={
                             router.asPath === item.href
@@ -101,7 +103,10 @@ const SideBar = () => {
                           : `side-menu-block`
                       }>
                         <div className="">
+                        {router.asPath === item.href ?
                           <Image src={item.image} alt={item.title} width={30} height={30} className="img-icon" />
+                          :<Image src={item.imageWhite} alt={item.title} width={30} height={30} className="img-icon" />
+                        }
                         </div>
                       </div>
                     </Link>
@@ -120,3 +125,8 @@ const SideBar = () => {
 }
 
 export default SideBar
+
+
+
+
+SideBar.js
