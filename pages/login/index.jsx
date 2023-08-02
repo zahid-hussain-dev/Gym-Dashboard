@@ -49,7 +49,7 @@ const index = () => {
         localStorage.setItem("userLoginToken", res.data.token)
         dispatch(setuserId(res.data.user.id))
         if (res.data.user.roles[0].name === "admin") {
-          router.push("/dashboard");
+          router.push("/coaches");
         }
         else if (res.data.user.roles[0].name === "coach") {
           router.push("/coaches");

@@ -8,13 +8,11 @@ import "../app/globals.css";
 
 export default function App({ Component, pageProps }) {
   const router = useRouter();
-  // if(router.asPath === "/OtpValidate" || router.asPath === "/Signup") return (<Component {...pageProps}/>); else return (<Layout><Component {...pageProps}/></Layout>)
-
 
   return (
     <>
     <Provider store={store}>
-      {router.asPath === "/otpValidate" || router.asPath === "/signup" || router.asPath === "/login" ?
+      {router.asPath === "/signup" || router.asPath === "/login" ?
         <>
           <Navbar />
           <Component {...pageProps} />
