@@ -1,27 +1,28 @@
-import styled from 'styled-components'
+import styled from "styled-components";
 
 export const MainDiv = styled.div`
-display: flex;
- justify-content: space-around;
-
+  display: flex;
+  justify-content: space-around;
+  filter: blur(5px);
+`;
+export const MainDiv2 = styled.div`
+  display: flex;
+  justify-content: space-around;
 `;
 export const Schedular = styled.div`
-width: 75%;
- height: 50%;
-
+  width: 75%;
+  height: 50%;
 `;
 export const TableContainer = styled.div`
-color:#d5b93b;
-width:60%;
-margin:0px auto;
-margin-top:80px;
+  color: #d5b93b;
+  width: 60%;
+  margin: 0px auto;
+  margin-top: 80px;
 `;
 export const TableWrapper = styled.table`
   border-collapse: collapse;
   width: 100%;
   text-align: center;
-  
-
 `;
 
 export const TableHead = styled.th`
@@ -39,16 +40,16 @@ export const TableRow = styled.tr`
   }
 `;
 
-export const TableRow2 = styled.tr` {
+export const TableRow2 = styled.tr`
+   {
     background-color: #f2f2f2;
     border-radius: 5px;
-    color:#d5b93b;
+    color: #d5b93b;
   }
-`
-;
+`;
 export const TableCell = styled.td`
   padding: 10px;
   background-color: black;
-  color:white;
-  border:1px solid #d5b93b;
+  color: white;
+  border: 1px solid #d5b93b;
 `;

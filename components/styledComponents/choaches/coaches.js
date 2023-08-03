@@ -7,8 +7,7 @@ export const PopupHeading = styled.h2`
 `;
 
 export const PopupContainer = styled.div`
-  background-color: rgb(63, 63, 63);
-  opacity: 0.9;
+   background-color: rgb(63, 63, 63);
   padding: 10px;
   width: 40%;
   margin: 0px auto;
@@ -17,7 +16,6 @@ export const PopupContainer = styled.div`
   position:fixed;
   z-index:9999;
   left:40%;
-  opacity:1;
 `;
 
 export const MainForm = styled.div`
