@@ -57,8 +57,8 @@ const AddUserForm = ({ closeModal }) => {
     console.log("formData", formData)
     closeModal();
   };
-
   return (
+
     <Styled.PopupContainer>
       <Styled.PopupMainHeading>
         <Styled.PopupHeading>Add Schedule</Styled.PopupHeading>
@@ -81,7 +81,7 @@ const AddUserForm = ({ closeModal }) => {
 
             <div>
               <Styled.Label className="label">Select Time Slotes:</Styled.Label>
-              <Styled.Select className="input-dataa" name="timeSlot" value={selectedOption} onChange={handleSelectChange}>
+              <Styled.Select className="input-data" name="timeSlot" value={selectedOption} onChange={handleSelectChange}>
                 <option value="">Time Slotes</option>
                 {option2.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -94,7 +94,7 @@ const AddUserForm = ({ closeModal }) => {
           <div style={{ display: "flex", marginTop: "20px" }}>
             <div>
               <Styled.Label className="label">Set Time:</Styled.Label>
-              <Styled.Select className="input-dataa" name="status" value={selectedOptionStatus} onChange={handleSelectChangeStatus}>
+              <Styled.Select className="input-data" name="status" value={selectedOptionStatus} onChange={handleSelectChangeStatus}>
                 <option value="">Time Status</option>
                 {option3.map((option) => (
                   <option key={option.value} value={option.value}>

@@ -82,8 +82,8 @@ const axiosInterceptor = () => {
                 token = await currentUser();
                 config.headers = {
                     ...config.headers,
-                    Authorization: token ? 'Bearer ' + token : 'Basic ' + basicCreds,
-                    // Authorization: token ? 'Basic ' + basicCreds : 'Basic ' + basicCreds,
+                    // Authorization: token ? 'Bearer ' + token : 'Basic ' + basicCreds,
+                    Authorization: token ? 'Basic ' + basicCreds : 'Basic ' + basicCreds,
                     'Content-Type': 'application/json',
                 };
                 break;
