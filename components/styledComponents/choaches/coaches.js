@@ -3,18 +3,21 @@ import styled from 'styled-components';
 export const PopupHeading = styled.h2`
   text-align: center;
   color: rgb(232, 174, 51);
-  margin-right: 90px;
+ margin-left:38%;
 `;
 
 export const PopupContainer = styled.div`
   background-color: rgb(63, 63, 63);
   opacity: 0.9;
   padding: 10px;
-  width: 45%;
-  // height: 250px;
+  width: 40%;
   margin: 0px auto;
   border-radius: 10px;
   margin-top: 80px;
+  position:fixed;
+  z-index:9999;
+  left:40%;
+  opacity:1;
 `;
 
 export const MainForm = styled.div`
@@ -36,14 +39,15 @@ export const InputData = styled.input`
   padding: 6px;
   border-radius: 2px;
   border: none;
-  // width: 135px;
+  width:60%;
 `;
 
 export const PopupMainHeading = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin-left: 105px;
+  justify-content: space-between;
+  left:30px
+  width:65%;
   margin-bottom: 20px;
 `;
 
@@ -60,11 +64,12 @@ export const SubmitForm = styled.button`
   width: 100px;
 `;
 export const Select = styled.select`
-  margin: 10px;
-  padding: 6px;
-  border-radius: 2px;
-  border: none;
-  margin-left: 20px;
-  width: 135px;
-  background-color: #f8f8f8; /* Optional: Add background color to the dropdown */
+margin: 10px;
+padding: 6px;
+border-radius: 2px;
+border: none;
+width:65%;
 `;
+
+
+
