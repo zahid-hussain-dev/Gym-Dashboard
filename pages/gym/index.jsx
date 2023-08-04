@@ -31,6 +31,7 @@ const index = () => {
   }, [])
 
   useEffect(async () => {
+    if(role==="gym"){
     try {
       setLoading(true)
       const res = await axiosInterceptor().get(
@@ -53,6 +54,7 @@ const index = () => {
       swal('Oops!', "Some Thing went Wrong", 'error')
       console.log(error)
     }
+  }
   }, [])
 
   const tableCell = [

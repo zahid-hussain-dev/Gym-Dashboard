@@ -29,7 +29,7 @@ const ViewId = () => {
             <React.Fragment>
             <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} onClick={handleButtonClick2}>Add Schedule</Button>
             {showModal2 && <AddCoache closeModal={closeModal2} />}
-
+            {showModal2 ?
             <Style.MainDiv>
                 <Style.Schedular >
                     <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem" }}>Schedule </div>
@@ -48,6 +48,25 @@ const ViewId = () => {
                     />
                 </Style.Schedular>
             </Style.MainDiv>
+            :
+            <Style.MainDiv2>
+            <Style.Schedular >
+                <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem" }}>Schedule </div>
+                <Scheduler
+                    // height={300}
+                    // loading={true}
+                    onSelectedDateChange={false}
+                    events={EVENTS}
+                    week={{
+                        weekDays: [0, 1, 2, 3, 4, 5, 6],
+                        weekStartOn: 6,
+                        startHour: 9,
+                        endHour: 24
+                        // step: 30
+                    }}
+                />
+            </Style.Schedular>
+        </Style.MainDiv2>    }
             </React.Fragment>
 
         </div>
