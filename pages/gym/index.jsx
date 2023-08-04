@@ -7,7 +7,7 @@ import * as Style from "../../components/styledComponents/coachesStyle/coaches";
 import { useRouter } from 'next/navigation';
 import { axiosInterceptor } from '../../axios/axiosInterceptor';
 import swal from "sweetalert";
-// import moment from "moment";
+import moment from "moment";
 
 const index = () => {
   const [role, setRole] = useState("");
@@ -20,9 +20,9 @@ const index = () => {
     console.log("modal click")
   };
 
-  // const closeModal = () => {
-  //   setShowModal(false);
-  // };
+  const closeModal = () => {
+    setShowModal(false);
+  };
 
   useEffect(() => {
     // Perform localStorage action
@@ -30,16 +30,7 @@ const index = () => {
     setRole(userRole);
   }, [])
 
-  const closeModal = () => {
-    setShowModal(false);
-    // const modalElement = document.getElementById('modal');
-    // modalElement.style.filter = 'blur(5px)';
-  };
-
-  useEffect(async () => {
-    const userRole = JSON.parse(localStorage.getItem("Userrole"))
-    setRole(userRole);
-    if(userRole=="gym"){
+  const getGymSchedule = async () => {
     try {
       setLoading(true)
       const res = await axiosInterceptor().get(
@@ -48,7 +39,7 @@ const index = () => {
       console.log("responsse of schedule", res)
       res.data.map((item, index) => (
         item['event_id'] = item.id,
-        item['title'] = "Events",
+        item['title'] = "Open Hours",
         item['start'] = new Date(item.from),
         item['end'] = new Date(item.to),
         item['editable'] = false,
@@ -63,7 +54,74 @@ const index = () => {
       console.log(error)
     }
   }
-  }, [])
+
+  const handleConfirm = async (event, action) => {
+    console.log("handleConfirm =", action, event.title);
+    console.log("event", event)
+    /**
+     * Make sure to return 4 mandatory fields:
+     * event_id: string|number
+     * title: string
+     * start: Date|string
+     * end: Date|string
+     * ....extra other fields depend on your custom fields/editor properties
+     */
+    // Simulate http request: return added/edited event
+    return new Promise((res, rej) => {
+      if (action === "edit") {
+        /** PUT event to remote DB */
+      } else if (action === "create") {
+        /**POST event to remote DB */
+
+        console.log("new Date(event.start)Date String()", new Date(event.start).toDateString())
+        console.log("event", new Date(event.start).toISOString().slice(0, 10), new Date(event.start).toISOString().slice(11, 19))
+        var dateChangedStart = new Date(event.start).toISOString().slice(0, 10).replace(/\//g, "-");
+        console.log("datechnage", dateChangedStart)
+        var dateChangedEnd = new Date(event.end).toISOString().slice(0, 10).replace(/\//g, "-");
+        console.log("datechnage", dateChangedEnd)
+        const Payload = {
+          from: dateChangedStart + " " + new Date(event.start).toISOString().slice(11, 19),
+          to: dateChangedEnd + " " + new Date(event.end).toISOString().slice(11, 19),
+        }
+        console.log("payload", Payload)
+        // try {
+        //   setLoading(true)
+        //   const res = axiosInterceptor().post(
+        //     `/api/gym/schedule`,
+        //     Payload,
+        //   );
+        //   console.log("responsse of login", res)
+        //   swal('Success!', res.data.message, 'success')
+        //   setLoading(false)
+        // } catch (error) {
+        //   setLoading(false)
+        //   // swal('Oops!', error.data.message, 'error')
+        //   console.log(error)
+        // }
+
+      }
+
+      const isFail = Math.random() > 0.6;
+      // Make it slow just for testing
+      setTimeout(() => {
+        if (isFail) {
+          rej("Ops... Faild");
+        } else {
+          res({
+            ...event,
+            event_id: event.event_id || Math.random()
+          });
+        }
+      }, 3000);
+    });
+  };
+
+  useEffect(() => {
+    if (role == "gym") {
+
+      getGymSchedule();
+    }
+  }, [role])
 
   const tableCell = [
     { id: 1, timeSlote: '9 - 10', name: 'Gym1', },
@@ -114,23 +172,24 @@ const index = () => {
       }
       {showModal && <AddGymSchedule closeModal={closeModal} />}
       {role && role === "gym" &&
-      // filter: showModal2 ? 'blur(5px)' : 'none' 
         <div style={{ display: "flex", justifyContent: "space-around" }}>
-          <div style={{ width: "75%", height: "50%", filter: showModal ?  'blur(5px)' : 'none' }}>
+          <div style={{ width: "75%", height: "50%" }}>
             <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem" }}>Gym Schedule </div>
-            {events.length > 0 && <Scheduler
-              // height={300}
-              // loading={true}
-              onSelectedDateChange={false}
-              events={events}
-              week={{
-                weekDays: [0, 1, 2, 3, 4, 5, 6],
-                weekStartOn: 6,
-                startHour: 0,
-                endHour: 24
-                // step: 30
-              }}
-            />}
+            {events.length > 0 &&
+              <Scheduler
+                // height={300}
+                // loading={true}
+                onSelectedDateChange={false}
+                events={events}
+                onConfirm={handleConfirm}
+                week={{
+                  weekDays: [0, 1, 2, 3, 4, 5, 6],
+                  weekStartOn: 6,
+                  startHour: 0,
+                  endHour: 24
+                  // step: 30
+                }}
+              />}
           </div>
 
         </div>

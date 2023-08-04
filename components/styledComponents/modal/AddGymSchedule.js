@@ -87,7 +87,7 @@ const AddGymSchedule = ({ closeModal }) => {
                         </div>
 
                         <div>
-                        <Styled.Label>Start:</Styled.Label>
+                            <Styled.Label>Start:</Styled.Label>
                             <Styled.InputData
                                 // type="date"
                                 type='time'
@@ -97,9 +97,9 @@ const AddGymSchedule = ({ closeModal }) => {
                             />
                         </div>
                     </div>
-                    <div style={{ display: "flex", marginTop: "20px" }}>
+                    <div style={{ marginTop: "20px", width: "57%" }}>
+                        <Styled.Label className="label">End:</Styled.Label>
                         <div>
-                            <Styled.Label className="label">End:</Styled.Label>
                             <Styled.InputData
                                 // type="date"
                                 type='time'
