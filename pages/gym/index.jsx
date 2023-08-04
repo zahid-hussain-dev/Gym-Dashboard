@@ -30,7 +30,7 @@ const index = () => {
     setRole(userRole);
   }, [])
 
-  useEffect(async () => {
+  const getGymSchedule = async () => {
     try {
       setLoading(true)
       const res = await axiosInterceptor().get(
@@ -53,6 +53,10 @@ const index = () => {
       swal('Oops!', "Some Thing went Wrong", 'error')
       console.log(error)
     }
+  }
+
+  useEffect(() => {
+    getGymSchedule();
   }, [])
 
   const tableCell = [

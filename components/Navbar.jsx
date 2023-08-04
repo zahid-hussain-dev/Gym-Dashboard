@@ -4,7 +4,7 @@ import logo from "@/public/assests/Images/logo.png";
 import { useRouter } from 'next/router';
 import DropdownUser from "@/components/styledComponents/dropdown/dropdownUser";
 const Navbar = () => {
-  const router = useRouter()
+  const router = useRouter();
   return (
     <div style={{ background: "#1F1D13", height: "fit-content", width: "auto", padding: "8px", boxShadow: "2px 2px #1F1D13", }}>
       <div
@@ -31,11 +31,11 @@ const Navbar = () => {
           </div>
           <div >
             <div style={{ marginRight: "20px" }}>
-              {router.asPath === "/signup" || router.asPath === "/login" ?
-                <React.Fragment></React.Fragment> :
-                <React.Fragment>
-                  <DropdownUser />
-                </React.Fragment>
+              {router.asPath === "/signup" || router.asPath === "/login"
+                ?
+                <React.Fragment></React.Fragment>
+                :
+                <DropdownUser />
               }
             </div>
           </div>
