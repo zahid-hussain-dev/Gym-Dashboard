@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import * as Styled from '../choaches/coaches';
 import Image from "next/image";
 import close from "../../../public/assests/SVGs/close-svgrepo-com (2).svg";
+import { axiosInterceptor } from '../../../axios/axiosInterceptor';
+import swal from "sweetalert";
 
-const AddUserForm = ({ closeModal }) => {
+const  AddUserForm = ({ closeModal }) => {
   const [formData, setFormData] = useState({
-    timeSlot: '',
+    timeStart: '',
+    timeEnd: '',
     date: '',
-    status: '',
+    type: '',
   });
   const option2 = [
     { value: '9 - 10', label: '9 - 10' },
@@ -16,8 +19,8 @@ const AddUserForm = ({ closeModal }) => {
     // Add more options here as needed
   ];
   const option3 = [
-    { value: 'Public', label: 'Public' },
-    { value: 'Private', label: 'Private' },
+    { value: 'PUBLIC', label: 'PUBLIC' },
+    { value: 'PRIVATE', label: 'PRIVATE' },
   ];
   const [selectedOption, setSelectedOption] = useState('');
   const [selectedOptionStatus, setSelectedOptionStatus] = useState('');
@@ -46,14 +49,28 @@ const AddUserForm = ({ closeModal }) => {
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-
-    setFormData({
-      timeSlot: '',
-      date: '',
-      status: '',
-    });
+    const Payload = {
+      from: formData.date + " " + formData.timeStart,
+      to: formData.date + " " + formData.timeEnd,
+      type:formData.type,
+  }
+  console.log("Payload",Payload)
+  try {
+    setLoading(true)
+    const res = await axiosInterceptor().post(
+        `/api/coach/open/slots`,
+        Payload,
+    );
+    console.log("responsse of login", res)
+    swal('Success!', res.data.message, 'success')
+    setLoading(false)
+} catch (error) {
+    setLoading(false)
+    swal('Oops!', error.data.message, 'error')
+    console.log(error)
+}
     console.log("formData", formData)
     closeModal();
   };
@@ -80,21 +97,30 @@ const AddUserForm = ({ closeModal }) => {
             </div>
 
             <div>
-              <Styled.Label className="label">Select Time Slotes:</Styled.Label>
-              <Styled.Select className="input-data" name="timeSlot" value={selectedOption} onChange={handleSelectChange}>
-                <option value="">Time Slotes</option>
-                {option2.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </Styled.Select>
+              <Styled.Label className="label">Time Start:</Styled.Label>
+              <Styled.InputData
+                type="time"
+                name="timeStart"
+                onChange={handleChange}
+                value={formData.timeStart}
+              />
+            </div>
+          </div>
+          <div style={{ display: "flex", marginTop: "20px" }}>
+            <div>
+              <Styled.Label className="label">Time End:</Styled.Label>
+              <Styled.InputData
+                type="time"
+                name="timeEnd"
+                onChange={handleChange}
+                value={formData.timeEnd}
+              />
             </div>
           </div>
           <div style={{ display: "flex", marginTop: "20px" }}>
             <div>
               <Styled.Label className="label">Set Time:</Styled.Label>
-              <Styled.Select className="input-data" name="status" value={selectedOptionStatus} onChange={handleSelectChangeStatus}>
+              <Styled.Select className="input-dataa" name="type" value={selectedOptionStatus} onChange={handleSelectChangeStatus}>
                 <option value="">Time Status</option>
                 {option3.map((option) => (
                   <option key={option.value} value={option.value}>

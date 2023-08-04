@@ -20,9 +20,9 @@ const index = () => {
     console.log("modal click")
   };
 
-  const closeModal = () => {
-    setShowModal(false);
-  };
+  // const closeModal = () => {
+  //   setShowModal(false);
+  // };
 
   useEffect(() => {
     // Perform localStorage action
@@ -30,8 +30,16 @@ const index = () => {
     setRole(userRole);
   }, [])
 
+  const closeModal = () => {
+    setShowModal(false);
+    // const modalElement = document.getElementById('modal');
+    // modalElement.style.filter = 'blur(5px)';
+  };
+
   useEffect(async () => {
-    if(role==="gym"){
+    const userRole = JSON.parse(localStorage.getItem("Userrole"))
+    setRole(userRole);
+    if(userRole=="gym"){
     try {
       setLoading(true)
       const res = await axiosInterceptor().get(
@@ -106,8 +114,9 @@ const index = () => {
       }
       {showModal && <AddGymSchedule closeModal={closeModal} />}
       {role && role === "gym" &&
+      // filter: showModal2 ? 'blur(5px)' : 'none' 
         <div style={{ display: "flex", justifyContent: "space-around" }}>
-          <div style={{ width: "75%", height: "50%" }}>
+          <div style={{ width: "75%", height: "50%", filter: showModal ?  'blur(5px)' : 'none' }}>
             <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem" }}>Gym Schedule </div>
             {events.length > 0 && <Scheduler
               // height={300}

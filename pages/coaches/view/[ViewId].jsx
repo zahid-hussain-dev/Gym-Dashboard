@@ -16,9 +16,15 @@ const ViewId = () => {
         console.log("modal click")
     };
 
+    // const closeModal2 = () => {
+    //     setShowModal2(false);
+    // };
+
     const closeModal2 = () => {
         setShowModal2(false);
-    };
+        // const modalElement = document.getElementById('modal');
+        // modalElement.style.filter = 'blur(5px)';
+      };
     const tableCell = [
         { id: 1, timeSlote: '9 - 10', child: 'wasiq', coach: 'mudasir' },
         { id: 2, timeSlote: '10 - 11', child: 'shakeel', coach: 'rohab' },
@@ -31,7 +37,7 @@ const ViewId = () => {
             {showModal2 && <AddCoache closeModal={closeModal2} />}
             {showModal2 ?
             <Style.MainDiv>
-                <Style.Schedular >
+                <Style.Schedular style={{ filter: showModal2 ? 'blur(5px)' : 'none' }} >
                     <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem" }}>Schedule </div>
                     <Scheduler
                         // height={300}
