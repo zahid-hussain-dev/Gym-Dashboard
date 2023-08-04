@@ -16,14 +16,10 @@ const ViewId = () => {
         console.log("modal click")
     };
 
-    // const closeModal2 = () => {
-    //     setShowModal2(false);
-    // };
 
     const closeModal2 = () => {
         setShowModal2(false);
-        // const modalElement = document.getElementById('modal');
-        // modalElement.style.filter = 'blur(5px)';
+
       };
     const tableCell = [
         { id: 1, timeSlote: '9 - 10', child: 'wasiq', coach: 'mudasir' },

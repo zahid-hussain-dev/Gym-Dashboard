@@ -11,6 +11,7 @@ const  AddUserForm = ({ closeModal }) => {
     timeEnd: '',
     date: '',
     type: '',
+    error: '',
   });
   const option2 = [
     { value: '9 - 10', label: '9 - 10' },
@@ -24,7 +25,7 @@ const  AddUserForm = ({ closeModal }) => {
   ];
   const [selectedOption, setSelectedOption] = useState('');
   const [selectedOptionStatus, setSelectedOptionStatus] = useState('');
-
+  const [loading, setLoading] = useState(false);
   const handleSelectChange = (event) => {
     setSelectedOption(event.target.value);
     const { name, value } = event.target;
@@ -46,8 +47,22 @@ const  AddUserForm = ({ closeModal }) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
+  error: '', // Reset the error message on every change
+  alert:("end time should be greater than start time!"),
     }));
-  };
+  if (name === 'timeEnd') {
+    const startTime = new Date(formData.timeStart);
+    const endTime = new Date(value);
+    if (endTime < startTime) {
+    
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        error: 'End time should be greater than start time!',
+      }));
+      console.log(error)
+    }
+   }
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -56,6 +71,7 @@ const  AddUserForm = ({ closeModal }) => {
       to: formData.date + " " + formData.timeEnd,
       type:formData.type,
   }
+  
   console.log("Payload",Payload)
   try {
     setLoading(true)
@@ -74,6 +90,19 @@ const  AddUserForm = ({ closeModal }) => {
     console.log("formData", formData)
     closeModal();
   };
+
+// const handleChange = (event) => {
+//     const { name, value } = event.target;
+//     setFormData((prevFormData) => ({
+//       ...prevFormData,
+//       [name]: value,
+//       error: '', // Reset the error message on every change
+    
+//   }));
+ 
+// };
+  
+
   return (
 
     <Styled.PopupContainer>
@@ -116,8 +145,6 @@ const  AddUserForm = ({ closeModal }) => {
                 value={formData.timeEnd}
               />
             </div>
-          </div>
-          <div style={{ display: "flex", marginTop: "20px" }}>
             <div>
               <Styled.Label className="label">Set Time:</Styled.Label>
               <Styled.Select className="input-dataa" name="type" value={selectedOptionStatus} onChange={handleSelectChangeStatus}>
@@ -129,6 +156,8 @@ const  AddUserForm = ({ closeModal }) => {
                 ))}
               </Styled.Select>
             </div>
+          </div>
+          <div style={{ display: "flex", marginTop: "20px" }}>
           </div>
         </Styled.MainForm>
         <Styled.SubmitForm type="submit">

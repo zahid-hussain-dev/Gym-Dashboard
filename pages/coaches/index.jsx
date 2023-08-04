@@ -21,8 +21,6 @@ const index = () => {
     // };
     const closeModal2 = () => {
         setShowModal2(false);
-        // const modalElement = document.getElementById('modal');
-        // modalElement.style.filter = 'blur(5px)';
       };
 
     useEffect(() => {
@@ -35,10 +33,6 @@ const index = () => {
         { id: 2,  gym: 'Gym2', coach: 'rohab' },
     ];
 
-//       const headingStyle = {
-//   backgroundColor: 'white',
-// //   filter: 'blur(5px)'
-//   };
     return (
         <div>
             {role && role === "admin" &&

@@ -96,10 +96,20 @@ const AddGymSchedule = ({ closeModal }) => {
                                 value={formData.timefrom}
                             />
                         </div>
-                    </div>
-                    <div style={{ display: "flex", marginTop: "20px" }}>
                         <div>
-                            <Styled.Label className="label">End:</Styled.Label>
+                        <Styled.Label>End:</Styled.Label>
+                            <Styled.InputData
+                                // type="date"
+                                type='time'
+                                name="timefrom"
+                                onChange={handleChange}
+                                value={formData.timeto}
+                            />
+                        </div>
+                    </div>
+                    {/* <div style={{  marginTop: "20px",width:"57%" }}>
+                    <Styled.Label className="label">End:</Styled.Label>
+                        <div>
                             <Styled.InputData
                                 // type="date"
                                 type='time'
@@ -108,7 +118,7 @@ const AddGymSchedule = ({ closeModal }) => {
                                 value={formData.timeto}
                             />
                         </div>
-                    </div>
+                    </div> */}
                 </Styled.MainForm>
                 <Styled.SubmitForm type="submit">
                     Submit
