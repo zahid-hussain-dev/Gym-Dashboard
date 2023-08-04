@@ -3,7 +3,7 @@ import { Scheduler } from "@aldabil/react-scheduler";
 import { EVENTS } from "../../components/MainComponents/Events";
 import { Button } from '../../components/styledComponents/button/Button';
 import * as Style from "../../components/styledComponents/coachesStyle/coaches";
-import AddCoache from '../../components/styledComponents/modal/AddCoache'
+import AddCoache from "../../components/styledComponents/modal/AddCoache"
 import { useRouter } from 'next/navigation';
 
 const index = () => {
@@ -16,9 +16,15 @@ const index = () => {
         console.log("modal click")
     };
 
+    // const closeModal2 = () => {
+    //     setShowModal2(false);
+    // };
     const closeModal2 = () => {
         setShowModal2(false);
-    };
+        // const modalElement = document.getElementById('modal');
+        // modalElement.style.filter = 'blur(5px)';
+      };
+
     useEffect(() => {
         // Perform localStorage action
         const userRole = JSON.parse(localStorage.getItem("Userrole"))
@@ -28,6 +34,11 @@ const index = () => {
         { id: 1,  gym: 'Gym1', coach: 'mudasir' },
         { id: 2,  gym: 'Gym2', coach: 'rohab' },
     ];
+
+//       const headingStyle = {
+//   backgroundColor: 'white',
+// //   filter: 'blur(5px)'
+//   };
     return (
         <div>
             {role && role === "admin" &&
@@ -67,7 +78,7 @@ const index = () => {
             {showModal2 && <AddCoache closeModal={closeModal2} />}
 
             <Style.MainDiv>
-                <Style.Schedular >
+                <Style.Schedular style={{ filter: showModal2 ? 'blur(5px)' : 'none' }} >
                     <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem" }}>Schedule </div>
                     <Scheduler
                         // height={300}

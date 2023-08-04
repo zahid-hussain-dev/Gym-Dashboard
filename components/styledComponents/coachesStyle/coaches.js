@@ -3,11 +3,12 @@ import styled from "styled-components";
 export const MainDiv = styled.div`
   display: flex;
   justify-content: space-around;
-  filter: blur(5px);
+  // filter: blur(5px);
 `;
 export const MainDiv2 = styled.div`
   display: flex;
   justify-content: space-around;
+  
 `;
 export const Schedular = styled.div`
   width: 75%;

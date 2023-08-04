@@ -25,7 +25,7 @@ const AddGymSchedule = ({ closeModal }) => {
         event.preventDefault();
         const Payload = {
             from: formData.datefrom + " " + formData.timefrom,
-            to: formData.dateto + " " + formData.timeto,
+            to: formData.datefrom + " " + formData.timeto,
         }
         try {
             setLoading(true)
@@ -34,10 +34,11 @@ const AddGymSchedule = ({ closeModal }) => {
                 Payload,
             );
             console.log("responsse of login", res)
+            swal('Success!', res.data.message, 'success')
             setLoading(false)
         } catch (error) {
             setLoading(false)
-            swal('Oops!', "Some Thing went Wrong", 'error')
+            swal('Oops!', error.data.message, 'error')
             console.log(error)
         }
 
@@ -86,19 +87,7 @@ const AddGymSchedule = ({ closeModal }) => {
                         </div>
 
                         <div>
-                            <Styled.Label className="label">End Date:</Styled.Label>
-                            <Styled.InputData
-                                // type="date"
-                                type='date'
-                                name="dateto"
-                                onChange={handleChange}
-                                value={formData.dateto}
-                            />
-                        </div>
-                    </div>
-                    <div style={{ display: "flex", marginTop: "20px" }}>
-                        <div>
-                            <Styled.Label>Start:</Styled.Label>
+                        <Styled.Label>Start:</Styled.Label>
                             <Styled.InputData
                                 // type="date"
                                 type='time'
@@ -107,7 +96,8 @@ const AddGymSchedule = ({ closeModal }) => {
                                 value={formData.timefrom}
                             />
                         </div>
-
+                    </div>
+                    <div style={{ display: "flex", marginTop: "20px" }}>
                         <div>
                             <Styled.Label className="label">End:</Styled.Label>
                             <Styled.InputData
