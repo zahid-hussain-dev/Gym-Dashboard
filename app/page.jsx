@@ -6,6 +6,9 @@ export default function Home() {
   const router = useRouter();
   const [token, setToken] = useState("");
   const [userRole, setUserRole] = useState("");
+  const userRole1 = localStorage.getItem("Userrole") != 'undefined' && JSON.parse(localStorage.getItem("Userrole"));
+  const userLoginToken = localStorage.getItem("userLoginToken");
+
   useEffect(() => {
     // Perform localStorage action
     const userLoginToken = localStorage.getItem("userLoginToken");
@@ -15,23 +18,25 @@ export default function Home() {
     setUserRole(userRole1);
 
   }, [])
+  console.log("token", userLoginToken)
+  console.log("userRole", userRole1)
 
-  if (token && userRole === "admin") {
+  if (userLoginToken && userRole1 === "admin") {
     return (
       router.push("/coaches")
     );
   }
-  else if (token && userRole === "gym") {
+  else if (userLoginToken && userRole1 === "gym") {
     router.push("/gym")
   }
-  else if (token && userRole === "gymnast") {
+  else if (userLoginToken && userRole1 === "gymnast") {
     router.push("/gymnast")
   }
-  else if (token && userRole === "coach") {
+  else if (userLoginToken && userRole1 === "coach") {
     router.push("/coaches")
   }
-  // else{
-  //   router.push("/login")
-  // }
+  else {
+    router.push("/login")
+  }
 
 }

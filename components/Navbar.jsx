@@ -32,10 +32,9 @@ const Navbar = () => {
           <div >
             <div style={{ marginRight: "20px" }}>
               {router.asPath === "/signup" || router.asPath === "/login" ?
-                <React.Fragment></React.Fragment> :
-                <React.Fragment>
-                  <DropdownUser />
-                </React.Fragment>
+                <React.Fragment></React.Fragment>
+                :
+                <DropdownUser />
               }
             </div>
           </div>
