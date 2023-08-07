@@ -3,10 +3,14 @@ import { Button } from '../../components/styledComponents/button/Button';
 import Image from "next/image";
 import * as Style from '../../components/styledComponents/gymnast/Gymnast';
 import { useRouter } from 'next/navigation';
+import { axiosInterceptor } from '../../axios/axiosInterceptor';
+import swal from "sweetalert";
 
 const index = () => {
   const [role, setRole] = useState("");
   const [formData, setFormData] = useState({});
+  const [childData, setChildData] = useState({});
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -62,9 +66,36 @@ const index = () => {
     }));
   };
 
-  const handleSubmit = (event) => {
-    // event.preventDefault();
+  const handleSubmit = async (event) =>  {
+    event.preventDefault();
     console.log("formData", formData)
+
+  };
+  const handleSelectChild = (event) => {
+    setSelectedOption(event.target.value);
+    const { name, value } = event.target;
+    setChildData((prevChildData) => ({
+      ...prevChildData,
+      [name]: value,
+    }));
+  };
+  const handleSubmitChild = async (event) =>  {
+    event.preventDefault();
+    console.log("ChildData", childData)
+     try {
+      setLoading(true)
+      const res = await axiosInterceptor().post(
+        `/gymnast/children`,
+        childData,
+      );
+      console.log("responsse of login", res)
+      swal('Success!', res.data.message, 'success')
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      swal('Oops!', error.data.message, 'error')
+      console.log(error)
+    }
   };
   const tableCell = [
     {id:1, timeSlote: '9 - 10', child: 'wasiq', coach: 'mudasir' },
@@ -89,9 +120,10 @@ const index = () => {
                     className="input-dataa"
                     type="text"
                     id="message"
-                    name="child"
+                    name="name"
+                    onChange={handleSelectChild}
                   />
-                  <Style.AddChildButton type="submit">
+                  <Style.AddChildButton type="submit" onClick={(e)=>handleSubmitChild(e)}>
                     Add Child
                   </Style.AddChildButton>
                 </Style.Header>

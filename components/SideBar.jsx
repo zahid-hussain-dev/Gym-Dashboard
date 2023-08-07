@@ -78,8 +78,8 @@ const SideBar = () => {
                       }>
                         <div className="">
                         {router.asPath === item.href ?
-                          <Image src={item.image} alt={item.title} width={30} height={30} className="img-icon" />
-                          :<Image src={item.imageWhite} alt={item.title} width={30} height={26} className="img-icon" />
+                          <Image src={item.image} alt={item.title} width={25} height={25} className="img-icon" />
+                          :<Image src={item.imageWhite} alt={item.title} width={25} height={25} className="img-icon" />
                         }                        </div>
                         <span
                           className={
@@ -104,8 +104,8 @@ const SideBar = () => {
                       }>
                         <div className="">
                         {router.asPath === item.href ?
-                          <Image src={item.image} alt={item.title} width={30} height={30} className="img-icon" />
-                          :<Image src={item.imageWhite} alt={item.title} width={30} height={30} className="img-icon" />
+                          <Image src={item.image} alt={item.title} width={25} height={25} className="img-icon" />
+                          :<Image src={item.imageWhite} alt={item.title} width={25} height={25} className="img-icon" />
                         }
                         </div>
                       </div>
