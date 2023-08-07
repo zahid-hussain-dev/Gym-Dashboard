@@ -41,8 +41,9 @@ export const AddChildButton = styled.button`
   color: white;
   border-radius: 5px;
   cursor: pointer;
-  width: 30%;
+  width: 23%;
   height:30px;
+  font-size:0.7vw;
   
 `;
 
@@ -80,7 +81,7 @@ export const InputData = styled.input`
   padding: 6px;
   border-radius: 2px;
   border: none;
-  width: 135px;
+  width: 65%;
 `;
 
 export const DropdownContainer = styled.div`
