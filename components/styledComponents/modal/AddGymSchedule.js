@@ -74,7 +74,7 @@ const AddGymSchedule = ({ closeModal }) => {
             {/* Form content */}
             <form onSubmit={handleSubmit}>
                 <Styled.MainForm style={{ display: "inherit" }}>
-                    <div style={{ display: "flex", marginTop: "20px" }}>
+                    <div style={{ display: "flex", alignItems:"center", marginTop: "20px" }}>
                         <div>
                             <Styled.Label>Start Date:</Styled.Label>
                             <Styled.InputData
@@ -85,7 +85,6 @@ const AddGymSchedule = ({ closeModal }) => {
                                 value={formData.datefrom}
                             />
                         </div>
-
                         <div>
                         <Styled.Label>Start:</Styled.Label>
                             <Styled.InputData
@@ -96,10 +95,8 @@ const AddGymSchedule = ({ closeModal }) => {
                                 value={formData.timefrom}
                             />
                         </div>
-                    </div>
-                    <div style={{ display: "flex", marginTop: "20px" }}>
                         <div>
-                            <Styled.Label className="label">End:</Styled.Label>
+                            <Styled.Label >End:</Styled.Label>
                             <Styled.InputData
                                 // type="date"
                                 type='time'
@@ -109,6 +106,7 @@ const AddGymSchedule = ({ closeModal }) => {
                             />
                         </div>
                     </div>
+                    {/*  */}
                 </Styled.MainForm>
                 <Styled.SubmitForm type="submit">
                     Submit

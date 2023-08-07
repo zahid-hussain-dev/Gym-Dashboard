@@ -9,7 +9,7 @@ export const PopupHeading = styled.h2`
 export const PopupContainer = styled.div`
    background-color: rgb(63, 63, 63);
   padding: 10px;
-  width: 40%;
+  width: 45%;
   margin: 0px auto;
   border-radius: 10px;
   margin-top: 80px;

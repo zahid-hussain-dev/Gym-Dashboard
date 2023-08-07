@@ -24,6 +24,7 @@ const  AddUserForm = ({ closeModal }) => {
   ];
   const [selectedOption, setSelectedOption] = useState('');
   const [selectedOptionStatus, setSelectedOptionStatus] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSelectChange = (event) => {
     setSelectedOption(event.target.value);
@@ -47,6 +48,15 @@ const  AddUserForm = ({ closeModal }) => {
       ...prevFormData,
       [name]: value,
     }));
+    if (name === 'timeEnd') {
+      const startTime = new Date(`2000-01-01T${formData.timeStart}`);
+      const endTime = new Date(`2000-01-01T${value}`);
+      if (endTime < startTime) {
+        alert('End time should be greater than start time!');
+      }else{
+        console.log("good case")
+      }
+    }
   };
 
   const handleSubmit = async (event) => {
@@ -95,29 +105,6 @@ const  AddUserForm = ({ closeModal }) => {
                 value={formData.date}
               />
             </div>
-
-            <div>
-              <Styled.Label className="label">Time Start:</Styled.Label>
-              <Styled.InputData
-                type="time"
-                name="timeStart"
-                onChange={handleChange}
-                value={formData.timeStart}
-              />
-            </div>
-          </div>
-          <div style={{ display: "flex", marginTop: "20px" }}>
-            <div>
-              <Styled.Label className="label">Time End:</Styled.Label>
-              <Styled.InputData
-                type="time"
-                name="timeEnd"
-                onChange={handleChange}
-                value={formData.timeEnd}
-              />
-            </div>
-          </div>
-          <div style={{ display: "flex", marginTop: "20px" }}>
             <div>
               <Styled.Label className="label">Set Time:</Styled.Label>
               <Styled.Select className="input-dataa" name="type" value={selectedOptionStatus} onChange={handleSelectChangeStatus}>
@@ -129,6 +116,30 @@ const  AddUserForm = ({ closeModal }) => {
                 ))}
               </Styled.Select>
             </div>
+            
+          </div>
+          <div style={{ display: "flex", marginTop: "20px" }}>
+          <div>
+              <Styled.Label className="label">Time Start:</Styled.Label>
+              <Styled.InputData
+                type="time"
+                name="timeStart"
+                onChange={handleChange}
+                value={formData.timeStart}
+              />
+            </div>
+            <div>
+              <Styled.Label className="label">Time End:</Styled.Label>
+              <Styled.InputData
+                type="time"
+                name="timeEnd"
+                onChange={handleChange}
+                value={formData.timeEnd}
+              />
+            </div>
+          </div>
+          <div style={{ display: "flex", marginTop: "20px" }}>
+
           </div>
         </Styled.MainForm>
         <Styled.SubmitForm type="submit">
