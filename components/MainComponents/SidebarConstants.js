@@ -38,7 +38,7 @@ export const sideItemsCoach = [
     {
         href: "/coaches",
         title: "Schedule",
-        image: dashboardSVG,
+        image: coachSVG,
         imageWhite: coachWhiteSVG,
 
     },
@@ -51,7 +51,7 @@ export const sideItemsCoach = [
     {
         href: "/privateBookings",
         title: "Private Booking",
-        image: dashboardSVG,
+        image: gymnastSVG,
         imageWhite: gymnastWhiteSVG,
     },
 

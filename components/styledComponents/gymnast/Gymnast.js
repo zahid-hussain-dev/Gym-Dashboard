@@ -8,25 +8,29 @@ export const FormContainer = styled.div`
 export const Header = styled.div`
 display:flex;
 width:50%;
+justify-content: center;
 background-color:gray;
 border-radius:10px;
-padding-left:25px;
+// padding-left:25px;
+align-items:center;
 `;
-export const  LabelHeader = styled.div`
+export const LabelHeader = styled.div`
 color: #d5b93b;
 width:30%;
 `;
-export const  Wrapper = styled.div`
+export const Wrapper = styled.div`
 color: #d5b93b;
 display:flex;
 justify-content: space-between;
 align-items:center;
 width:60%;
+
 `;
 
 export const AddChildWrapper = styled.div`
   display: flex;
   justify-content: center;
+  align-item:center;
   margin-top: 50px;
 
 `;
@@ -35,12 +39,12 @@ export const AddChildButton = styled.button`
   border: none;
   background-color: #d5b93b;
   color: white;
-  padding: 8px;
   border-radius: 5px;
   cursor: pointer;
-  width: 80px;
-  height: 30px;
-  margin-top: 9px;
+  width: 23%;
+  height:30px;
+  font-size:0.7vw;
+
   
 `;
 
@@ -57,7 +61,7 @@ export const SecondForm = styled.div`
   margin-left: 20%;
   margin-top: 30px;
   border-radius: 10px;
-  height:200px;
+  // height:200px;
 `;
 
 export const SubmitButton = styled.button`
@@ -78,14 +82,15 @@ export const InputData = styled.input`
   padding: 6px;
   border-radius: 2px;
   border: none;
-  margin-left: 20px;
-  width: 135px;
+  // width: 135px;
+  width:65%;
 `;
 
 export const DropdownContainer = styled.div`
   display: flex;
   align-items: center;
   margin: 10px;
+  margin-left:0px;
 `;
 
 export const CenteredDropdownContainer = styled(DropdownContainer)`
@@ -143,7 +148,7 @@ export const TableRow2 = styled.tr` {
     color:#d5b93b;
   }
 `
-;
+  ;
 export const TableCell = styled.td`
   padding: 10px;
   background-color: black;

@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Scheduler } from "@aldabil/react-scheduler";
 import { EVENTS } from "../../components/MainComponents/Events";
-import { Button } from '../../components/styledComponents/button/Button';
+import { Button, ViewButton } from '../../components/styledComponents/button/Button';
 import * as Style from "../../components/styledComponents/coachesStyle/coaches";
 import AddCoache from "../../components/styledComponents/modal/AddCoache"
 import { useRouter } from 'next/navigation';
 import { axiosInterceptor } from '../../axios/axiosInterceptor';
+import Loader from '../../components/styledComponents/loader/loader';
 import swal from "sweetalert";
+import moment from "moment";
 
 const index = () => {
     const [role, setRole] = useState("");
@@ -14,7 +16,7 @@ const index = () => {
     const [showModal2, setShowModal2] = useState(false);
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(false);
-
+    const [allCoaches, setAllCoaches] = useState([]);
     const handleButtonClick2 = () => {
         setShowModal2(true);
         console.log("modal click")
@@ -22,6 +24,60 @@ const index = () => {
 
     const closeModal2 = () => {
         setShowModal2(false);
+    };
+    const handleConfirm = async (event, action) => {
+        console.log("handleConfirm =", action, event.title);
+
+        if (action === "edit") {
+            /** PUT event to remote DB */
+        } else if (action === "create") {
+            /**POST event to remote DB */
+            const Payload = {
+                from: moment(event.start).format('YYYY-MM-DD HH:mm:ss'),
+                to: moment(event.end).format('YYYY-MM-DD HH:mm:ss'),
+                type: "PRIVATE",
+            }
+            console.log("payload", Payload)
+
+            try {
+                setLoading(true)
+                const res = await axiosInterceptor().post(
+                    `/api/coach/open/slots`,
+                    Payload,
+                );
+                console.log("responsse of schedule create", res)
+                swal('Success!', res.data.message, 'success')
+                setLoading(false);
+                return { ...event, event_id: event.event_id || Math.random() }
+            } catch (error) {
+                setLoading(false)
+                console.log("error", error)
+                swal('Oops!', error.data.message, 'error')
+                console.log(error)
+                throw error
+            }
+
+        }
+        // setTimeout(() => {
+        //   res({
+        //     ...event,
+        //     event_id: event.event_id || Math.random()
+        //   });
+        // }, 1000);
+
+        // const isFail = Math.random() > 0.6;
+        // // Make it slow just for testing
+        // console.log("isFail", isFail)
+        // setTimeout(() => {
+        //   if (isFail) {
+        //     rej("Ops... Faild");
+        //   } else {
+        //     res({
+        //       ...event,
+        //       event_id: event.event_id || Math.random()
+        //     });
+        //   }
+        // }, 1000)
     };
     useEffect(() => {
         // Perform localStorage action
@@ -40,7 +96,7 @@ const index = () => {
         const lastDay = new Date(
             today.setDate(today.getDate() - today.getDay() + 6),
         );
-        console.log("firstDay",firstDay.toISOString().slice(0, 10))
+        console.log("firstDay", firstDay.toISOString().slice(0, 10))
 
         const Payload = {
             from: "2023-07-25",
@@ -52,7 +108,6 @@ const index = () => {
             console.log("api calling for schedule")
             const res = await axiosInterceptor().post(
                 `/api/coach/my/schedule`,
-                // { params: Payload }
                 Payload,
             );
             console.log("responsse of schedule", res)
@@ -73,12 +128,33 @@ const index = () => {
             console.log(error)
         }
     }
+    const getAllCoaches = async () => {
+        try {
+            setLoading(true)
+            console.log("api calling for all coaches")
+            const res = await axiosInterceptor().get(
+                `/api/coach/`,
+
+            );
+            console.log("responsse of all coaches", res)
+            setAllCoaches(res?.data?.data)
+            setLoading(false)
+        } catch (error) {
+            setLoading(false)
+            // swal('Oops!', error.data.message, 'error')
+            console.log(error)
+        }
+    }
     useEffect(() => {
         if (role == "coach") {
             console.log("here")
             getCoachScedule();
         }
-    }, [role])
+        if (role == "admin") {
+            console.log("here in admin")
+            getAllCoaches();
+        }
+    }, [role, showModal2])
 
     const tableCell = [
         { id: 1, gym: 'Gym1', coach: 'mudasir' },
@@ -104,14 +180,13 @@ const index = () => {
                                 </Style.TableRow>
                             </thead>
                             <tbody>
-                                {tableCell.map((data, index) => (
+                                {allCoaches && allCoaches.map((data, index) => (
                                     <Style.TableRow key={index}>
-                                        <Style.TableCell>{data.coach}</Style.TableCell>
-                                        <Style.TableCell>{data.gym}</Style.TableCell>
+                                        <Style.TableCell>{data.userName}</Style.TableCell>
+                                        <Style.TableCell>{data?.gym.name}</Style.TableCell>
                                         <Style.TableCell>
                                             {role === "admin" &&
-
-                                                <button onClick={() => { router.push(`/coaches/view/${data.id}`) }}>View</button>
+                                                <ViewButton onClick={() => { router.push(`/coaches/view/${data?.id}`) }}>View</ViewButton>
                                             }
                                         </Style.TableCell>
 
@@ -136,6 +211,7 @@ const index = () => {
                                     // loading={true}
                                     onSelectedDateChange={false}
                                     events={events}
+                                    onConfirm={handleConfirm}
                                     week={{
                                         weekDays: [0, 1, 2, 3, 4, 5, 6],
                                         weekStartOn: 0,
@@ -149,6 +225,8 @@ const index = () => {
                     </Style.MainDiv>
                 </React.Fragment>
             }
+            <Loader isLoading={loading}></Loader>
+
         </div>
     )
 }

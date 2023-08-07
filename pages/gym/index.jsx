@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { Scheduler } from "@aldabil/react-scheduler";
 import { EVENTS } from "../../components/MainComponents/Events";
-import { Button } from '../../components/styledComponents/button/Button';
+import { Button, ViewButton } from '../../components/styledComponents/button/Button';
 import AddGymSchedule from '../../components/styledComponents/modal/AddGymSchedule';
 import * as Style from "../../components/styledComponents/coachesStyle/coaches";
 import { useRouter } from 'next/navigation';
 import { axiosInterceptor } from '../../axios/axiosInterceptor';
+import Loader from '../../components/styledComponents/loader/loader';
 import swal from "sweetalert";
 import moment from "moment";
 
@@ -57,63 +58,56 @@ const index = () => {
 
   const handleConfirm = async (event, action) => {
     console.log("handleConfirm =", action, event.title);
-    console.log("event", event)
-    /**
-     * Make sure to return 4 mandatory fields:
-     * event_id: string|number
-     * title: string
-     * start: Date|string
-     * end: Date|string
-     * ....extra other fields depend on your custom fields/editor properties
-     */
-    // Simulate http request: return added/edited event
-    return new Promise((res, rej) => {
-      if (action === "edit") {
-        /** PUT event to remote DB */
-      } else if (action === "create") {
-        /**POST event to remote DB */
 
-        console.log("new Date(event.start)Date String()", new Date(event.start).toDateString())
-        console.log("event", new Date(event.start).toISOString().slice(0, 10), new Date(event.start).toISOString().slice(11, 19))
-        var dateChangedStart = new Date(event.start).toISOString().slice(0, 10).replace(/\//g, "-");
-        console.log("datechnage", dateChangedStart)
-        var dateChangedEnd = new Date(event.end).toISOString().slice(0, 10).replace(/\//g, "-");
-        console.log("datechnage", dateChangedEnd)
-        const Payload = {
-          from: dateChangedStart + " " + new Date(event.start).toISOString().slice(11, 19),
-          to: dateChangedEnd + " " + new Date(event.end).toISOString().slice(11, 19),
-        }
-        console.log("payload", Payload)
-        // try {
-        //   setLoading(true)
-        //   const res = axiosInterceptor().post(
-        //     `/api/gym/schedule`,
-        //     Payload,
-        //   );
-        //   console.log("responsse of login", res)
-        //   swal('Success!', res.data.message, 'success')
-        //   setLoading(false)
-        // } catch (error) {
-        //   setLoading(false)
-        //   // swal('Oops!', error.data.message, 'error')
-        //   console.log(error)
-        // }
+    if (action === "edit") {
+      /** PUT event to remote DB */
+    } else if (action === "create") {
+      /**POST event to remote DB */
+      const Payload = {
+        from: moment(event.start).format('YYYY-MM-DD HH:mm:ss'),
+        to: moment(event.end).format('YYYY-MM-DD HH:mm:ss'),
+      }
+      console.log("payload", Payload)
 
+      try {
+        setLoading(true)
+        const res = await axiosInterceptor().post(
+          `/api/gym/schedule`,
+          Payload,
+        );
+        console.log("responsse of schedule create", res)
+        swal('Success!', res.data.message, 'success')
+        setLoading(false);
+        return { ...event, event_id: event.event_id || Math.random() }
+      } catch (error) {
+        setLoading(false)
+        console.log("error", error)
+        swal('Oops!', error.data.message, 'error')
+        console.log(error)
+        throw error
       }
 
-      const isFail = Math.random() > 0.6;
-      // Make it slow just for testing
-      setTimeout(() => {
-        if (isFail) {
-          rej("Ops... Faild");
-        } else {
-          res({
-            ...event,
-            event_id: event.event_id || Math.random()
-          });
-        }
-      }, 3000);
-    });
+    }
+    // setTimeout(() => {
+    //   res({
+    //     ...event,
+    //     event_id: event.event_id || Math.random()
+    //   });
+    // }, 1000);
+
+    // const isFail = Math.random() > 0.6;
+    // // Make it slow just for testing
+    // console.log("isFail", isFail)
+    // setTimeout(() => {
+    //   if (isFail) {
+    //     rej("Ops... Faild");
+    //   } else {
+    //     res({
+    //       ...event,
+    //       event_id: event.event_id || Math.random()
+    //     });
+    //   }
+    // }, 1000)
   };
 
   useEffect(() => {
@@ -121,7 +115,7 @@ const index = () => {
 
       getGymSchedule();
     }
-  }, [role])
+  }, [role, showModal])
 
   const tableCell = [
     { id: 1, timeSlote: '9 - 10', name: 'Gym1', },
@@ -159,9 +153,9 @@ const index = () => {
                   <Style.TableCell>{data.name}</Style.TableCell>
                   <Style.TableCell>{data.timeSlote}</Style.TableCell>
                   <Style.TableCell>
-                    <button onClick={() => {
+                    <ViewButton onClick={() => {
                       { router.push(`/gym/view/${data.id}`) }
-                    }}>View</button>
+                    }}>View</ViewButton>
                   </Style.TableCell>
 
                 </Style.TableRow>
@@ -194,6 +188,8 @@ const index = () => {
 
         </div>
       }
+      <Loader isLoading={loading}></Loader>
+
     </div>
   )
 }

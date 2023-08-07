@@ -3,6 +3,7 @@ import Base64 from '../utils/base64';
 // import {getCurrentUser} from './user';
 // const base_URL = "https://devapi.assetplanet.com";
 const base_URL= "http://104.197.218.96:3000";
+// const base_URL = "http://192.168.100.18:3000";
 
 
 const BackendURL = base_URL;
@@ -13,10 +14,10 @@ const basicCreds = Base64.btoa(
 );
 
 const currentUser = async () => {
-  let data = localStorage.getItem("userLoginToken");
-  if (data) {
-    return data;
-  }
+    let data = localStorage.getItem("userLoginToken");
+    if (data) {
+        return data;
+    }
 };
 const axiosInterceptor = () => {
     const responseHandler = response => {

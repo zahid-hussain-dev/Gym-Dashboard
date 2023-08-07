@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { Button } from '../../components/styledComponents/button/Button';
+import { Button, AcceptButton, RejectButton } from '../../components/styledComponents/button/Button';
 import Image from "next/image";
 import * as Style from '../../components/styledComponents/gymnast/Gymnast';
+import { axiosInterceptor } from '../../axios/axiosInterceptor';
+import Loader from '../../components/styledComponents/loader/loader';
+import moment from "moment";
+import swal from "sweetalert";
 
 const index = () => {
     const [role, setRole] = useState("");
@@ -10,29 +14,62 @@ const index = () => {
         const userRole = JSON.parse(localStorage.getItem("Userrole"))
         setRole(userRole);
     }, [])
-    const options = [
-        { value: 'option1', label: 'Saim' },
-        { value: 'option2', label: 'ahsan' },
-        { value: 'option3', label: 'hammad' },
-        // Add more options here as needed
-    ];
-    const option1 = [
-        { value: 'option1', label: 'Wasiq' },
-        { value: 'option2', label: 'Shekeel' },
-        { value: 'option3', label: 'Zahid' },
-        // Add more options here as needed
-    ];
-    const option2 = [
-        { value: 'option1', label: '9 - 10' },
-        { value: 'option2', label: '10 - 11' },
-        { value: 'option3', label: '11 - 12' },
-        // Add more options here as needed
-    ];
-    const [selectedOption, setSelectedOption] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [privateBookings, setPrivateBookings] = useState(false);
 
-    const handleSelectChange = (event) => {
-        setSelectedOption(event.target.value);
-    };
+
+    const getPrivateBookings = async () => {
+        try {
+            setLoading(true)
+            console.log("api calling for private")
+            const res = await axiosInterceptor().get(
+                `/api/bookings`,
+            );
+            setLoading(false)
+            console.log("responsse of Private", res)
+            setPrivateBookings(res.data.data)
+        } catch (error) {
+            setLoading(false)
+            swal('Oops!', error.data.message, 'error')
+            console.log(error)
+        }
+    }
+    const handleApprove = async (id) => {
+        try {
+            setLoading(true)
+            console.log("api calling for schedule")
+            const res = await axiosInterceptor().put(
+                // `/api/bookings`,
+                `/api/bookings?id=${id}&status=ACCEPT`
+
+            );
+            setLoading(false)
+            console.log("responsse of Approved", res)
+        } catch (error) {
+            setLoading(false)
+            swal('Oops!', error.data.message, 'error')
+            console.log(error)
+        }
+    }
+    const handleReject = async (id) => {
+        try {
+            setLoading(true)
+            console.log("api calling for schedule")
+            const res = await axiosInterceptor().put(
+                `/api/bookings?id=${id}&status=REJECT`,
+            );
+            setLoading(false)
+            console.log("responsse of Reject", res)
+        } catch (error) {
+            setLoading(false)
+            swal('Oops!', error.data.message, 'error')
+            console.log(error)
+        }
+    }
+    useEffect(() => {
+        getPrivateBookings();
+    }, [])
+
     const tableCell = [
         { timeSlote: '9 - 10', client: 'wasiq' },
         { timeSlote: '10 - 11', client: 'shakeel' },
@@ -51,23 +88,44 @@ const index = () => {
                         </Style.TableRow>
                     </thead>
                     <tbody>
-                        {tableCell.map((data, index) => (
+                        {privateBookings && privateBookings.map((data, index) => (
                             <Style.TableRow key={index}>
-                                <Style.TableCell>{data.client}</Style.TableCell>
-                                <Style.TableCell>{data.timeSlote}</Style.TableCell>
-                                <Style.TableCell><button onClick={() => {
-                                    console.log("child", data.client)
+                                <Style.TableCell>{data.coach.userName}</Style.TableCell>
+                                <Style.TableCell>{new Date(data?.from).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} {"-"} {new Date(data?.to).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} </Style.TableCell>
+                                {data.status === "PENDING"
+                                    ?
+                                    <Style.TableCell>
+                                        <AcceptButton onClick={() => {
+                                            handleApprove(data.id);
 
-                                }}>Approve</button> <button onClick={() => {
-                                    console.log("child", data.client)
+                                        }}>Accept</AcceptButton>
+                                        <RejectButton onClick={() => {
+                                            handleReject(data.id);
 
-                                }}>Reject</button></Style.TableCell>
+                                        }}>Reject</RejectButton>
+                                    </Style.TableCell>
+                                    :
+                                    <Style.TableCell>
+                                        <AcceptButton
+                                            disabled={true}
+                                            onClick={() => {
+                                                console.log("child", data.id)
+                                                // handleApprove(data.id);
+
+                                            }}>{data.status}ED</AcceptButton>
+
+                                    </Style.TableCell>
+
+                                }
 
                             </Style.TableRow>
                         ))}
+
                     </tbody>
                 </Style.TableWrapper>
             </Style.TableContainer>
+            <Loader isLoading={loading}></Loader>
+
         </div>
     )
 }
