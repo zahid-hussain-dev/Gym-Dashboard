@@ -5,7 +5,7 @@ import close from "../../../public/assests/SVGs/close-svgrepo-com (2).svg";
 import { axiosInterceptor } from '../../../axios/axiosInterceptor';
 import swal from "sweetalert";
 
-const AddUserForm = ({ closeModal }) => {
+const AddUserForm = ({ closeModal, id }) => {
   const [formData, setFormData] = useState({
     timeStart: '',
     timeEnd: '',
@@ -13,6 +13,7 @@ const AddUserForm = ({ closeModal }) => {
     type: '',
   });
   const [loading, setLoading] = useState(false);
+  const [events, setEvents] = useState([]);
 
   const option2 = [
     { value: '9 - 10', label: '9 - 10' },
@@ -53,11 +54,27 @@ const AddUserForm = ({ closeModal }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const Payload = {
-      from: formData.date + " " + formData.timeStart,
-      to: formData.date + " " + formData.timeEnd,
-      type: formData.type,
+    let Payload = {};
+    if (id) {
+      Payload = {
+        from: formData.date + " " + formData.timeStart,
+        to: formData.date + " " + formData.timeEnd,
+        type: formData.type,
+        coach: id,
+
+      }
+      console.log("with id")
     }
+    else {
+      Payload = {
+        from: formData.date + " " + formData.timeStart,
+        to: formData.date + " " + formData.timeEnd,
+        type: formData.type,
+
+      }
+      console.log("without id")
+    }
+
     console.log("Payload", Payload)
     try {
       setLoading(true)

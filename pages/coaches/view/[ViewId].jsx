@@ -67,61 +67,109 @@ const ViewId = () => {
             console.log(error)
         }
     }
-    useEffect(() => {
+    const handleConfirm = async (event, action) => {
+        console.log("handleConfirm =", action, event.title);
 
-        getCoachScedule();
-    }, [showModal2])
+        if (action === "edit") {
+            /** PUT event to remote DB */
+        } else if (action === "create") {
+            /**POST event to remote DB */
+            const Payload = {
+                from: moment(event.start).format('YYYY-MM-DD HH:mm:ss'),
+                to: moment(event.end).format('YYYY-MM-DD HH:mm:ss'),
+                type: "PUBLIC",
+                coach: Id,
+            }
+            console.log("payload", Payload)
+
+            try {
+                setLoading(true)
+                const res = await axiosInterceptor().post(
+                    `/api/coach/open/slots`,
+                    Payload,
+                );
+                console.log("responsse of schedule create", res)
+                swal('Success!', res.data.message, 'success')
+                setLoading(false);
+                return { ...event, event_id: event.event_id || Math.random() }
+            } catch (error) {
+                setLoading(false)
+                console.log("error", error)
+                swal('Oops!', error.data.message, 'error')
+                console.log(error)
+                throw error
+            }
+
+        }
+    };
+    
+    useEffect(() => {
+        if (Id) {
+
+            getCoachScedule();
+        }
+
+    }, [showModal2, Id])
     const closeModal2 = () => {
         setShowModal2(false);
         // const modalElement = document.getElementById('modal');
         // modalElement.style.filter = 'blur(5px)';
     };
-    const tableCell = [
-        { id: 1, timeSlote: '9 - 10', child: 'wasiq', coach: 'mudasir' },
-        { id: 2, timeSlote: '10 - 11', child: 'shakeel', coach: 'rohab' },
-    ];
     return (
         <div>
-            ViewId details {Id}
             <React.Fragment>
                 <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} onClick={handleButtonClick2}>Add Schedule</Button>
-                {showModal2 && <AddCoache closeModal={closeModal2} />}
+                {showModal2 && <AddCoache closeModal={closeModal2} id={Id} />}
                 {showModal2 ?
                     <Style.MainDiv>
                         <Style.Schedular style={{ filter: showModal2 ? 'blur(5px)' : 'none' }} >
                             <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem" }}>Schedule </div>
-                            <Scheduler
-                                // height={300}
-                                // loading={true}
-                                onSelectedDateChange={false}
-                                events={EVENTS}
-                                week={{
-                                    weekDays: [0, 1, 2, 3, 4, 5, 6],
-                                    weekStartOn: 6,
-                                    startHour: 9,
-                                    endHour: 24
-                                    // step: 30
-                                }}
-                            />
+                            {events.length > 0 ?
+                                <Scheduler
+                                    // height={300}
+                                    // loading={true}
+                                    onSelectedDateChange={false}
+                                    events={events}
+                                    onConfirm={handleConfirm}
+                                    week={{
+                                        weekDays: [0, 1, 2, 3, 4, 5, 6],
+                                        weekStartOn: 6,
+                                        startHour: 9,
+                                        endHour: 24
+                                        // step: 30
+                                    }}
+                                />
+
+                                :
+                                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem" }}>No Schedule Exist for this Coach {Id} </div>
+                            }
                         </Style.Schedular>
+
                     </Style.MainDiv>
                     :
                     <Style.MainDiv2>
                         <Style.Schedular >
                             <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem" }}>Schedule </div>
-                            <Scheduler
-                                // height={300}
-                                // loading={true}
-                                onSelectedDateChange={false}
-                                events={EVENTS}
-                                week={{
-                                    weekDays: [0, 1, 2, 3, 4, 5, 6],
-                                    weekStartOn: 6,
-                                    startHour: 9,
-                                    endHour: 24
-                                    // step: 30
-                                }}
-                            />
+                            {events.length > 0 ?
+
+                                <Scheduler
+                                    // height={300}
+                                    // loading={true}
+                                    onSelectedDateChange={false}
+                                    events={events}
+                                    onConfirm={handleConfirm}
+                                    week={{
+                                        weekDays: [0, 1, 2, 3, 4, 5, 6],
+                                        weekStartOn: 6,
+                                        startHour: 9,
+                                        endHour: 24
+                                        // step: 30
+                                    }}
+                                />
+                                :
+                                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem" }}>No Schedule Exist for this Coach {Id} </div>
+
+                            }
                         </Style.Schedular>
                     </Style.MainDiv2>}
             </React.Fragment>

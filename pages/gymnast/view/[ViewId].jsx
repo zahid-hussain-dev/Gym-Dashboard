@@ -1,5 +1,6 @@
 import React from 'react'
 import { useRouter } from 'next/router';
+import { Button, RejectButton,AcceptButton } from '../../../components/styledComponents/button/Button';
 import * as Style from '../../../components/styledComponents/gymnast/Gymnast';
 
 const ViewId = () => {
@@ -27,8 +28,7 @@ const ViewId = () => {
                             <Style.TableRow key={index}>
                                 <Style.TableCell>{data.child}</Style.TableCell>
                                 <Style.TableCell>
-                                    <button onClick={() => { console.log(data.id) }}>Delete</button>
-                                    <button onClick={() => { console.log(data.id) }}>Update</button>
+                                    <RejectButton onClick={() => { console.log(data.id) }}>Delete</RejectButton>
                                 </Style.TableCell>
 
                             </Style.TableRow>
@@ -55,7 +55,7 @@ const ViewId = () => {
                                 <Style.TableCell>{data.coach}</Style.TableCell>
                                 <Style.TableCell>{data.timeSlote}</Style.TableCell>
                                 <Style.TableCell>
-                                    <button onClick={() => { console.log(data.id) }}>Cancel</button>
+                                    <AcceptButton onClick={() => { console.log(data.id) }}>Cancel</AcceptButton>
                                 </Style.TableCell>
 
                             </Style.TableRow>

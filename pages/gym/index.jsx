@@ -16,6 +16,7 @@ const index = () => {
   const [loading, setLoading] = useState(false);
   const [events, setEvents] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [allGyms, setAllGyms] = useState([]);
   const handleButtonClick = () => {
     setShowModal(true);
     console.log("modal click")
@@ -55,7 +56,22 @@ const index = () => {
       console.log(error)
     }
   }
-
+  const getAllGym = async () => {
+    try {
+      setLoading(true)
+      console.log("api calling for all Gyms")
+      const res = await axiosInterceptor().get(
+        `/api/gym/`,
+      );
+      console.log("responsse of all Gyms", res)
+      setAllGyms(res?.data?.data)
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      // swal('Oops!', error.data.message, 'error')
+      console.log(error)
+    }
+  }
   const handleConfirm = async (event, action) => {
     console.log("handleConfirm =", action, event.title);
 
@@ -115,6 +131,9 @@ const index = () => {
 
       getGymSchedule();
     }
+    if (role == "admin") {
+      getAllGym();
+    }
   }, [role, showModal])
 
   const tableCell = [
@@ -147,11 +166,11 @@ const index = () => {
               </Style.TableRow>
             </thead>
             <tbody>
-              {tableCell.map((data, index) => (
+              {allGyms && allGyms.map((data, index) => (
                 <Style.TableRow key={index}>
-                  <Style.TableCell>{data.id}</Style.TableCell>
-                  <Style.TableCell>{data.name}</Style.TableCell>
-                  <Style.TableCell>{data.timeSlote}</Style.TableCell>
+                  <Style.TableCell>{data?.id}</Style.TableCell>
+                  <Style.TableCell>{data?.name}</Style.TableCell>
+                  <Style.TableCell>{data?.timeSlote}</Style.TableCell>
                   <Style.TableCell>
                     <ViewButton onClick={() => {
                       { router.push(`/gym/view/${data.id}`) }

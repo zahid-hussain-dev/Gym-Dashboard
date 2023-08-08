@@ -5,7 +5,7 @@ import close from "../../../public/assests/SVGs/close-svgrepo-com (2).svg";
 import { axiosInterceptor } from '../../../axios/axiosInterceptor';
 import swal from "sweetalert";
 
-const AddGymSchedule = ({ closeModal }) => {
+const AddGymSchedule = ({ closeModal, id }) => {
     const [formData, setFormData] = useState({
         datefrom: "",
         dateto: "",
@@ -23,10 +23,21 @@ const AddGymSchedule = ({ closeModal }) => {
     };
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const Payload = {
-            from: formData.datefrom + " " + formData.timefrom,
-            to: formData.datefrom + " " + formData.timeto,
+        let Payload = {};
+        if (id) {
+            Payload = {
+                from: formData.datefrom + " " + formData.timefrom,
+                to: formData.datefrom + " " + formData.timeto,
+                gym: id,
+            }
         }
+        else {
+            Payload = {
+                from: formData.datefrom + " " + formData.timefrom,
+                to: formData.datefrom + " " + formData.timeto,
+            }
+        }
+
         try {
             setLoading(true)
             const res = await axiosInterceptor().post(

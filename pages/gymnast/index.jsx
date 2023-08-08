@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button,ViewButton } from '../../components/styledComponents/button/Button';
+import { Button, ViewButton } from '../../components/styledComponents/button/Button';
 import Image from "next/image";
 import * as Style from '../../components/styledComponents/gymnast/Gymnast';
 import { useRouter } from 'next/navigation';
@@ -26,10 +26,19 @@ const index = () => {
     // Perform localStorage action
     const userRole = JSON.parse(localStorage.getItem("Userrole"))
     setRole(userRole);
-    getChildren();
-    getCoach();
+
   }, [])
 
+  useEffect(() => {
+    if (role == "gymnast") {
+      getChildren();
+      getCoach();
+    }
+    if (role == "admin") {
+      console.log("admin side")
+      // getAllGym();
+    }
+  }, [role])
   useEffect(() => {
     if (bookingCoach && bookingDate) {
       getAvailableTimeSlots();
@@ -267,7 +276,7 @@ const index = () => {
                   <Style.TableCell>{data.client}</Style.TableCell>
                   <Style.TableCell>{data.gym}</Style.TableCell>
                   <Style.TableCell>
-                    <button onClick={() => { router.push(`/gymnast/view/${data.id}`) }}>View</button></Style.TableCell>
+                    <ViewButton onClick={() => { router.push(`/gymnast/view/${data.id}`) }}>View</ViewButton></Style.TableCell>
 
                 </Style.TableRow>
               ))}
