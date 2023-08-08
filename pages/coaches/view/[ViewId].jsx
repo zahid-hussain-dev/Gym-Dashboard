@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Scheduler } from "@aldabil/react-scheduler";
 import { EVENTS } from "../../../components/MainComponents/Events";
-import { Button } from '../../../components/styledComponents/button/Button';
+import { Button, AcceptButton,RejectButton } from '../../../components/styledComponents/button/Button';
 import * as Style from "../../../components/styledComponents/coachesStyle/coaches";
 import AddCoache from '../../../components/styledComponents/modal/AddCoache';
 import { axiosInterceptor } from '../../../axios/axiosInterceptor';
@@ -14,6 +14,8 @@ const ViewId = () => {
     const [loading, setLoading] = useState(false);
 
     const [events, setEvents] = useState([]);
+    const [bookings, setBookings] = useState([]);
+
 
     const handleButtonClick2 = () => {
         setShowModal2(true);
@@ -67,6 +69,22 @@ const ViewId = () => {
             console.log(error)
         }
     }
+    const getCoachBookings = async (id) => {
+        try {
+            setLoading(true)
+            console.log("api calling for schedule")
+            const res = await axiosInterceptor().get(
+                `/api/bookings/all?coach=${router.query.ViewId}`,
+            );
+            console.log("responsse of coach bookings", res.data.data)
+            setBookings(res.data.data);
+            setLoading(false)
+        } catch (error) {
+            setLoading(false)
+            swal('Oops!', error.data.message, 'error')
+            console.log(error)
+        }
+    }
     const handleConfirm = async (event, action) => {
         console.log("handleConfirm =", action, event.title);
 
@@ -102,11 +120,41 @@ const ViewId = () => {
 
         }
     };
-    
+    const handleApprove = async (id) => {
+        try {
+            setLoading(true)
+            console.log("api calling for schedule")
+            const res = await axiosInterceptor().put(
+                `/api/bookings?id=${id}&status=ACCEPT`
+
+            );
+            setLoading(false)
+            console.log("responsse of Approved", res)
+        } catch (error) {
+            setLoading(false)
+            swal('Oops!', error.data.message, 'error')
+            console.log(error)
+        }
+    }
+    const handleReject = async (id) => {
+        try {
+            setLoading(true)
+            console.log("api calling for schedule")
+            const res = await axiosInterceptor().put(
+                `/api/bookings?id=${id}&status=CANCEL`,
+            );
+            setLoading(false)
+            console.log("responsse of Reject", res)
+        } catch (error) {
+            setLoading(false)
+            swal('Oops!', error.data.message, 'error')
+            console.log(error)
+        }
+    }
     useEffect(() => {
         if (Id) {
-
             getCoachScedule();
+            getCoachBookings();
         }
 
     }, [showModal2, Id])
@@ -115,6 +163,10 @@ const ViewId = () => {
         // const modalElement = document.getElementById('modal');
         // modalElement.style.filter = 'blur(5px)';
     };
+    const tableCell = [
+        { id: 1, timeSlote: '9 - 10', child: 'wasiq', coach: 'mudasir' },
+        { id: 2, timeSlote: '10 - 11', child: 'shakeel', coach: 'rohab' },
+    ];
     return (
         <div>
             <React.Fragment>
@@ -171,9 +223,66 @@ const ViewId = () => {
 
                             }
                         </Style.Schedular>
+
                     </Style.MainDiv2>}
             </React.Fragment>
+            <Style.SubTitle style={{ marginTop: "1rem" }}>Booking Listing</Style.SubTitle>
+            <Style.TableContainer>
+                <Style.TableWrapper>
+                    <thead>
+                        <Style.TableRow>
+                            <Style.TableHead>CHILD</Style.TableHead>
+                            <Style.TableHead>COACH</Style.TableHead>
+                            <Style.TableHead>TIME SLOT</Style.TableHead>
+                            <Style.TableHead>ACTIONS</Style.TableHead>
 
+                        </Style.TableRow>
+                    </thead>
+                    <tbody>
+                        {bookings && bookings.map((data, index) => (
+                            <Style.TableRow key={index}>
+                                <Style.TableCell>{data.childrenId}</Style.TableCell>
+                                <Style.TableCell>{data.coachId}</Style.TableCell>
+                                <Style.TableCell>{new Date(data?.from).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} {"-"} {new Date(data?.to).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} </Style.TableCell>
+                                {data.status === "PENDING"
+                                    &&
+                                    <Style.TableCell>
+                                        <AcceptButton onClick={() => {
+                                            handleApprove(data.id);
+
+                                        }}>Accept</AcceptButton>
+                                        <RejectButton onClick={() => {
+                                            handleReject(data.id);
+
+                                        }}>Cancel</RejectButton>
+                                    </Style.TableCell>
+                                }
+                                {data.status === "ACCEPT"
+                                    &&
+                                    <Style.TableCell>
+                                        <RejectButton onClick={() => {
+                                            handleReject(data.id);
+
+                                        }}>Cancel</RejectButton>
+                                    </Style.TableCell>
+                                }
+                                {data.status === "CANCEL"
+                                    &&
+                                    <Style.TableCell>
+                                        <AcceptButton onClick={() => {
+                                            handleApprove(data.id);
+
+                                        }}>Accept</AcceptButton>
+                                    </Style.TableCell>
+                                }
+
+
+                            </Style.TableRow>
+                        ))}
+                        
+                    </tbody>
+                </Style.TableWrapper>
+            </Style.TableContainer>
         </div>
     )
 }
