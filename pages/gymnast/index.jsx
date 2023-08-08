@@ -21,6 +21,7 @@ const index = () => {
   const router = useRouter();
   const [childrens, setChildrens] = useState([]);
   const [coaches, setCoaches] = useState([]);
+  const [allGymnast, setAllGymnast] = useState([]);
 
   useEffect(() => {
     // Perform localStorage action
@@ -28,7 +29,22 @@ const index = () => {
     setRole(userRole);
 
   }, [])
-
+  const getAllGymnast = async () => {
+    try {
+      setLoading(true)
+      console.log("api calling for all Gymnast")
+      const res = await axiosInterceptor().get(
+        `/api/gymnast/`,
+      );
+      console.log("responsse of all Gymnast", res)
+      setAllGymnast(res?.data?.rows)
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      // swal('Oops!', error.data.message, 'error')
+      console.log(error)
+    }
+  }
   useEffect(() => {
     if (role == "gymnast") {
       getChildren();
@@ -36,7 +52,7 @@ const index = () => {
     }
     if (role == "admin") {
       console.log("admin side")
-      // getAllGym();
+      getAllGymnast();
     }
   }, [role])
   useEffect(() => {
@@ -239,7 +255,7 @@ const index = () => {
                   </div>
 
                 </Style.CenteredDropdownContainer>
-                <div>
+                <div style={{    display: "flex",flexDirection: "column", justifyContent: "center",alignItems: "center", marginLeft:"6%"}}>
                   <Style.Label className="label">Time Slotes:</Style.Label>
                   <Style.Select className="input-dataa" name='time' value={selectedOptionTime} onChange={handleSelectChangeTime}>
                     <option value="">Time Slotes</option>
@@ -271,15 +287,21 @@ const index = () => {
               </Style.TableRow>
             </thead>
             <tbody>
-              {tableCellAdmin.map((data, index) => (
-                <Style.TableRow key={index}>
-                  <Style.TableCell>{data.client}</Style.TableCell>
-                  <Style.TableCell>{data.gym}</Style.TableCell>
-                  <Style.TableCell>
-                    <ViewButton onClick={() => { router.push(`/gymnast/view/${data.id}`) }}>View</ViewButton></Style.TableCell>
 
+             {allGymnast && allGymnast.map((data, index) => (
+                <Style.TableRow key={index}>
+                  <Style.TableCell>{data?.id}</Style.TableCell>
+                  <Style.TableCell>{data?.firstName}{data?.lastName}</Style.TableCell>
+                  <Style.TableCell>                    
+                    <ViewButton onClick={() => {
+                      { router.push(`/gymnast/view/${data.id}`) }
+                    }}>View</ViewButton>
+                    </Style.TableCell>
+                  
                 </Style.TableRow>
               ))}
+
+              
             </tbody>
           </Style.TableWrapper>
         </Style.TableContainer>
