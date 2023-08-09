@@ -22,6 +22,7 @@ const index = () => {
   const [childrens, setChildrens] = useState([]);
   const [coaches, setCoaches] = useState([]);
   const [allGymnast, setAllGymnast] = useState([]);
+  const [gymnastBookingList, setGymnastBookingList] = useState([]);
 
   useEffect(() => {
     // Perform localStorage action
@@ -45,10 +46,27 @@ const index = () => {
       console.log(error)
     }
   }
+  const getGymnastBookingList = async (id) => {
+    try {
+      setLoading(true)
+      console.log("api calling for booking list")
+      const res = await axiosInterceptor().get(
+        `api/bookings`,
+      );
+      console.log("responsse of Booking list", res)
+      setGymnastBookingList(res?.data?.data)
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      // swal('Oops!', error.data.message, 'error')
+      console.log(error)
+    }
+  }
   useEffect(() => {
     if (role == "gymnast") {
       getChildren();
       getCoach();
+      getGymnastBookingList();
     }
     if (role == "admin") {
       console.log("admin side")
@@ -182,14 +200,6 @@ const index = () => {
       console.log(error)
     }
   }
-  const tableCell = [
-    { id: 1, timeSlote: '9 - 10', child: 'wasiq', coach: 'mudasir' },
-    { id: 2, timeSlote: '10 - 11', child: 'shakeel', coach: 'rohab' },
-  ];
-  const tableCellAdmin = [
-    { id: 1, client: 'wasiq', gym: 'Gym1' },
-    { id: 2, client: 'shakeel', gym: 'Gym2' },
-  ];
   return (
     <div>
 
@@ -280,8 +290,8 @@ const index = () => {
           <Style.TableWrapper>
             <thead>
               <Style.TableRow>
-                <Style.TableHead>CLIENT</Style.TableHead>
-                <Style.TableHead>GYM</Style.TableHead>
+                <Style.TableHead>ID</Style.TableHead>
+                <Style.TableHead>GYMNAST</Style.TableHead>
                 <Style.TableHead>ACTIONS</Style.TableHead>
 
               </Style.TableRow>
@@ -291,7 +301,7 @@ const index = () => {
              {allGymnast && allGymnast.map((data, index) => (
                 <Style.TableRow key={index}>
                   <Style.TableCell>{data?.id}</Style.TableCell>
-                  <Style.TableCell>{data?.firstName}{data?.lastName}</Style.TableCell>
+                  <Style.TableCell>{data?.firstName}{" "}{data?.lastName}</Style.TableCell>
                   <Style.TableCell>                    
                     <ViewButton onClick={() => {
                       { router.push(`/gymnast/view/${data.id}`) }
@@ -318,11 +328,11 @@ const index = () => {
               </Style.TableRow>
             </thead>
             <tbody>
-              {tableCell.map((data, index) => (
+              {gymnastBookingList && gymnastBookingList.map((data, index) => (
                 <Style.TableRow key={index}>
-                  <Style.TableCell>{data.child}</Style.TableCell>
-                  <Style.TableCell>{data.coach}</Style.TableCell>
-                  <Style.TableCell>{data.timeSlote}</Style.TableCell>
+                  <Style.TableCell>{data.childrenId}</Style.TableCell>
+                  <Style.TableCell>{data.coachId}</Style.TableCell>
+                  <Style.TableCell>{new Date(data?.from).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} {"-"} {new Date(data?.to).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })}</Style.TableCell>
                   <Style.TableCell>
                     <ViewButton onClick={() => { router.push(`/gymnast/view/${data.id}`) }}>View</ViewButton></Style.TableCell>
 
