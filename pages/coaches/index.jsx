@@ -204,8 +204,9 @@ const index = () => {
 
                     <Style.MainDiv>
                         <Style.Schedular style={{ filter: showModal2 ? 'blur(5px)' : 'none' }} >
-                            <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem" }}>Schedule </div>
-                            {events.length > 0 &&
+                            <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem",textAlign:"center" }}>Schedule </div>
+                            
+                            {events.length > 0 ?
                                 <Scheduler
                                     // height={300}
                                     // loading={true}
@@ -220,6 +221,8 @@ const index = () => {
                                         // step: 30
                                     }}
                                 />
+                                :
+                                <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem",textAlign:"center",  marginTop:"30%" }}>No Schedule Exist </div>
                             }
                         </Style.Schedular>
                     </Style.MainDiv>

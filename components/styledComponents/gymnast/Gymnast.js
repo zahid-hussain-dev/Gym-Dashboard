@@ -1,22 +1,21 @@
 import styled from 'styled-components';
 
 export const FormContainer = styled.div`
-  text-align: center;
+  // text-align: center;
 
 `;
 
 export const Header = styled.div`
 display:flex;
-width:50%;
+width:40%;
 justify-content: center;
 background-color:gray;
 border-radius:10px;
-// padding-left:25px;
+padding-right:25px;
 align-items:center;
 `;
 export const LabelHeader = styled.div`
 color: #d5b93b;
-width:30%;
 `;
 export const Wrapper = styled.div`
 color: #d5b93b;
@@ -43,7 +42,7 @@ export const AddChildButton = styled.button`
   cursor: pointer;
   width: 23%;
   height:30px;
-  font-size:0.7vw;
+  font-size:0.6vw;
 
   
 `;
@@ -52,6 +51,8 @@ export const AddBookingHeading = styled.h2`
   color: rgb(232, 174, 51);
   padding: 20px;
   height:80px;
+  text-align: center;
+
 `;
 
 export const SecondForm = styled.div`
@@ -71,19 +72,20 @@ export const SubmitButton = styled.button`
   padding: 8px;
   border-radius: 5px;
   cursor: pointer;
-  width: 100px;
+  width: 10px;
   height: 30px;
   margin-top: 20px;
   margin: 5px;
 `;
 
 export const InputData = styled.input`
-  margin: 10px;
-  padding: 6px;
-  border-radius: 2px;
-  border: none;
-  // width: 135px;
-  width:65%;
+margin: 20px;
+padding: 6px;
+border-radius: 2px;
+border: none;
+margin-left: 20px;
+width: 100%;
+background-color: #f8f8f8; /* Optional: Add background color to the dropdown */
 `;
 
 export const DropdownContainer = styled.div`
@@ -94,23 +96,26 @@ export const DropdownContainer = styled.div`
 `;
 
 export const CenteredDropdownContainer = styled(DropdownContainer)`
-  justify-content: center;
+  display:flex;
+  justify-content: space-around;
+  align-items:center;
   margin-bottom: 10px; /* Add margin to separate multiple dropdowns */
 `;
 
 export const Label = styled.label`
   color: rgb(251, 235, 64);
   font-size: medium;
-  margin-left: 15px;
+margin-left:19px;
+
 `;
 
 export const Select = styled.select`
-  margin: 10px;
+  margin: 20px;
   padding: 6px;
   border-radius: 2px;
   border: none;
   margin-left: 20px;
-  width: 135px;
+  width: 100%;
   background-color: #f8f8f8; /* Optional: Add background color to the dropdown */
 `;
 export const TableContainer = styled.div`

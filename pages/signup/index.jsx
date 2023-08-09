@@ -4,6 +4,7 @@ import { InputGroup } from "../../components/styledComponents/inputGroup/InputGr
 import { Button } from "../../components/styledComponents/button/Button";
 import { axiosInterceptor } from '../../axios/axiosInterceptor';
 import swal from "sweetalert";
+import Link from 'next/link';
 
 export default function Signup() {
   const [userData, setUserData] = useState({});
@@ -37,8 +38,10 @@ export default function Signup() {
   }
   return (
     <div style={{ marginTop: "20px" }}>
-      <div className="login-card border">
+      <div className="signup-card border">
         <h2 className="login-heading">Sign Up</h2>
+        <div>
+        <div style={{display:"flex", justifyContent:"space-around",}}>
         <div>
           <InputGroup>
             <label>First Name</label>
@@ -54,30 +57,6 @@ export default function Signup() {
           </InputGroup>
 
           <InputGroup>
-            <label>Last Name</label>
-            <Input
-                onChange={(e) => {
-                  setUserData({ ...userData, [e.target.name]: e.target.value });
-                }}
-              id="lastName"
-              type="text"
-              placeholder="Last Name"
-              name="lastName"
-            ></Input>
-          </InputGroup>
-          <InputGroup>
-          <label>Password</label>
-          <Input
-              onChange={(e) => {
-                setUserData({ ...userData, [e.target.name]: e.target.value });
-              }}
-            id="password"
-            type="password"
-            placeholder="Password"
-            name="password"
-          ></Input>
-        </InputGroup>
-          <InputGroup>
             <label>Email </label>
             <Input
                 onChange={(e) => {
@@ -90,19 +69,6 @@ export default function Signup() {
             ></Input>
           </InputGroup>
           <InputGroup>
-          <label>Phone </label>
-          <Input
-              onChange={(e) => {
-                setUserData({ ...userData, [e.target.name]: e.target.value });
-              }}
-            id="phone"
-            type="text"
-            placeholder="Phone"
-            name="phone"
-          ></Input>
-        </InputGroup>
-
-          <InputGroup>
             <label>User Name</label>
             <Input
                 onChange={(e) => {
@@ -110,16 +76,51 @@ export default function Signup() {
                 }}
               id="username"
               type="text"
-              placeholder="UserName"
+              placeholder="User Name"
               name="userName"
             ></Input>
           </InputGroup>
+                    <InputGroup>
+          <label>Phone </label>
+          <Input
+              onChange={(e) => {
+                setUserData({ ...userData, [e.target.name]: e.target.value });
+              }}
+            id="phone"
+            type="number"
+            placeholder="Phone"
+            name="phone"
+          ></Input>
+        </InputGroup>
+           </div>
 
-
-         
-
+           <div>
+           <InputGroup>
+            <label>Last Name</label>
+            <Input
+                onChange={(e) => {
+                  setUserData({ ...userData, [e.target.name]: e.target.value });
+                }}
+              id="lastName"
+              type="text"
+              placeholder="Last Name"
+              name="lastName"
+            ></Input>
+          </InputGroup>
+                    <InputGroup>
+          <label>Password</label>
+          <Input
+              onChange={(e) => {
+                setUserData({ ...userData, [e.target.name]: e.target.value });
+              }}
+            id="password"
+            type="password"
+            placeholder="Password"
+            name="password"
+          ></Input>
+        </InputGroup>
           <InputGroup>
-            <label>UserType</label>
+            <label>User Type</label>
             <Input
                 onChange={(e) => {
                   setUserData({ ...userData, [e.target.name]: e.target.value });
@@ -128,7 +129,7 @@ export default function Signup() {
               id="userType"
               type="text"
               placeholder="userType"
-              name="userType"
+              name="user Type"
             ></Input>
           </InputGroup>
           <InputGroup>
@@ -140,23 +141,29 @@ export default function Signup() {
             //   onKeyPress={handleKeyPress}
             id="gymId"
             type="text"
-            placeholder="gymId"
+            placeholder="gym Id"
             name="gymId"
           ></Input>
         </InputGroup>
-
-
+        </div>
+        </div>
 
           <Button
-          style={{marginTop:"1rem"}}
+          style={{marginTop:"2rem",width:"40%"}}
           onClick={() => {
             SignupSuccess();
           }}
-          // disabled={user.loading}
           >
             Sign up
           </Button>
-
+          <InputGroup style={{ textAlign:"center",marginTop:"1.5rem" }}>
+              <label >
+                Already have an account?  { ''}
+                <span style={{ color: "rgb(57, 181, 74)", textAlign:"center" }}>
+                  <Link href="/login"> Log In</Link>
+                </span>
+              </label>
+            </InputGroup>
         </div>
       </div>
     </div>

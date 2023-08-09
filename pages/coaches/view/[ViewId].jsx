@@ -175,7 +175,7 @@ const ViewId = () => {
                 {showModal2 ?
                     <Style.MainDiv>
                         <Style.Schedular style={{ filter: showModal2 ? 'blur(5px)' : 'none' }} >
-                            <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem" }}>Schedule </div>
+                            <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem" }}>Schedule</div>
                             {events.length > 0 ?
                                 <Scheduler
                                     // height={300}
