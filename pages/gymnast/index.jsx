@@ -27,6 +27,7 @@ const index = () => {
   const [fetchedHours, setFetchedHours] = useState([]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
+
   const formatTimeTo12Hour = date => {
     return date.toLocaleTimeString([], {
       hour: 'numeric',
@@ -65,6 +66,22 @@ const index = () => {
       );
       console.log("responsse of all Gymnast", res)
       setAllGymnast(res?.data?.rows)
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      // swal('Oops!', error.data.message, 'error')
+      console.log(error)
+    }
+  }
+  const getGymnastBookingList = async (id) => {
+    try {
+      setLoading(true)
+      console.log("api calling for booking list")
+      const res = await axiosInterceptor().get(
+        `api/bookings`,
+      );
+      console.log("responsse of Booking list", res)
+      setGymnastBookingList(res?.data?.data)
       setLoading(false)
     } catch (error) {
       setLoading(false)
@@ -286,6 +303,7 @@ const index = () => {
   const updateButtonState = (emailValue) => {
     setIsButtonDisabled(emailValue === '');
   };
+
   return (
     <div>
 
@@ -393,6 +411,7 @@ const index = () => {
                   <Style.TableCell>{data?.id}</Style.TableCell>
                   <Style.TableCell>{data?.firstName}{" "}{data?.lastName}</Style.TableCell>
                   <Style.TableCell>
+                  <Style.TableCell>                    
                     <ViewButton onClick={() => {
                       { router.push(`/gymnast/view/${data.id}`) }
                     }}>View</ViewButton>
