@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 
 export const PopupHeading = styled.h2`
-  text-align: center;
+
   color: rgb(232, 174, 51);
- margin-left:38%;
+ margin-left:42%;
 `;
 
 export const PopupContainer = styled.div`
@@ -12,18 +12,19 @@ export const PopupContainer = styled.div`
   width: 40%;
   margin: 0px auto;
   border-radius: 10px;
-  margin-top: 80px;
+  margin-top: 12%;
   position:fixed;
   z-index:9999;
-  left:40%;
+  left:35%;
 `;
 
 export const MainForm = styled.div`
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-around;
   align-items: center;
   margin-top: 15px;
-  margin-left: 25px;
+  padding-right: 4%;
+
 `;
 
 export const Label = styled.label`
@@ -37,7 +38,7 @@ export const InputData = styled.input`
   padding: 6px;
   border-radius: 2px;
   border: none;
-  width:60%;
+  width:100%;
 `;
 
 export const PopupMainHeading = styled.div`
@@ -56,7 +57,7 @@ export const SubmitForm = styled.button`
   color: white;
   padding: 8px;
   border-radius: 5px;
-  margin-left: 38%;
+  margin-left: 45%;
   cursor: pointer;
   margin-top: 20px;
   width: 100px;
@@ -66,7 +67,7 @@ margin: 10px;
 padding: 6px;
 border-radius: 2px;
 border: none;
-width:65%;
+width:100%;
 `;
 
 

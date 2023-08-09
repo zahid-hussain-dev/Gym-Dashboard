@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { Button, ViewButton } from '../../components/styledComponents/button/Button';
+import { Button,Buttton ,ViewButton } from '../../components/styledComponents/button/Button';
 import Image from "next/image";
 import * as Style from '../../components/styledComponents/gymnast/Gymnast';
 import { useRouter } from 'next/navigation';
 import { axiosInterceptor } from '../../axios/axiosInterceptor';
 import Loader from '../../components/styledComponents/loader/loader';
 import swal from "sweetalert";
+import moment from "moment";
 
 const index = () => {
   const [role, setRole] = useState("");
@@ -22,7 +23,33 @@ const index = () => {
   const [childrens, setChildrens] = useState([]);
   const [coaches, setCoaches] = useState([]);
   const [allGymnast, setAllGymnast] = useState([]);
+  const [gymnastBookingList, setGymnastBookingList] = useState([]);
+  const [fetchedHours, setFetchedHours] = useState([]);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
+  const formatTimeTo12Hour = date => {
+    return date.toLocaleTimeString([], {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+  };
+  const getGymnastBookingList = async (id) => {
+    try {
+      setLoading(true)
+      console.log("api calling for booking list")
+      const res = await axiosInterceptor().get(
+        `api/bookings`,
+      );
+      console.log("responsse of Booking list", res)
+      setGymnastBookingList(res?.data?.data)
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      // swal('Oops!', error.data.message, 'error')
+      console.log(error)
+    }
+  }
   useEffect(() => {
     // Perform localStorage action
     const userRole = JSON.parse(localStorage.getItem("Userrole"))
@@ -49,6 +76,7 @@ const index = () => {
     if (role == "gymnast") {
       getChildren();
       getCoach();
+      getGymnastBookingList();
     }
     if (role == "admin") {
       console.log("admin side")
@@ -135,12 +163,48 @@ const index = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const splitTime = formData.time.split("-")
     console.log("formData", formData)
+    var from = moment(
+      `${formData.date} ${splitTime[0]}`,
+      'YYYY-MM-DD h:mm a',
+    ).format('YYYY-MM-DD HH:mm:ss');
+    var to = moment(
+      `${formData.date} ${splitTime[1]}`,
+      'YYYY-MM-DD h:mm a',
+    ).format('YYYY-MM-DD HH:mm:ss');
+
+    let Payload = {
+      childrenId: formData.childrenId,
+      coachId: formData.coachId,
+      from: from,
+      to: to,
+    }
+    try {
+      setLoading(true)
+      const res = await axiosInterceptor().post(
+        `/api/bookings`,
+        Payload,
+      );
+      console.log("responsse of post booking", res)
+      if (res.status == 201) {
+        if (res.data.status === "PENDING") {
+          swal('Success!', "Your Slot has beed booked wait for confirmation ", 'success')
+        }
+      }
+
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      swal('Oops!', error.data.message, 'error')
+      console.log(error)
+    }
 
   };
   const handleSelectChild = (event) => {
     setSelectedOption(event.target.value);
     const { name, value } = event.target;
+    updateButtonState(event.target.value);
     setChildData((prevChildData) => ({
       ...prevChildData,
       [name]: value,
@@ -175,6 +239,42 @@ const index = () => {
         `api/gymnast/coach/info?coachId=${id}&date=${date}`,
       );
       console.log("responsse of timeslots", res)
+
+      if (res.status === 200) {
+        const coachAvailability = res.data.privateAllowedSlots[0];
+        const startTime = new Date(coachAvailability.from);
+        const endTime = new Date(coachAvailability.to);
+        const bookingSlots = res.data.bookings;
+        const localBookingSlots = bookingSlots.map(booking => {
+          const bookingStart = new Date(booking.currentFrom);
+          const bookingEnd = new Date(booking.currentTo);
+          return {
+            currentFrom: bookingStart,
+            currentTo: bookingEnd,
+          };
+        });
+        const fetchedSlots = [];
+        const halfHour = 30 * 60 * 1000; // 30 minutes in milliseconds
+        let currentSlot = new Date(startTime);
+        while (currentSlot.getTime() + halfHour <= endTime.getTime()) {
+          const fromTime = new Date(currentSlot);
+          const toTime = new Date(currentSlot.getTime() + halfHour);
+          const isSlotAvailable = !localBookingSlots.some(
+            booking =>
+              currentSlot >= booking.currentFrom &&
+              currentSlot < booking.currentTo,
+          );
+          if (isSlotAvailable) {
+            fetchedSlots.push({
+              from: formatTimeTo12Hour(fromTime),
+              to: formatTimeTo12Hour(toTime),
+            });
+          }
+          currentSlot = new Date(currentSlot.getTime() + halfHour);
+        }
+        setFetchedHours(fetchedSlots);
+      }
+
       setLoading(false)
     } catch (error) {
       setLoading(false)
@@ -182,14 +282,10 @@ const index = () => {
       console.log(error)
     }
   }
-  const tableCell = [
-    { id: 1, timeSlote: '9 - 10', child: 'wasiq', coach: 'mudasir' },
-    { id: 2, timeSlote: '10 - 11', child: 'shakeel', coach: 'rohab' },
-  ];
-  const tableCellAdmin = [
-    { id: 1, client: 'wasiq', gym: 'Gym1' },
-    { id: 2, client: 'shakeel', gym: 'Gym2' },
-  ];
+
+  const updateButtonState = (emailValue) => {
+    setIsButtonDisabled(emailValue === '');
+  };
   return (
     <div>
 
@@ -208,7 +304,7 @@ const index = () => {
                     name="name"
                     onChange={handleSelectChild}
                   />
-                  <Style.AddChildButton type="submit" onClick={(e) => handleSubmitChild(e)}>
+                  <Style.AddChildButton type="submit" onClick={(e) => handleSubmitChild(e)} disabled={isButtonDisabled}>
                     Add Child
                   </Style.AddChildButton>
                 </Style.Header>
@@ -219,20 +315,21 @@ const index = () => {
               <div>
                 <Style.CenteredDropdownContainer className="dropdown-container">
                   <div>
-                    <Style.Label className="label">Select New Child:</Style.Label>
-                    <Style.Select className="input-dataa" name='child' value={selectedOption} onChange={handleSelectChange}>
-                      <option value="">Child</option>
+                    <div>
+                    <Style.Label className="label">Select Child:</Style.Label>
+                    <Style.Select className="input-dataa" name='childrenId' value={selectedOption} onChange={handleSelectChange}>
+                     
                       {childrens && childrens.map((option) => (
                         <option key={option.id} value={option.id}>
                           {option.name}
                         </option>
                       ))}
                     </Style.Select>
-                  </div>
-                  <div>
-                    <Style.Label className="label">Select Coaches:</Style.Label>
-                    <Style.Select className="input-dataa" name='coach' value={selectedOptionCoach} onChange={handleSelectChangeCoach}>
-                      <option value="">Coaches</option>
+                    </div>
+                    <div>
+                    <Style.Label className="label">Select Coach:</Style.Label>
+                    <Style.Select className="input-dataa" name='coachId' value={selectedOptionCoach} onChange={handleSelectChangeCoach}>
+                      
                       {coaches && coaches.map((option) => (
                         <option key={option.id} value={option.id}>
                           {option.userName}
@@ -240,6 +337,9 @@ const index = () => {
                       ))}
                     </Style.Select>
                   </div>
+                  </div>
+
+                  <div>
                   <div>
                     <Style.Label className="label">Select Date:</Style.Label>
                     <Style.InputData
@@ -252,21 +352,21 @@ const index = () => {
                       }}
                       value={formData.date}
                     />
-                  </div>
-
-                </Style.CenteredDropdownContainer>
-                <div style={{    display: "flex",flexDirection: "column", justifyContent: "center",alignItems: "center", marginLeft:"6%"}}>
-                  <Style.Label className="label">Time Slotes:</Style.Label>
+                 </div>
+                 <div>
+                  <Style.Label className="label">Time Slots:</Style.Label>
                   <Style.Select className="input-dataa" name='time' value={selectedOptionTime} onChange={handleSelectChangeTime}>
-                    <option value="">Time Slotes</option>
-                    {option2.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
+                   
+                  {fetchedHours && fetchedHours.map((option, index) => (
+                      <option key={index} value={`${option.from} - ${option.to}`}>
+                        {option.from} - {option.to}
                       </option>
                     ))}
                   </Style.Select>
                 </div>
-                <Button onClick={(e) => handleSubmit(e)}>Book</Button>
+              </div>
+                </Style.CenteredDropdownContainer>
+                <Buttton onClick={(e) => handleSubmit(e)}>Book</Buttton>
               </div>
               {/* Rest of the code */}
             </Style.SecondForm>
@@ -274,34 +374,34 @@ const index = () => {
         </Style.FormContainer>
 
       }
-      {role && role === "admin"
+{role && role === "admin"
         ?
         <Style.TableContainer>
           <Style.TableWrapper>
             <thead>
               <Style.TableRow>
-                <Style.TableHead>CLIENT</Style.TableHead>
-                <Style.TableHead>GYM</Style.TableHead>
+                <Style.TableHead>ID</Style.TableHead>
+                <Style.TableHead>GYMNAST</Style.TableHead>
                 <Style.TableHead>ACTIONS</Style.TableHead>
 
               </Style.TableRow>
             </thead>
             <tbody>
 
-             {allGymnast && allGymnast.map((data, index) => (
+              {allGymnast && allGymnast.map((data, index) => (
                 <Style.TableRow key={index}>
                   <Style.TableCell>{data?.id}</Style.TableCell>
-                  <Style.TableCell>{data?.firstName}{data?.lastName}</Style.TableCell>
-                  <Style.TableCell>                    
+                  <Style.TableCell>{data?.firstName}{" "}{data?.lastName}</Style.TableCell>
+                  <Style.TableCell>
                     <ViewButton onClick={() => {
                       { router.push(`/gymnast/view/${data.id}`) }
                     }}>View</ViewButton>
-                    </Style.TableCell>
-                  
+                  </Style.TableCell>
+
                 </Style.TableRow>
               ))}
 
-              
+
             </tbody>
           </Style.TableWrapper>
         </Style.TableContainer>
@@ -318,11 +418,11 @@ const index = () => {
               </Style.TableRow>
             </thead>
             <tbody>
-              {tableCell.map((data, index) => (
+              {gymnastBookingList && gymnastBookingList.map((data, index) => (
                 <Style.TableRow key={index}>
-                  <Style.TableCell>{data.child}</Style.TableCell>
-                  <Style.TableCell>{data.coach}</Style.TableCell>
-                  <Style.TableCell>{data.timeSlote}</Style.TableCell>
+                  <Style.TableCell>{data.childrenId}</Style.TableCell>
+                  <Style.TableCell>{data.coachId}</Style.TableCell>
+                  <Style.TableCell>{new Date(data?.from).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} {"-"} {new Date(data?.to).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })}</Style.TableCell>
                   <Style.TableCell>
                     <ViewButton onClick={() => { router.push(`/gymnast/view/${data.id}`) }}>View</ViewButton></Style.TableCell>
 
@@ -332,7 +432,7 @@ const index = () => {
           </Style.TableWrapper>
         </Style.TableContainer>
       }
-
+<Loader isLoading={loading}></Loader>
     </div>
   )
 }

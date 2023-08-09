@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { InputGroup } from '../../components/styledComponents/inputGroup/InputGroup';
 import { Input } from '../../components/styledComponents/input/Input';
 import { Button } from '../../components/styledComponents/button/Button';
@@ -11,17 +11,19 @@ import Loader from '../../components/styledComponents/loader/loader';
 import Link from 'next/link';
 
 const index = () => {
-  const [userData, setUserData] = useState({});
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [userData, setUserData] = useState({
+    email: '',
+    password: ''
+  });
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
   const loginData = useSelector((state) => state.user.loginData);
 
   const handleKeyPress = (event) => {
-    if (event.key === "Enter") {
-      console.log("here on key enter")
-      dispatch(setloginData(userData));
-      loginSuccess();
+    if (event.key === "Enter" && !isButtonDisabled) {
+      handleLogin();
     }
   };
 
@@ -30,14 +32,18 @@ const index = () => {
     loginSuccess();
   };
 
+  const updateButtonState = (emailValue, passwordValue) => {
+    setIsButtonDisabled(emailValue === '' || passwordValue === '');
+  };
+
   const loginSuccess = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const res = await axiosInterceptor().post(
         `/api/auth/signIn`,
-        userData,
+        userData
       );
-      console.log("responsse of login", res)
+            console.log("responsse of login", res)
       dispatch(setuserId(res.data.id))
       setLoading(false)
       if (res.status === 200 && res.data.token) {
@@ -66,13 +72,12 @@ const index = () => {
         // swal("ERROR!", "While Login....")
       }
 
-
     } catch (error) {
-      setLoading(false)
-      swal('Oops!', "Some Thing went Wrong", 'error')
-      console.log(error)
+      setLoading(false);
+      swal('Oops!', error.data.message);
+      console.log(error);
     }
-  }
+  };
 
   return (
     <div style={{ marginTop: "4rem", marginBottom: "20px" }}>
@@ -83,49 +88,62 @@ const index = () => {
             <label style={{ color: "white" }}>Email</label>
             <Input
               onChange={(e) => {
-                setUserData({ ...userData, [e.target.name]: e.target.value });
+                const newEmailValue = e.target.value;
+                setUserData(prevUserData => {
+                  const newUserData = { ...prevUserData, email: newEmailValue };
+                  updateButtonState(newEmailValue, newUserData.password);
+                  return newUserData;
+                });
               }}
               id="username"
               type="email"
               placeholder="Email"
               name="email"
-            ></Input>
+            />
           </InputGroup>
 
           <InputGroup>
             <label style={{ color: "white" }}>Password</label>
             <Input
               onChange={(e) => {
-                setUserData({ ...userData, [e.target.name]: e.target.value });
+                const newPasswordValue = e.target.value;
+                setUserData(prevUserData => {
+                  const newUserData = { ...prevUserData, password: newPasswordValue };
+                  updateButtonState(newUserData.email, newPasswordValue);
+                  return newUserData;
+                });
               }}
               onKeyPress={handleKeyPress}
               id="password"
               type="password"
               placeholder="Password"
               name="password"
-            ></Input>
+            />
           </InputGroup>
 
           <Button
+            disabled={isButtonDisabled}
             style={{ marginTop: "1rem" }}
-            onClick={() => {
-              handleLogin();
-            }}
+            onClick={handleLogin}
           >
             Login
           </Button>
 
           <div style={{ marginTop: "1rem", display: "flex", justifyContent: "center" }}>
             <InputGroup>
-              <label>Don't have an account? <span style={{ color: "rgb(57, 181, 74" }}><Link href="/signup">Sign up</Link></span></label>
+              <label>
+                Don't have an account?{' '}
+                <span style={{ color: "rgb(57, 181, 74)" }}>
+                  <Link href="/signup">Sign up</Link>
+                </span>
+              </label>
             </InputGroup>
           </div>
         </div>
       </div>
       <Loader isLoading={loading}></Loader>
-
     </div>
-  )
+  );
 }
 
-export default index
+export default index;

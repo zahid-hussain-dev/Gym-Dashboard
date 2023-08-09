@@ -103,19 +103,18 @@ const AddUserForm = ({ closeModal, id }) => {
 
       {/* Form content */}
       <form onSubmit={handleSubmit}>
-        <Styled.MainForm style={{ display: "inherit" }}>
-          <div style={{ display: "flex", marginTop: "20px" }}>
-            <div>
-              <Styled.Label>Enter Date:</Styled.Label>
+        <Styled.MainForm >
+          <div >
+             <div>
+              <Styled.Label>Select Date:</Styled.Label>
               <Styled.InputData
                 type="date"
                 name="date"
                 onChange={handleChange}
                 value={formData.date}
               />
-            </div>
-
-            <div>
+              </div>
+              <div>
               <Styled.Label className="label">Time Start:</Styled.Label>
               <Styled.InputData
                 type="time"
@@ -123,10 +122,10 @@ const AddUserForm = ({ closeModal, id }) => {
                 onChange={handleChange}
                 value={formData.timeStart}
               />
-            </div>
+               </div>
           </div>
-          <div style={{ display: "flex", marginTop: "20px" }}>
-            <div>
+          <div >
+               <div>
               <Styled.Label className="label">Time End:</Styled.Label>
               <Styled.InputData
                 type="time"
@@ -145,9 +144,7 @@ const AddUserForm = ({ closeModal, id }) => {
                   </option>
                 ))}
               </Styled.Select>
-            </div>
-          </div>
-          <div style={{ display: "flex", marginTop: "20px" }}>
+              </div>
           </div>
         </Styled.MainForm>
         <Styled.SubmitForm type="submit">
