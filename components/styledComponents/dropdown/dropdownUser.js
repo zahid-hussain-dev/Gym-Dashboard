@@ -21,7 +21,7 @@ const DropdownUser = () => {
         setIsOpen(!isOpen);
     };
     const handleLogoutClick = () => {
-        // Perform logout logic here
+        // Perform  logic here
         console.log('Logout clicked');
         // e.preventDefault();
         localStorage.removeItem("userLoginToken");

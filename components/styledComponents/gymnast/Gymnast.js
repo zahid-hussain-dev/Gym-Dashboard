@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const FormContainer = styled.div`
-  // text-align: center;
+ 
 
 `;
 
@@ -99,13 +99,15 @@ export const CenteredDropdownContainer = styled(DropdownContainer)`
   display:flex;
   justify-content: space-around;
   align-items:center;
+  margin-right:5%;
   margin-bottom: 10px; /* Add margin to separate multiple dropdowns */
 `;
 
 export const Label = styled.label`
   color: rgb(251, 235, 64);
   font-size: medium;
-margin-left:19px;
+margin-left:2px;
+
 
 `;
 
@@ -136,7 +138,7 @@ export const TableHead = styled.th`
   padding: 10px;
   background-color: #f2f2f2;
   text-align: center;
-  border-radius: 5px;
+  border-radius: 5px 5px 0px 0px;
 `;
 
 export const TableRow = styled.tr`

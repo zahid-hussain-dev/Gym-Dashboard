@@ -5,6 +5,7 @@ import { EVENTS } from "../../../components/MainComponents/Events";
 import { Button } from "../../../components/styledComponents/button/Button";
 import AddGymSchedule from "../../../components/styledComponents/modal/AddGymSchedule";
 import { axiosInterceptor } from '../../../axios/axiosInterceptor';
+import Loader from '../../../components/styledComponents/loader/loader';
 
 const ViewId = () => {
   const router = useRouter();
@@ -170,6 +171,7 @@ const ViewId = () => {
             </div>
           </div>
         )}
+         <Loader isLoading={loading}></Loader>
       </div>
     </>
   );

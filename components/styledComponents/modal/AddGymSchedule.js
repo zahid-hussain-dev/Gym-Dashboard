@@ -78,14 +78,14 @@ const AddGymSchedule = ({ closeModal, id }) => {
     return (
         <Styled.PopupContainer>
             <Styled.PopupMainHeading>
-                <Styled.PopupHeading>Add Gym Schedule</Styled.PopupHeading>
+                <Styled.PopupHeading  style={{marginRight: "5%" }}>Add Gym Schedule</Styled.PopupHeading>
                 <Image src={close} className="close" onClick={closeModal} alt="close" width={20} height={20} />
             </Styled.PopupMainHeading>
 
             {/* Form content */}
             <form onSubmit={handleSubmit}>
-                <Styled.MainForm style={{ display: "inherit" }}>
-                    <div style={{ display: "flex", marginTop: "20px" }}>
+                <Styled.MainForm style={{ display:"block" }}>
+                    <div style={{ display: "flex", marginTop: "20px", justifyContent:"space-evenly",alignItems:"center" }}>
                         <div>
                             <Styled.Label>Start Date:</Styled.Label>
                             <Styled.InputData
@@ -94,10 +94,11 @@ const AddGymSchedule = ({ closeModal, id }) => {
                                 name="datefrom"
                                 onChange={handleChange}
                                 value={formData.datefrom}
+                                style={{ width:"70%" }}
                             />
                         </div>
 
-                        <div>
+                        <div style={{     marginRight: "8%" }}>
                             <Styled.Label>Start:</Styled.Label>
                             <Styled.InputData
                                 // type="date"
@@ -105,10 +106,10 @@ const AddGymSchedule = ({ closeModal, id }) => {
                                 name="timefrom"
                                 onChange={handleChange}
                                 value={formData.timefrom}
+                                style={{ width:"90%" }}
                             />
                         </div>
-                    </div>
-                    <div style={{ marginTop: "20px", width: "57%" }}>
+                        <div >
                         <Styled.Label className="label">End:</Styled.Label>
                         <div>
                             <Styled.InputData
@@ -119,6 +120,8 @@ const AddGymSchedule = ({ closeModal, id }) => {
                                 value={formData.timeto}
                             />
                         </div>
+                    </div>
+
                     </div>
                 </Styled.MainForm>
                 <Styled.SubmitForm type="submit">

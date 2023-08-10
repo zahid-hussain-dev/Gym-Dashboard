@@ -94,7 +94,8 @@ const index = () => {
                                 <Style.TableCell>{new Date(data?.from).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', })} {"-"} {new Date(data?.to).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', })} </Style.TableCell>
                                 {data.status === "PENDING"
                                     ?
-                                    <Style.TableCell>
+                                    <Style.TableCell >
+                                       <div style={{width:"40%",display:"flex",justifyContent:"space-between",marginLeft:"30%"}}>
                                         <AcceptButton onClick={() => {
                                             handleApprove(data.id);
 
@@ -103,6 +104,7 @@ const index = () => {
                                             handleReject(data.id);
 
                                         }}>Reject</RejectButton>
+                                         </div>
                                     </Style.TableCell>
                                     :
                                     <Style.TableCell>
@@ -129,3 +131,13 @@ const index = () => {
 }
 
 export default index
+
+
+{/* <input list="brow"/>
+<datalist id="brow">
+{coaches && coaches.map((option) => (
+    <option key={option.id} value={option.id}>
+      {option.userName}
+    </option>
+  ))}
+</datalist> */}

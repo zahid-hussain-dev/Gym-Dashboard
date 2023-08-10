@@ -7,6 +7,9 @@ import { axiosInterceptor } from '../../axios/axiosInterceptor';
 import Loader from '../../components/styledComponents/loader/loader';
 import swal from "sweetalert";
 import moment from "moment";
+import Select from 'react-select';
+
+
 
 const index = () => {
   const [role, setRole] = useState("");
@@ -73,22 +76,6 @@ const index = () => {
       console.log(error)
     }
   }
-  const getGymnastBookingList = async (id) => {
-    try {
-      setLoading(true)
-      console.log("api calling for booking list")
-      const res = await axiosInterceptor().get(
-        `api/bookings`,
-      );
-      console.log("responsse of Booking list", res)
-      setGymnastBookingList(res?.data?.data)
-      setLoading(false)
-    } catch (error) {
-      setLoading(false)
-      // swal('Oops!', error.data.message, 'error')
-      console.log(error)
-    }
-  }
   useEffect(() => {
     if (role == "gymnast") {
       getChildren();
@@ -113,6 +100,8 @@ const index = () => {
     // Add more options here as needed
   ];
   const [selectedOption, setSelectedOption] = useState('');
+  const [selectedOptionValue, setSelectedOptionValue] = useState('');
+  const [selectedOptionCoaches, setSelectedOptionCoaches] = useState('');
   const [selectedOptionCoach, setSelectedOptionCoach] = useState('');
   const [selectedOptionTime, setSelectedOptionTime] = useState('');
   const getChildren = async () => {
@@ -153,20 +142,24 @@ const index = () => {
     }));
   };
   const handleSelectChange = (event) => {
-    setSelectedOption(event.target.value);
-    const { name, value } = event.target;
+    console.log(event)
+    setSelectedOption(event.value);
+    setSelectedOptionValue(event.name)
+
+    // const { name, value } = event.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: value,
+      childrenId: event.value,
     }));
   };
   const handleSelectChangeCoach = (event) => {
-    setSelectedOptionCoach(event.target.value);
-    const { name, value } = event.target;
-    setBookingCoach(event.target.value);
+    setSelectedOptionCoach(event.value);
+    setSelectedOptionCoaches(event.name)
+    setBookingCoach(event.value);
+
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: value,
+      coachId: event.value,
     }));
   };
   const handleSelectChangeTime = (event) => {
@@ -333,33 +326,41 @@ const index = () => {
               <div>
                 <Style.CenteredDropdownContainer className="dropdown-container">
                   <div>
-                    <div>
-                    <Style.Label className="label">Select Child:</Style.Label>
-                    <Style.Select className="input-dataa" name='childrenId' value={selectedOption} onChange={handleSelectChange}>
-                     
-                      {childrens && childrens.map((option) => (
-                        <option key={option.id} value={option.id}>
-                          {option.name}
-                        </option>
-                      ))}
-                    </Style.Select>
-                    </div>
-                    <div>
-                    <Style.Label className="label">Select Coach:</Style.Label>
-                    <Style.Select className="input-dataa" name='coachId' value={selectedOptionCoach} onChange={handleSelectChangeCoach}>
-                      
-                      {coaches && coaches.map((option) => (
-                        <option key={option.id} value={option.id}>
-                          {option.userName}
-                        </option>
-                      ))}
-                    </Style.Select>
+                  <div>
+
+                  <Style.Label >Select Child:</Style.Label>
+                  <div style={{width:"280px",marginBottom:"20px"}}>
+                 
+                    
+                    <Select 
+                    
+                      name='childrenId'
+                      value={selectedOptionValue}
+                      onChange={handleSelectChange}
+                      options={childrens.map(option => ({ value: option.id, label: option.name }))}
+                      placeholder="Select Child"
+                      isSearchable
+                    />
+                  </div>
+                  <div>
+                    <Style.Label className="label" >Select Coach:</Style.Label>
+                    <Select
+                      name='coachId'
+                      value={selectedOptionCoaches}
+                      onChange={handleSelectChangeCoach}
+                      options={coaches.map(option => ({ value: option.id, label: option.userName }))}
+                      placeholder="Select Coach"
+                      isSearchable
+                    />
+                  </div>
+
                   </div>
                   </div>
 
                   <div>
                   <div>
                     <Style.Label className="label">Select Date:</Style.Label>
+                   
                     <Style.InputData
                       type="date"
                       name="date"
@@ -411,7 +412,6 @@ const index = () => {
                   <Style.TableCell>{data?.id}</Style.TableCell>
                   <Style.TableCell>{data?.firstName}{" "}{data?.lastName}</Style.TableCell>
                   <Style.TableCell>
-                  <Style.TableCell>                    
                     <ViewButton onClick={() => {
                       { router.push(`/gymnast/view/${data.id}`) }
                     }}>View</ViewButton>
@@ -457,3 +457,17 @@ const index = () => {
 }
 
 export default index
+
+
+
+
+
+// <Style.Label className="label">Select Coach:</Style.Label>
+// <Style.Select className="input-dataa" name='coachId' value={selectedOptionCoach} onChange={handleSelectChangeCoach}>
+  
+//   {coaches && coaches.map((option) => (
+//     <option key={option.id} value={option.id}>
+//       {option.userName}
+//     </option>
+//   ))}
+// </Style.Select>

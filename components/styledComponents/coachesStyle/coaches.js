@@ -30,7 +30,7 @@ export const TableHead = styled.th`
   padding: 10px;
   background-color: #f2f2f2;
   text-align: center;
-  border-radius: 5px;
+  border-radius: 5px 5px 0px 0px;
 `;
 
 export const TableRow = styled.tr`

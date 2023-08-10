@@ -6,6 +6,7 @@ import * as Style from "../../../components/styledComponents/coachesStyle/coache
 import AddCoache from '../../../components/styledComponents/modal/AddCoache';
 import { axiosInterceptor } from '../../../axios/axiosInterceptor';
 import { useRouter } from 'next/router';
+import Loader from '../../../components/styledComponents/loader/loader';
 
 const ViewId = () => {
     const router = useRouter();
@@ -246,7 +247,7 @@ const ViewId = () => {
                                 <Style.TableCell>{new Date(data?.from).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} {"-"} {new Date(data?.to).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} </Style.TableCell>
                                 {data.status === "PENDING"
                                     &&
-                                    <Style.TableCell>
+                                    <Style.TableCell style={{width:"40%",display:"flex",justifyContent:"space-between",marginLeft:"30%"}} >
                                         <AcceptButton onClick={() => {
                                             handleApprove(data.id);
 
@@ -283,7 +284,9 @@ const ViewId = () => {
                     </tbody>
                 </Style.TableWrapper>
             </Style.TableContainer>
+            <Loader isLoading={loading}></Loader>
         </div>
+        
     )
 }
 
