@@ -25,11 +25,13 @@
     "react-chartjs-2": "^5.2.0",
     "react-dom": "18.2.0",
     "react-redux": "^8.1.1",
+    "react-select": "^5.7.4",
     "styled-components": "^6.0.2",
     "sweetalert": "^2.1.2",
     "typescript": "5.1.6"
   },
   "devDependencies": {
+    "@babel/core": "^7.22.10",
     "@types/react": "18.2.15"
   }
 }

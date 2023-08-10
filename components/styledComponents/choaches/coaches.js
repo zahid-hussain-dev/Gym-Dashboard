@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const PopupHeading = styled.h2`
 
   color: rgb(232, 174, 51);
- margin-left:42%;
+ margin-left:39%;
 `;
 
 export const PopupContainer = styled.div`

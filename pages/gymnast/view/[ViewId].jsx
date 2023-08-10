@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { Button, RejectButton, AcceptButton } from '../../../components/styledComponents/button/Button';
 import * as Style from '../../../components/styledComponents/gymnast/Gymnast';
 import { axiosInterceptor } from '../../../axios/axiosInterceptor';
+import Loader from '../../../components/styledComponents/loader/loader';
 const ViewId = () => {
   const router = useRouter();
   const [role, setRole] = useState("");
@@ -187,7 +188,7 @@ const ViewId = () => {
           </tbody>
         </Style.TableWrapper>
       </Style.TableContainer>
-
+      <Loader isLoading={loading}></Loader>
     </div>
   )
 }

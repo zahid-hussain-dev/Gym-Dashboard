@@ -5,6 +5,7 @@ import { Button } from "../../components/styledComponents/button/Button";
 import { axiosInterceptor } from '../../axios/axiosInterceptor';
 import swal from "sweetalert";
 import Link from 'next/link';
+import Loader from '../../components/styledComponents/loader/loader';
 
 export default function Signup() {
   const [userData, setUserData] = useState({});
@@ -166,6 +167,7 @@ export default function Signup() {
             </InputGroup>
         </div>
       </div>
+      <Loader isLoading={loading}></Loader>
     </div>
   )
 }

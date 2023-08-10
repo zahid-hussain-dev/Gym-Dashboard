@@ -160,7 +160,6 @@ const index = () => {
               <Style.TableRow>
                 <Style.TableHead>Gym Id</Style.TableHead>
                 <Style.TableHead>Gym Name</Style.TableHead>
-                <Style.TableHead>Timing</Style.TableHead>
                 <Style.TableHead>Actions</Style.TableHead>
 
               </Style.TableRow>
@@ -170,7 +169,7 @@ const index = () => {
                 <Style.TableRow key={index}>
                   <Style.TableCell>{data?.id}</Style.TableCell>
                   <Style.TableCell>{data?.name}</Style.TableCell>
-                  <Style.TableCell>{data?.timeSlote}</Style.TableCell>
+                  
                   <Style.TableCell>
                     <ViewButton onClick={() => {
                       { router.push(`/gym/view/${data.id}`) }

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button } from '../../components/styledComponents/button/Button';
 import AddUserForm from '../../components/styledComponents/modal/AddUserForm';
 import AddCoache from '../../components/styledComponents/modal/AddCoache'
-
+import Loader from '../../components/styledComponents/loader/loader';
 const index = () => {
   const [role, setRole] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -57,7 +57,9 @@ const index = () => {
       </div>
       {showModal && <AddUserForm closeModal={closeModal} />}
       {showModal2 && <AddCoache closeModal={closeModal2} />}
+      <Loader isLoading={loading}></Loader>
     </React.Fragment>
+   
   )
 }
 

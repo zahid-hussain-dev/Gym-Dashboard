@@ -104,26 +104,4 @@
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
 }
 
-/* export const Button = styled.button`
-min-width: 54px;
-width: 30%;
-margin-left:34.5%;
-margin-bottom:15px;
-padding: 10px 16px;
-// background-image: linear-gradient(to bottom right, #39b54a, #0d723b);
-background:#E3DC22;
-color: black;
-border: 0;
-border-radius: 4px;
-font-family: gilroy;
-outline: none;
-font-size: 1.2rem;
-font-weight: 500;
-line-height: 1.5;
-letter-spacing: 0.087rem;
-cursor: pointer;
-transition: all 0.3s;
-&:hover{
-    background-image: linear-gradient(to bottom, right, #0d723b, #39b54a);
-}
-`; */
+
