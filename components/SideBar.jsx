@@ -6,7 +6,7 @@ import menu from "@/public/assests/SVGs/menu.svg";
 import dashboard from "@/public/assests/Images/dashboard.png";
 import dashboardSVG from "@/public/assests/SVGs/dashboard-2-svgrepo-com.svg";
 import { setShowCollapse } from '@/store/slices/user/userSlice';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch,useSelector  } from "react-redux";
 import { sideItemsAdmin, sideItemsCoach, sideItemsGymnast, sideItemsGym } from "./MainComponents/SidebarConstants";
 
 const SideBar = () => {
@@ -45,10 +45,10 @@ const SideBar = () => {
     dispatch(setShowCollapse(!showCollapse));
   }
   return (
-    <div style={{ display: "flex" }} className='menu-width'>
+    <div style={{ display: "flex",}} className='menu-width'>
       <aside className={!isMenuOpened ? "left-side-menu left-sidebar--opened" : "left-side-menu left-sidebar--collapsed"}
       >
-        <nav style={{ width: "100%" }}>
+        <nav style={{ width: "100%",backgroundColor:"rgb(63, 63, 63)",     borderRight:" 1px solid #7b7b5c",height:"100%"  }}>
           <div id="sidebar-menu">
             <div
               style={{

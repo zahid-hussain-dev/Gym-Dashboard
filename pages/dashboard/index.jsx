@@ -7,6 +7,7 @@ const index = () => {
   const [role, setRole] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
+  const [loading, setLoading] = useState(false);
   // var userRole = ""
   // if (typeof window !== 'undefined') {
   //   userRole = JSON.parse(localStorage.getItem("Userrole"))
@@ -26,6 +27,7 @@ const index = () => {
   const handleButtonClick = () => {
     setShowModal(true);
     setShowModal2(false);
+    setLoading(true)
   };
 
   const closeModal = () => {

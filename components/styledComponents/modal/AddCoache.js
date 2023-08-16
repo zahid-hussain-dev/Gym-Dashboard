@@ -5,7 +5,7 @@ import close from "../../../public/assests/SVGs/close-svgrepo-com (2).svg";
 import { axiosInterceptor } from '../../../axios/axiosInterceptor';
 import swal from "sweetalert";
 
-const AddUserForm = ({ closeModal, id }) => {
+const AddCoachForm = ({ closeModal, id }) => {
   const [formData, setFormData] = useState({
     timeStart: '',
     timeEnd: '',
@@ -100,7 +100,6 @@ const AddUserForm = ({ closeModal, id }) => {
         <Styled.PopupHeading style={{marginLeft:"42%"}}>Add Schedule</Styled.PopupHeading>
         <Image src={close} className="close" onClick={closeModal} alt="close" width={20} height={20} />
       </Styled.PopupMainHeading>
-
       {/* Form content */}
       <form onSubmit={handleSubmit}>
         <Styled.MainForm >
@@ -155,4 +154,4 @@ const AddUserForm = ({ closeModal, id }) => {
   );
 };
 
-export default AddUserForm;
+export default AddCoachForm;

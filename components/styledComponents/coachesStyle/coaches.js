@@ -19,6 +19,8 @@ export const TableContainer = styled.div`
   width: 60%;
   margin: 0px auto;
   margin-top: 80px;
+  height: 45rem;
+  overflow-y: scroll;
 `;
 export const TableWrapper = styled.table`
   border-collapse: collapse;

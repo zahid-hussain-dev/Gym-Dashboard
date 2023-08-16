@@ -4,6 +4,7 @@ import { Button, RejectButton, AcceptButton } from '../../../components/styledCo
 import * as Style from '../../../components/styledComponents/gymnast/Gymnast';
 import { axiosInterceptor } from '../../../axios/axiosInterceptor';
 import Loader from '../../../components/styledComponents/loader/loader';
+import { useDispatch, useSelector } from "react-redux";
 const ViewId = () => {
   const router = useRouter();
   const [role, setRole] = useState("");
@@ -25,6 +26,8 @@ const ViewId = () => {
     setRole(userRole);
 
   }, [])
+  const GymnastName = useSelector((state) => state.user.gymnastName);
+  console.log("GymnastName", GymnastName)
   const getChildList = async (id) => {
     try {
       setLoading(true)
@@ -105,8 +108,9 @@ const ViewId = () => {
 
   return (
     <div>
-      ViewId details {Id}
+      {Id}
       <Style.SubTitle>Child Listing</Style.SubTitle>
+      <div style={{ fontSize: "18px", color: "white", marginBottom: "0.5rem",textAlign:"center" }}>No Listing Exist for this Coach {GymnastName} </div>
       <Style.TableContainer>
         <Style.TableWrapper>
           <thead>
