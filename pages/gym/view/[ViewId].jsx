@@ -6,6 +6,7 @@ import { Button } from "../../../components/styledComponents/button/Button";
 import AddGymSchedule from "../../../components/styledComponents/modal/AddGymSchedule";
 import { axiosInterceptor } from '../../../axios/axiosInterceptor';
 import Loader from '../../../components/styledComponents/loader/loader';
+import { useDispatch, useSelector } from "react-redux";
 
 const ViewId = () => {
   const router = useRouter();
@@ -18,7 +19,8 @@ const ViewId = () => {
     setShowModal(true);
     console.log("modal click");
   };
-
+  const GymName = useSelector((state) => state.user.gymName);
+  console.log("CoachName", GymName)
   const closeModal = () => {
     //   setShowModal(false);
     setShowModal((prev) => !prev);
@@ -93,7 +95,7 @@ const ViewId = () => {
       {/* <Styled.Globalstyle/> */}
       <div>
         <Button
-          style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }}
+          style={{ width: "auto", marginBottom: "1rem", marginLeft: "5%" }}
           onClick={handleButtonClick}
         >
           Add Gym Schedule
@@ -106,14 +108,16 @@ const ViewId = () => {
               display: "flex",
               justifyContent: "space-around",
               filter: "blur(5px)",
+              textAlign:"center"
             }}
           >
-            <div style={{ width: "45%", height: "50%" }}>
+            <div style={{ width: "100%", height: "50%"}}>
               <div
                 style={{
                   fontSize: "24px",
                   color: "white",
                   marginBottom: "1rem",
+                
                 }}
               >
                 Gym Schedule{" "}
@@ -134,13 +138,13 @@ const ViewId = () => {
                   }}
                 />
                 :
-                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem" }}>No Schedule Exist for this Gym {Id} </div>
+                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem" }}>No Schedule Exist for this Gym {GymName} </div>
               }
             </div>
           </div>
         ) : (
           <div style={{ display: "flex", justifyContent: "space-around" }}>
-            <div style={{ width: "45%", height: "50%" }}>
+            <div style={{ width: "45%", height: "50%",textAlign:"center",marginTop:"12%"}}>
               <div
                 style={{
                   fontSize: "24px",
@@ -166,7 +170,7 @@ const ViewId = () => {
                   }}
                 />
                 :
-                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem" }}>No Schedule Exist for this Gym {Id} </div>
+                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem" }}>No Schedule Exist for this Gym {GymName} </div>
               }
             </div>
           </div>

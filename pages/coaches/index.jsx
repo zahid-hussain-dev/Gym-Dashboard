@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import { Scheduler } from "@aldabil/react-scheduler";
 import { EVENTS } from "../../components/MainComponents/Events";
 import { Button, ViewButton } from '../../components/styledComponents/button/Button';
 import * as Style from "../../components/styledComponents/coachesStyle/coaches";
 import AddCoache from "../../components/styledComponents/modal/AddCoache"
 import { useRouter } from 'next/navigation';
+import { setCoachName } from '../../store/slices/user/userSlice';
+import { useDispatch, useSelector } from "react-redux";
 import { axiosInterceptor } from '../../axios/axiosInterceptor';
 import Loader from '../../components/styledComponents/loader/loader';
 import swal from "sweetalert";
@@ -17,9 +19,11 @@ const index = () => {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(false);
     const [allCoaches, setAllCoaches] = useState([]);
+    const dispatch = useDispatch();
     const handleButtonClick2 = () => {
         setShowModal2(true);
         console.log("modal click")
+       
     };
 
     const closeModal2 = () => {
@@ -169,7 +173,7 @@ const index = () => {
         <div>
             {role && role === "admin" &&
                 <React.Fragment>
-                    <Style.TableContainer>
+                    <Style.TableContainer style={{ filter: showModal2 ? 'blur(5px)' : 'none' }}>
                         <Style.TableWrapper>
                             <thead>
                                 <Style.TableRow>
@@ -186,7 +190,10 @@ const index = () => {
                                         <Style.TableCell>{data?.gym.name}</Style.TableCell>
                                         <Style.TableCell>
                                             {role === "admin" &&
-                                                <ViewButton onClick={() => { router.push(`/coaches/view/${data?.id}`) }}>View</ViewButton>
+                                                <ViewButton onClick={() => {  
+                                                    dispatch(setCoachName(data.userName));
+                                                    router.push(`/coaches/view/${data?.id}`)
+                                                 }}>View</ViewButton>
                                             }
                                         </Style.TableCell>
 
@@ -200,10 +207,8 @@ const index = () => {
             {role && role !== "admin" &&
                 <React.Fragment>
                     <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} onClick={handleButtonClick2}>Add Schedule</Button>
-                    {showModal2 && <AddCoache closeModal={closeModal2} />}
-
                     <Style.MainDiv>
-                        <Style.Schedular style={{ filter: showModal2 ? 'blur(5px)' : 'none' }} >
+                        <Style.Schedular  >
                             <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem",textAlign:"center" }}>Schedule </div>
                             
                             {events.length > 0 ?
@@ -229,7 +234,7 @@ const index = () => {
                 </React.Fragment>
             }
             <Loader isLoading={loading}></Loader>
-
+            {showModal2 && <AddCoache closeModal={closeModal2} />}
         </div>
     )
 }

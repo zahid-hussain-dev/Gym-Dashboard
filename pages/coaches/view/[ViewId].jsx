@@ -7,17 +7,17 @@ import AddCoache from '../../../components/styledComponents/modal/AddCoache';
 import { axiosInterceptor } from '../../../axios/axiosInterceptor';
 import { useRouter } from 'next/router';
 import Loader from '../../../components/styledComponents/loader/loader';
+import { useDispatch, useSelector } from "react-redux";
 
 const ViewId = () => {
     const router = useRouter();
     const Id = router.query.ViewId;
     const [showModal2, setShowModal2] = useState(false);
     const [loading, setLoading] = useState(false);
-
+    const [coachName, setCoachName] = useState('');
+    // const GymName = router.query.GymName;
     const [events, setEvents] = useState([]);
     const [bookings, setBookings] = useState([]);
-
-
     const handleButtonClick2 = () => {
         setShowModal2(true);
         console.log("modal click")
@@ -26,6 +26,8 @@ const ViewId = () => {
     // const closeModal2 = () => {
     //     setShowModal2(false);
     // };
+    const CoachName = useSelector((state) => state.user.coachName);
+    console.log("CoachName", CoachName)
     const getCoachScedule = async (id) => {
         const today = new Date();
 
@@ -41,8 +43,8 @@ const ViewId = () => {
         console.log("firstDay", firstDay.toISOString().slice(0, 10))
 
         const Payload = {
-            from: "2023-07-25",
-            to: "2023-07-26"
+            from: "2023-08-01",
+            to: "2023-08-02"
         }
 
         try {
@@ -159,6 +161,7 @@ const ViewId = () => {
         }
 
     }, [showModal2, Id])
+    console.log("events", events);
     const closeModal2 = () => {
         setShowModal2(false);
         // const modalElement = document.getElementById('modal');
@@ -168,13 +171,19 @@ const ViewId = () => {
         { id: 1, timeSlote: '9 - 10', child: 'wasiq', coach: 'mudasir' },
         { id: 2, timeSlote: '10 - 11', child: 'shakeel', coach: 'rohab' },
     ];
+//     useEffect(() => {
+//         const GymName = useSelector((state) => state.user.GymName);
+// setCoachName(GymName)
+
+//     }, [])
     return (
         <div>
-            <React.Fragment>
-                <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} onClick={handleButtonClick2}>Add Schedule</Button>
+            <React.Fragment >
+                <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "5%" }} onClick={handleButtonClick2}>Add Schedule</Button>
                 {showModal2 && <AddCoache closeModal={closeModal2} id={Id} />}
                 {showModal2 ?
                     <Style.MainDiv>
+                        {/* style={{ filter: showModal2 ? 'blur(5px)' : 'none' }} */}
                         <Style.Schedular style={{ filter: showModal2 ? 'blur(5px)' : 'none' }} >
                             <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem" }}>Schedule</div>
                             {events.length > 0 ?
@@ -194,15 +203,15 @@ const ViewId = () => {
                                 />
 
                                 :
-                                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem" }}>No Schedule Exist for this Coach {Id} </div>
+                                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem",textAlign:"center"}}>No Schedule Exist for this Coach {CoachName} </div>
                             }
                         </Style.Schedular>
 
                     </Style.MainDiv>
                     :
-                    <Style.MainDiv2>
+                    <Style.MainDiv2 >
                         <Style.Schedular >
-                            <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem" }}>Schedule </div>
+                            <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem",textAlign:"center"  }}>Schedule </div>
                             {events.length > 0 ?
 
                                 <Scheduler
@@ -220,15 +229,15 @@ const ViewId = () => {
                                     }}
                                 />
                                 :
-                                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem" }}>No Schedule Exist for this Coach {Id} </div>
+                                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem", textAlign:"center" }}>No Schedule Exist for this Coach {CoachName}</div>
 
                             }
                         </Style.Schedular>
 
                     </Style.MainDiv2>}
             </React.Fragment>
-            <Style.SubTitle style={{ marginTop: "1rem" }}>Booking Listing</Style.SubTitle>
-            <Style.TableContainer>
+            <Style.SubTitle style={{ marginTop: "1rem" ,marginLeft: "5%",filter: showModal2 ? 'blur(5px)' : 'none'}}>Booking Listing</Style.SubTitle>
+            <Style.TableContainer style={{ filter: showModal2 ? 'blur(5px)' : 'none' }}>
                 <Style.TableWrapper>
                     <thead>
                         <Style.TableRow>

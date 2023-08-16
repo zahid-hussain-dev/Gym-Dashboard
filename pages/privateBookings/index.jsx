@@ -132,12 +132,3 @@ const index = () => {
 
 export default index
 
-
-{/* <input list="brow"/>
-<datalist id="brow">
-{coaches && coaches.map((option) => (
-    <option key={option.id} value={option.id}>
-      {option.userName}
-    </option>
-  ))}
-</datalist> */}

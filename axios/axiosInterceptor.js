@@ -2,8 +2,8 @@ import axios from 'axios';
 import Base64 from '../utils/base64';
 // import {getCurrentUser} from './user';
 // const base_URL = "https://devapi.assetplanet.com";
-const base_URL= "http://104.197.218.96:3000";
-// const base_URL = "http://192.168.100.18:3000";
+// const base_URL= "http://104.197.218.96:3000";
+const base_URL = "http://192.168.100.18:3000";
 
 
 const BackendURL = base_URL;

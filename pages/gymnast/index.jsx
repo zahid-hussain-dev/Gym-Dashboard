@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button,Buttton ,ViewButton } from '../../components/styledComponents/button/Button';
+import { Button ,ViewButton } from '../../components/styledComponents/button/Button';
 import Image from "next/image";
 import * as Style from '../../components/styledComponents/gymnast/Gymnast';
 import { useRouter } from 'next/navigation';
@@ -8,13 +8,15 @@ import Loader from '../../components/styledComponents/loader/loader';
 import swal from "sweetalert";
 import moment from "moment";
 import Select from 'react-select';
-
+import AddChildForm from '../../components/styledComponents/modal/Booking';
+import { setGymnastName } from '../../store/slices/user/userSlice';
+import { useDispatch, useSelector } from "react-redux";
 
 
 const index = () => {
   const [role, setRole] = useState("");
   const [formData, setFormData] = useState({});
-
+  const dispatch = useDispatch();
   const [bookingDate, setBookingDate] = useState();
   const [bookingCoach, setBookingCoach] = useState();
 
@@ -97,13 +99,13 @@ const index = () => {
     { value: '9 - 10', label: '9 - 10' },
     { value: '10 - 11', label: '10 - 11' },
     { value: '11 - 12', label: '11 - 12' },
-    // Add more options here as needed
   ];
   const [selectedOption, setSelectedOption] = useState('');
   const [selectedOptionValue, setSelectedOptionValue] = useState('');
   const [selectedOptionCoaches, setSelectedOptionCoaches] = useState('');
   const [selectedOptionCoach, setSelectedOptionCoach] = useState('');
   const [selectedOptionTime, setSelectedOptionTime] = useState('');
+  const [showModal4, setShowModal4] = useState(false);
   const getChildren = async () => {
     try {
       setLoading(true)
@@ -115,7 +117,7 @@ const index = () => {
       setLoading(false)
     } catch (error) {
       setLoading(false)
-      swal('Oops!', error.data.message, 'error')
+      // swal('Oops!', error.data.message, 'error')
       console.log(error)
     }
   }
@@ -130,7 +132,7 @@ const index = () => {
       setLoading(false)
     } catch (error) {
       setLoading(false)
-      swal('Oops!', error.data.message, 'error')
+      // swal('Oops!', error.data.message, 'error')
       console.log(error)
     }
   }
@@ -244,7 +246,8 @@ const index = () => {
     const id = bookingCoach;
     const date = bookingDate;
     try {
-      setLoading(true)
+      // setLoading(true)
+      if(bookingCoach&&bookingDate){
       const res = await axiosInterceptor().get(
         `api/gymnast/coach/info?coachId=${id}&date=${date}`,
       );
@@ -283,9 +286,10 @@ const index = () => {
           currentSlot = new Date(currentSlot.getTime() + halfHour);
         }
         setFetchedHours(fetchedSlots);
+        console.log('ALert',fetchedSlots)
       }
-
-      setLoading(false)
+    }
+      // setLoading(false)
     } catch (error) {
       setLoading(false)
       // swal('Oops!', error.data.message, 'error')
@@ -296,13 +300,28 @@ const index = () => {
   const updateButtonState = (emailValue) => {
     setIsButtonDisabled(emailValue === '');
   };
+  const handleAddChildClick = () => {
+    setShowModal4(true);
+    console.log("modal click")
+  };
+  const closeModal4 = () => {
+    setShowModal4(false);
+  };
+ 
+
+
+
+  const handleCloseModal4 = () => {
+    setShowModal4(false);
+  };
+
 
   return (
-    <div>
-
-      {role && role !== "admin" &&
+    
+    <div closeModal={closeModal4}>
+   <Button  style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} onClick={handleAddChildClick}>Add Bookings</Button>
+      {/* {role && role !== "admin" &&
         <Style.FormContainer className="add-child-form">
-          {/* Form content */}
           <div className="Add-child-main">
             <Style.AddChildWrapper className="Add-child">
               <Style.Wrapper>
@@ -325,15 +344,11 @@ const index = () => {
               <Style.AddBookingHeading className="add-booking">Add Booking</Style.AddBookingHeading>
               <div>
                 <Style.CenteredDropdownContainer className="dropdown-container">
-                  <div>
-                  <div>
-
-                  <Style.Label >Select Child:</Style.Label>
-                  <div style={{width:"280px",marginBottom:"20px"}}>
-                 
-                    
-                    <Select 
-                    
+                  <Style.FirstMain>
+                    <Style.SecondMain>
+                    <Style.Lbl>
+                    <Style.Labeled >Select Child:</Style.Labeled>
+                    <Select
                       name='childrenId'
                       value={selectedOptionValue}
                       onChange={handleSelectChange}
@@ -341,9 +356,9 @@ const index = () => {
                       placeholder="Select Child"
                       isSearchable
                     />
-                  </div>
-                  <div>
-                    <Style.Label className="label" >Select Coach:</Style.Label>
+                    </Style.Lbl>
+                    <Style.SecondInput >
+                    <Style.Labeled className="label" >Select Coach:</Style.Labeled>
                     <Select
                       name='coachId'
                       value={selectedOptionCoaches}
@@ -352,16 +367,13 @@ const index = () => {
                       placeholder="Select Coach"
                       isSearchable
                     />
-                  </div>
-
-                  </div>
-                  </div>
-
-                  <div>
+                    </Style.SecondInput>
+                    </Style.SecondMain>
+                  </Style.FirstMain>
+                  <Style.Mains>
                   <div>
                     <Style.Label className="label">Select Date:</Style.Label>
-                   
-                    <Style.InputData
+                    <Style.InputDataa
                       type="date"
                       name="date"
                       onChange={(e) => {
@@ -383,16 +395,16 @@ const index = () => {
                     ))}
                   </Style.Select>
                 </div>
-              </div>
+              </Style.Mains>
                 </Style.CenteredDropdownContainer>
                 <Buttton onClick={(e) => handleSubmit(e)}>Book</Buttton>
               </div>
-              {/* Rest of the code */}
             </Style.SecondForm>
           </div>
         </Style.FormContainer>
 
-      }
+      } */}
+     {showModal4 &&   <AddChildForm  Closed={handleCloseModal4} onSubmit={handleSubmitChild} />}
 {role && role === "admin"
         ?
         <Style.TableContainer>
@@ -413,6 +425,7 @@ const index = () => {
                   <Style.TableCell>{data?.firstName}{" "}{data?.lastName}</Style.TableCell>
                   <Style.TableCell>
                     <ViewButton onClick={() => {
+                      dispatch(setGymnastName(data.firstName));
                       { router.push(`/gymnast/view/${data.id}`) }
                     }}>View</ViewButton>
                   </Style.TableCell>
@@ -432,25 +445,24 @@ const index = () => {
                 <Style.TableHead>CHILD</Style.TableHead>
                 <Style.TableHead>COACH</Style.TableHead>
                 <Style.TableHead>TIME SLOT</Style.TableHead>
-                <Style.TableHead>ACTIONS</Style.TableHead>
+                <Style.TableHead>STATUS</Style.TableHead>
 
               </Style.TableRow>
             </thead>
             <tbody>
               {gymnastBookingList && gymnastBookingList.map((data, index) => (
                 <Style.TableRow key={index}>
-                  <Style.TableCell>{data.childrenId}</Style.TableCell>
-                  <Style.TableCell>{data.coachId}</Style.TableCell>
+                  <Style.TableCell>{data?.['children.name']}</Style.TableCell>
+                  <Style.TableCell>{data?.['coach.firstName'] + data?.['coach.lastName']}</Style.TableCell>
                   <Style.TableCell>{new Date(data?.from).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} {"-"} {new Date(data?.to).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })}</Style.TableCell>
-                  <Style.TableCell>
-                    <ViewButton onClick={() => { router.push(`/gymnast/view/${data.id}`) }}>View</ViewButton></Style.TableCell>
-
+                  <Style.TableCell>{data.status}</Style.TableCell>
                 </Style.TableRow>
               ))}
             </tbody>
           </Style.TableWrapper>
         </Style.TableContainer>
       }
+     
 <Loader isLoading={loading}></Loader>
     </div>
   )
@@ -458,16 +470,3 @@ const index = () => {
 
 export default index
 
-
-
-
-
-// <Style.Label className="label">Select Coach:</Style.Label>
-// <Style.Select className="input-dataa" name='coachId' value={selectedOptionCoach} onChange={handleSelectChangeCoach}>
-  
-//   {coaches && coaches.map((option) => (
-//     <option key={option.id} value={option.id}>
-//       {option.userName}
-//     </option>
-//   ))}
-// </Style.Select>

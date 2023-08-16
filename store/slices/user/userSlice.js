@@ -7,6 +7,9 @@ const userSlice = createSlice({
     loginData:{},
     userId:"",
     showCollapse:true,
+    coachName:"",
+    gymName:"",
+    gymnastName:"",
 
   },
   reducers: {
@@ -22,10 +25,18 @@ const userSlice = createSlice({
     setShowCollapse(state, action) {
       state.showCollapse = action.payload;
     },
-
+    setCoachName(state, action) {
+      state.coachName = action.payload;
+    },
+    setGymName(state, action) {
+      state.gymName = action.payload;
+    },
+    setGymnastName(state, action) {
+      state.gymnastName = action.payload;
+    },
   },
 });
 
-export const { setshowDropdown,setloginData,setuserId,setShowCollapse } = userSlice.actions;
+export const { setshowDropdown,setloginData,setuserId,setShowCollapse,setCoachName,setGymName,setGymnastName } = userSlice.actions;
 
 export default userSlice.reducer;

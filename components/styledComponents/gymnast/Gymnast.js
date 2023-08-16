@@ -1,7 +1,32 @@
 import styled from 'styled-components';
 
+export const PopupHeading = styled.h2`
+
+  color: rgb(232, 174, 51);
+ margin-left:39%;
+`;
+export const PopupContainer = styled.div`
+   background-color: rgb(63, 63, 63);
+  padding: 10px;
+  width: 40%;
+  margin: 0px auto;
+  border-radius: 10px;
+  margin-top: 5%;
+  position:fixed;
+  z-index:9999;
+  left:35%;
+`;
+export const PopupMainHeading = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  left:30px
+  width:65%;
+  margin-bottom: 20px;
+`;
+
 export const FormContainer = styled.div`
- 
+ text-align: center;
 
 `;
 
@@ -87,7 +112,16 @@ margin-left: 20px;
 width: 100%;
 background-color: #f8f8f8; /* Optional: Add background color to the dropdown */
 `;
-
+export const InputDataa = styled.input`
+margin: 20px;
+padding: 6px;
+border-radius: 2px;
+border: none;
+margin-left: 20px;
+width: 100%;
+height:2.3rem;
+background-color: #f8f8f8; /* Optional: Add background color to the dropdown */
+`;
 export const DropdownContainer = styled.div`
   display: flex;
   align-items: center;
@@ -99,18 +133,58 @@ export const CenteredDropdownContainer = styled(DropdownContainer)`
   display:flex;
   justify-content: space-around;
   align-items:center;
-  margin-right:5%;
   margin-bottom: 10px; /* Add margin to separate multiple dropdowns */
+  width:100%;
 `;
 
 export const Label = styled.label`
   color: rgb(251, 235, 64);
   font-size: medium;
-margin-left:2px;
-
+margin-left:19px;
 
 `;
 
+export const Labeled = styled.label`
+  color: rgb(251, 235, 64);
+  font-size: medium;
+margin-left:2px;
+
+
+
+`;
+export const Lbl = styled.label`
+display:flex;
+flex-direction:column;
+ row-gap:1rem;
+
+`;
+export const SecondMain = styled.label`
+display:flex;
+flex-direction:column;
+row-gap:2rem;
+margin-bottom:15px;
+`;
+export const FirstMain = styled.label`
+
+width:32%;
+
+display:flex;
+flex-direction:column;
+row-gap:2rem;
+`;
+export const Mains = styled.label`
+margin-right:15px;
+width:32%;
+
+`;
+export const SecondInput = styled.label`
+
+  display: flex;
+  flex-direction: column;
+  row-gap:1rem;
+
+
+`;
 export const Select = styled.select`
   margin: 20px;
   padding: 6px;
@@ -118,6 +192,7 @@ export const Select = styled.select`
   border: none;
   margin-left: 20px;
   width: 100%;
+height:2.3rem;
   background-color: #f8f8f8; /* Optional: Add background color to the dropdown */
 `;
 export const TableContainer = styled.div`
@@ -144,17 +219,16 @@ export const TableHead = styled.th`
 export const TableRow = styled.tr`
   &:nth-child(even) {
     background-color: #f2f2f2;
-    border-radius: 5px;
     text-align: center;
   }
 `;
 
 export const TableRow2 = styled.tr` {
     background-color: #f2f2f2;
-    border-radius: 5px;
     color:#d5b93b;
   }
 `
+  ;
   ;
 export const TableCell = styled.td`
   padding: 10px;
@@ -176,6 +250,6 @@ font-size: 1.2rem;
 font-weight: 500;
 line-height: 1.5;
 letter-spacing: 0.087rem;
-
+margin-left:5%;
 
 `;

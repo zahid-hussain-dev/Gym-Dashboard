@@ -74,6 +74,11 @@ export const sideItemsGymnast = [
         image: gymnastSVG,
         imageWhite: gymnastWhiteSVG,
     },
-
+    {
+        href: "/child",
+        title: "Childs",
+        image: gymnastSVG,
+        imageWhite: gymnastWhiteSVG,
+    },
 
 ];
