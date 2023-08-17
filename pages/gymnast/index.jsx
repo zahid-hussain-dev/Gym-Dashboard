@@ -319,8 +319,9 @@ const index = () => {
   return (
     
     <div closeModal={closeModal4}>
+      {role!=="admin" &&
    <Button  style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} onClick={handleAddChildClick}>Add Bookings</Button>
-      {/* {role && role !== "admin" &&
+     }   {/* {role && role !== "admin" &&
         <Style.FormContainer className="add-child-form">
           <div className="Add-child-main">
             <Style.AddChildWrapper className="Add-child">
@@ -407,7 +408,7 @@ const index = () => {
      {showModal4 &&   <AddChildForm  Closed={handleCloseModal4} onSubmit={handleSubmitChild} />}
 {role && role === "admin"
         ?
-        <Style.TableContainer>
+        <Style.TableContainer style={{ filter: showModal4 ? 'blur(5px)' : 'none' }} >
           <Style.TableWrapper>
             <thead>
               <Style.TableRow>
@@ -438,7 +439,7 @@ const index = () => {
           </Style.TableWrapper>
         </Style.TableContainer>
         :
-        <Style.TableContainer>
+        <Style.TableContainer style={{ filter: showModal4 ? 'blur(5px)' : 'none' }} >
           <Style.TableWrapper>
             <thead>
               <Style.TableRow>

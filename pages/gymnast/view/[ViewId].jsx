@@ -5,10 +5,13 @@ import * as Style from '../../../components/styledComponents/gymnast/Gymnast';
 import { axiosInterceptor } from '../../../axios/axiosInterceptor';
 import Loader from '../../../components/styledComponents/loader/loader';
 import { useDispatch, useSelector } from "react-redux";
+import AddChildForm from '../../../components/styledComponents/modal/Booking';
 const ViewId = () => {
   const router = useRouter();
   const [role, setRole] = useState("");
-
+  const [showModal4, setShowModal4] = useState(false);
+  const [childData, setChildData] = useState({});
+  const [childrens, setChildrens] = useState([]);
   const Id = router.query.ViewId;
   const tableCell = [
     { id: 1, timeSlote: '9 - 10', child: 'wasiq', coach: 'mudasir' },
@@ -26,6 +29,15 @@ const ViewId = () => {
     setRole(userRole);
 
   }, [])
+  const handleSelectChild = (event) => {
+    setSelectedOption(event.target.value);
+    const { name, value } = event.target;
+    updateButtonState(event.target.value);
+    setChildData((prevChildData) => ({
+      ...prevChildData,
+      [name]: value,
+    }));
+  };
   const GymnastName = useSelector((state) => state.user.gymnastName);
   console.log("GymnastName", GymnastName)
   const getChildList = async (id) => {
@@ -45,7 +57,10 @@ const ViewId = () => {
     }
   }
 
-
+  const handleAddChildClick = () => {
+    setShowModal4(true);
+    console.log("modal click")
+  };
 
   const getBookingList = async (id) => {
     try {
@@ -94,6 +109,43 @@ const ViewId = () => {
       console.log(error)
     }
   }
+  const getChildren = async () => {
+    try {
+      setLoading(true)
+      const res = await axiosInterceptor().get(
+        `/api/gymnast/children`,
+      );
+      console.log("children data", res)
+      setChildrens(res.data.result)
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      // swal('Oops!', error.data.message, 'error')
+      console.log(error)
+    }
+  }
+  const handleSubmitChild = async (event) => {
+    event.preventDefault();
+    console.log("ChildData", childData)
+    try {
+      setLoading(true)
+      const res = await axiosInterceptor().post(
+        `/api/gymnast/children`,
+        childData,
+      );
+      console.log("responsse of login", res)
+      swal('Success!', res.data.message, 'success')
+      getChildren();
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      swal('Oops!', error.data.message, 'error')
+      console.log(error)
+    }
+  };
+   const handleCloseModal4 = () => {
+    setShowModal4(false);
+  };
   useEffect(() => {
     if (Id && role == "admin") {
       getChildList();
@@ -110,8 +162,9 @@ const ViewId = () => {
     <div>
       {Id}
       <Style.SubTitle>Child Listing</Style.SubTitle>
-      <div style={{ fontSize: "18px", color: "white", marginBottom: "0.5rem",textAlign:"center" }}>No Listing Exist for this Coach {GymnastName} </div>
-      <Style.TableContainer>
+      {showModal4 &&   <AddChildForm  Closed={handleCloseModal4} onSubmit={handleSubmitChild} />}
+      <div style={{ fontSize: "18px", color: "white", marginBottom: "0.5rem",textAlign:"center",filter: showModal4 ? 'blur(5px)' : 'none'  }}>No Listing Exist for this Coach {GymnastName} </div>
+      <Style.TableContainer style={{ filter: showModal4 ? 'blur(5px)' : 'none' }} >
         <Style.TableWrapper>
           <thead>
             <Style.TableRow>
@@ -144,12 +197,15 @@ const ViewId = () => {
 
                 </Style.TableRow>
               ))}
-
+     
           </tbody>
         </Style.TableWrapper>
       </Style.TableContainer>
+      <div style={{ display:"flex",alignItems:"center" }} >
       <Style.SubTitle style={{ marginTop: "1rem" }}>Booking Listing</Style.SubTitle>
-      <Style.TableContainer>
+      <Button  style={{ width: "auto", marginTop: "1rem", marginLeft: "1rem" }} onClick={handleAddChildClick}>+</Button>
+      </div>
+      <Style.TableContainer style={{ filter: showModal4 ? 'blur(5px)' : 'none' }} >
         <Style.TableWrapper>
           <thead>
             <Style.TableRow>

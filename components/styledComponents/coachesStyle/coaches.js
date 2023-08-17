@@ -18,9 +18,10 @@ export const TableContainer = styled.div`
   color: #d5b93b;
   width: 60%;
   margin: 0px auto;
-  margin-top: 80px;
-  height: 45rem;
-  overflow-y: scroll;
+  margin-top: 50px;
+  height: 30rem;
+   overflow-y: auto;
+  filter: showModal2 ? 'blur(5px)' : 'none';
 `;
 export const TableWrapper = styled.table`
   border-collapse: collapse;
@@ -33,10 +34,12 @@ export const TableHead = styled.th`
   background-color: #f2f2f2;
   text-align: center;
   border-radius: 5px 5px 0px 0px;
+  position:sticky;
+  top:0;
 `;
 
 export const TableRow = styled.tr`
-  &:nth-child(even) {
+ {
     background-color: #f2f2f2;
     border-radius: 5px;
     text-align: center;
@@ -48,6 +51,8 @@ export const TableRow2 = styled.tr`
     background-color: #f2f2f2;
     border-radius: 5px;
     color: #d5b93b;
+    height: 20px;
+    overflow-y: auto;
   }
 `;
 export const TableCell = styled.td`

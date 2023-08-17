@@ -1,7 +1,7 @@
 import React, { useState, useEffect} from 'react';
 import { Scheduler } from "@aldabil/react-scheduler";
 import { EVENTS } from "../../components/MainComponents/Events";
-import { Button, ViewButton } from '../../components/styledComponents/button/Button';
+import { Button, ViewButton,AcceptButton,RejectButton } from '../../components/styledComponents/button/Button';
 import * as Style from "../../components/styledComponents/coachesStyle/coaches";
 import AddCoache from "../../components/styledComponents/modal/AddCoache"
 import { useRouter } from 'next/navigation';
@@ -103,8 +103,8 @@ const index = () => {
         console.log("firstDay", firstDay.toISOString().slice(0, 10))
 
         const Payload = {
-            from: "2023-07-25",
-            to: "2023-07-26"
+            from: "2023-08-10",
+            to: "2023-08-18"
         }
 
         try {
@@ -173,21 +173,45 @@ const index = () => {
         <div>
             {role && role === "admin" &&
                 <React.Fragment>
-                    <Style.TableContainer style={{ filter: showModal2 ? 'blur(5px)' : 'none' }}>
+                    <Style.TableContainer >
                         <Style.TableWrapper>
                             <thead>
                                 <Style.TableRow>
                                     <Style.TableHead>COACH</Style.TableHead>
                                     <Style.TableHead>GYM</Style.TableHead>
+                                    <Style.TableHead>STATUS</Style.TableHead>
                                     <Style.TableHead>ACTIONS</Style.TableHead>
 
                                 </Style.TableRow>
                             </thead>
+                            {/* <Style.TableScroll> */}
                             <tbody>
+                                {/* <Style.TableScroll> */}
                                 {allCoaches && allCoaches.map((data, index) => (
-                                    <Style.TableRow key={index}>
-                                        <Style.TableCell>{data.userName}</Style.TableCell>
+                                    <Style.TableRow2 key={index}>
+                                        <Style.TableCell>{data?.userName}</Style.TableCell>
                                         <Style.TableCell>{data?.gym.name}</Style.TableCell>
+                                        {/* <Style.TableCell>{data?.status}
+                                        
+                                        </Style.TableCell> */}
+                                         {data?.status === "PENDING_APPROVAL"
+                                    ?
+                                    <Style.TableCell style={{display:"flex",justifyContent:"space-evenly"}} >
+                                        <AcceptButton onClick={() => {
+                                            handleApprove(data.id);
+
+                                        }}>Accept</AcceptButton>
+                                        <RejectButton onClick={() => {
+                                            handleReject(data.id);
+
+                                        }}>Cancel</RejectButton>
+                                    </Style.TableCell>
+                                    :
+                                    <Style.TableCell>
+                                    <RejectButton >{data.status}</RejectButton>
+                                </Style.TableCell>
+                                }
+                               
                                         <Style.TableCell>
                                             {role === "admin" &&
                                                 <ViewButton onClick={() => {  
@@ -197,19 +221,21 @@ const index = () => {
                                             }
                                         </Style.TableCell>
 
-                                    </Style.TableRow>
+                                    </Style.TableRow2>
                                 ))}
+                                {/* </Style.TableScroll> */}
                             </tbody>
+                             {/* </Style.TableScroll> */}
                         </Style.TableWrapper>
                     </Style.TableContainer>
                 </React.Fragment>
             }
             {role && role !== "admin" &&
                 <React.Fragment>
-                    <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} onClick={handleButtonClick2}>Add Schedule</Button>
+                    <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} onClick={handleButtonClick2}>+</Button>
                     <Style.MainDiv>
-                        <Style.Schedular  >
-                            <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem",textAlign:"center" }}>Schedule </div>
+                        <Style.Schedular   style={{filter: showModal2 ? 'blur(5px)' : 'none'  }}>
+                            <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem",textAlign:"center",filter: showModal2 ? 'blur(5px)' : 'none' }}>Schedule </div>
                             
                             {events.length > 0 ?
                                 <Scheduler
@@ -225,16 +251,19 @@ const index = () => {
                                         endHour: 24
                                         // step: 30
                                     }}
+                                   
                                 />
                                 :
-                                <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem",textAlign:"center",  marginTop:"30%" }}>No Schedule Exist </div>
+                                <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem",textAlign:"center",filter: showModal2 ? 'blur(5px)' : 'none'  }}>No Schedule Exist </div>
                             }
+                            
                         </Style.Schedular>
+                        {showModal2 && <AddCoache style={{position:"absolute",top:"40%" ,left:"52%",zIndex:"1" }} closeModal={closeModal2} />}
                     </Style.MainDiv>
                 </React.Fragment>
             }
             <Loader isLoading={loading}></Loader>
-            {showModal2 && <AddCoache closeModal={closeModal2} />}
+
         </div>
     )
 }

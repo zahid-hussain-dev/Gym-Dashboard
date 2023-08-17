@@ -156,7 +156,7 @@ const index = () => {
       }
       {role && role === "admin" &&
 
-        <Style.TableContainer>
+        <Style.TableContainer style={{ filter: showModal ? 'blur(5px)' : 'none' }} >
           <Style.TableWrapper>
             <thead>
               <Style.TableRow>
@@ -187,7 +187,7 @@ const index = () => {
       }
       {showModal && <AddGymSchedule closeModal={closeModal} />}
       {role && role === "gym" &&
-        <div style={{ display: "flex", justifyContent: "space-around" }}>
+        <div style={{ display: "flex", justifyContent: "space-around",filter: showModal? 'blur(5px)' : 'none'  }}>
           <div style={{ width: "75%", height: "50%" }}>
             <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem" }}>Gym Schedule </div>
             {events.length > 0 &&

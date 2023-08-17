@@ -179,11 +179,10 @@ const ViewId = () => {
     return (
         <div>
             <React.Fragment >
-                <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "5%" }} onClick={handleButtonClick2}>Add Schedule</Button>
+                <Button style={{ width: "auto", marginBottom: "1rem",marginLeft:"83%",marginTop:"4%"}} onClick={handleButtonClick2}>+</Button>
                 {showModal2 && <AddCoache closeModal={closeModal2} id={Id} />}
                 {showModal2 ?
-                    <Style.MainDiv>
-                        {/* style={{ filter: showModal2 ? 'blur(5px)' : 'none' }} */}
+                    <Style.MainDiv style={{ filter: showModal2 ? 'blur(5px)' : 'none',marginTop:"4%" }}> 
                         <Style.Schedular style={{ filter: showModal2 ? 'blur(5px)' : 'none' }} >
                             <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem" }}>Schedule</div>
                             {events.length > 0 ?
@@ -203,13 +202,25 @@ const ViewId = () => {
                                 />
 
                                 :
-                                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem",textAlign:"center"}}>No Schedule Exist for this Coach {CoachName} </div>
-                            }
+                                <Scheduler
+                                // height={300}
+                                // loading={true}
+                                onSelectedDateChange={false}
+                                events={events}
+                                onConfirm={handleConfirm}
+                                week={{
+                                    weekDays: [0, 1, 2, 3, 4, 5, 6],
+                                    weekStartOn: 6,
+                                    startHour: 9,
+                                    endHour: 24
+                                    // step: 30
+                                }}
+                            />                            }
                         </Style.Schedular>
 
                     </Style.MainDiv>
                     :
-                    <Style.MainDiv2 >
+                    <Style.MainDiv2 style={{ filter: showModal2 ? 'blur(5px)' : 'none',marginTop:"4%"  }} >
                         <Style.Schedular >
                             <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem",textAlign:"center"  }}>Schedule </div>
                             {events.length > 0 ?
@@ -229,15 +240,27 @@ const ViewId = () => {
                                     }}
                                 />
                                 :
-                                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem", textAlign:"center" }}>No Schedule Exist for this Coach {CoachName}</div>
-
+                                <Scheduler
+                                // height={300}
+                                // loading={true}
+                                onSelectedDateChange={false}
+                                events={events}
+                                onConfirm={handleConfirm}
+                                week={{
+                                    weekDays: [0, 1, 2, 3, 4, 5, 6],
+                                    weekStartOn: 6,
+                                    startHour: 9,
+                                    endHour: 24
+                                    // step: 30
+                                }}
+                            />
                             }
                         </Style.Schedular>
 
                     </Style.MainDiv2>}
             </React.Fragment>
-            <Style.SubTitle style={{ marginTop: "1rem" ,marginLeft: "5%",filter: showModal2 ? 'blur(5px)' : 'none'}}>Booking Listing</Style.SubTitle>
-            <Style.TableContainer style={{ filter: showModal2 ? 'blur(5px)' : 'none' }}>
+            <Style.SubTitle style={{ marginTop: "1rem" ,marginLeft: "5%",filter: showModal2 ? 'blur(5px)' : 'none',marginTop: "30%"}}>Booking Listing</Style.SubTitle>
+            <Style.TableContainer style={{ filter: showModal2 ? 'blur(5px)' : 'none',marginTop: "30%" ,marginTop:"4%"  }}>
                 <Style.TableWrapper>
                     <thead>
                         <Style.TableRow>

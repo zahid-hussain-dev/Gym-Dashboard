@@ -95,7 +95,7 @@ const ViewId = () => {
       {/* <Styled.Globalstyle/> */}
       <div>
         <Button
-          style={{ width: "auto", marginBottom: "1rem", marginLeft: "5%" }}
+          style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }}
           onClick={handleButtonClick}
         >
           Add Gym Schedule
@@ -103,23 +103,23 @@ const ViewId = () => {
         {/* {showModal && <AddGymSchedule closeModal={closeModal} />} */}
         {showModal && <AddGymSchedule closeModal={closeModal} id={Id} />}
         {showModal ? (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-around",
-              filter: "blur(5px)",
-              textAlign:"center"
-            }}
-          >
-            <div style={{ width: "100%", height: "50%"}}>
-              <div
-                style={{
-                  fontSize: "24px",
-                  color: "white",
-                  marginBottom: "1rem",
-                
-                }}
-              >
+         <div
+          style={{
+            display: "flex",
+            justifyContent: "space-around",
+            filter: "blur(5px)",
+            textAlign:"center"
+          }}
+        >
+          <div style={{ width: "90%", height: "40%",marginTop:"2%"}}>
+            <div
+              style={{
+                fontSize: "24px",
+                color: "white",
+                marginBottom: "1rem",
+                textAlign:"center"
+              }}
+            >
                 Gym Schedule{" "}
               </div>
               {events.length > 0 ?
@@ -138,18 +138,20 @@ const ViewId = () => {
                   }}
                 />
                 :
-                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem" }}>No Schedule Exist for this Gym {GymName} </div>
+                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem",  textAlign:"center" }}>No Schedule Exist for this Gym {GymName} </div>
               }
             </div>
           </div>
         ) : (
           <div style={{ display: "flex", justifyContent: "space-around" }}>
-            <div style={{ width: "45%", height: "50%",textAlign:"center",marginTop:"12%"}}>
+            <div style={{ width: "90%", height: "50%",marginTop:"2%"}}>
               <div
                 style={{
                   fontSize: "24px",
                   color: "white",
                   marginBottom: "1rem",
+                  width:"100%",
+                  textAlign:"center"
                 }}
               >
                 Gym Schedule{" "}
@@ -170,12 +172,11 @@ const ViewId = () => {
                   }}
                 />
                 :
-                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem" }}>No Schedule Exist for this Gym {GymName} </div>
+                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem",  textAlign:"center" }}>No Schedule Exist for this Gym {GymName} </div>
               }
             </div>
           </div>
         )}
-         <Loader isLoading={loading}></Loader>
       </div>
     </>
   );

@@ -12,7 +12,7 @@ export const PopupContainer = styled.div`
   width: 40%;
   margin: 0px auto;
   border-radius: 10px;
-  margin-top: 12%;
+  margin-top: 10%;
   position:fixed;
   z-index:9999;
   left:35%;
