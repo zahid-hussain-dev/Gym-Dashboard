@@ -95,7 +95,7 @@ const index = () => {
                                 {data.status === "PENDING"
                                     ?
                                     <Style.TableCell >
-                                       <div style={{width:"40%",display:"flex",justifyContent:"space-between",marginLeft:"30%"}}>
+                                       <div style={{width:"70%",display:"flex",justifyContent:"space-between",marginLeft:"15%"}}>
                                         <AcceptButton onClick={() => {
                                             handleApprove(data.id);
 

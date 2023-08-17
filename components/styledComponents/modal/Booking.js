@@ -287,7 +287,7 @@ const AddChildForm = ({ Closed }) => {
  
 
   return (
-    <Style.PopupContainer>
+    <Style.PopupContainer >
       <Style.PopupMainHeading>
         <Style.PopupHeading>Add Booking</Style.PopupHeading>
         <Image src={close} className="close" onClick={Closed} alt="close" width={20} height={20} />

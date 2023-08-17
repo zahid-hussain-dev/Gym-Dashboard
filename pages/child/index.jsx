@@ -59,7 +59,7 @@ const Index = () => {
       <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} onClick={handleAddChildClick} >+</Button>
       <div>
         {showModal5 && <AddChildren onClose={handleCloseModal5} />}
-        <Style.TableContainer>
+        <Style.TableContainer style={{ filter: showModal5 ? 'blur(5px)' : 'none' }} >
           <Style.TableWrapper>
             <thead>
               <Style.TableRow>
