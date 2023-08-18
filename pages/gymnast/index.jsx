@@ -5,6 +5,7 @@ import * as Style from '../../components/styledComponents/gymnast/Gymnast';
 import { useRouter } from 'next/navigation';
 import { axiosInterceptor } from '../../axios/axiosInterceptor';
 import Loader from '../../components/styledComponents/loader/loader';
+import moment from "moment";
 import swal from "sweetalert";
 
 const index = () => {
@@ -23,6 +24,7 @@ const index = () => {
   const [coaches, setCoaches] = useState([]);
   const [allGymnast, setAllGymnast] = useState([]);
   const [gymnastBookingList, setGymnastBookingList] = useState([]);
+  const [fetchedHours, setFetchedHours] = useState([]);
 
   useEffect(() => {
     // Perform localStorage action
@@ -30,6 +32,13 @@ const index = () => {
     setRole(userRole);
 
   }, [])
+  const formatTimeTo12Hour = date => {
+    return date.toLocaleTimeString([], {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+  };
   const getAllGymnast = async () => {
     try {
       setLoading(true)
@@ -77,6 +86,7 @@ const index = () => {
     if (bookingCoach && bookingDate) {
       getAvailableTimeSlots();
     }
+    console.log("fetchedHours", fetchedHours)
   }, [bookingCoach, bookingDate])
 
   const option2 = [
@@ -144,6 +154,7 @@ const index = () => {
   };
   const handleSelectChangeTime = (event) => {
     setSelectedOptionTime(event.target.value);
+    console.log("event.target.value", event.target.value)
     const { name, value } = event.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -153,9 +164,45 @@ const index = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const splitTime = formData.time.split("-")
     console.log("formData", formData)
+    var from = moment(
+      `${formData.date} ${splitTime[0]}`,
+      'YYYY-MM-DD h:mm a',
+    ).format('YYYY-MM-DD HH:mm:ss');
+    var to = moment(
+      `${formData.date} ${splitTime[1]}`,
+      'YYYY-MM-DD h:mm a',
+    ).format('YYYY-MM-DD HH:mm:ss');
+
+    let Payload = {
+      childrenId: formData.childrenId,
+      coachId: formData.coachId,
+      from: from,
+      to: to,
+    }
+    try {
+      setLoading(true)
+      const res = await axiosInterceptor().post(
+        `/api/bookings`,
+        Payload,
+      );
+      console.log("responsse of post booking", res)
+      if (res.status == 201) {
+        if (res.data.status === "PENDING") {
+          swal('Success!', "Your Slot has beed booked wait for confirmation ", 'success')
+        }
+      }
+
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      swal('Oops!', error.data.message, 'error')
+      console.log(error)
+    }
 
   };
+  
   const handleSelectChild = (event) => {
     setSelectedOption(event.target.value);
     const { name, value } = event.target;
@@ -193,6 +240,42 @@ const index = () => {
         `api/gymnast/coach/info?coachId=${id}&date=${date}`,
       );
       console.log("responsse of timeslots", res)
+
+      if (res.status === 200) {
+        const coachAvailability = res.data.privateAllowedSlots[0];
+        const startTime = new Date(coachAvailability.from);
+        const endTime = new Date(coachAvailability.to);
+        const bookingSlots = res.data.bookings;
+        const localBookingSlots = bookingSlots.map(booking => {
+          const bookingStart = new Date(booking.currentFrom);
+          const bookingEnd = new Date(booking.currentTo);
+          return {
+            currentFrom: bookingStart,
+            currentTo: bookingEnd,
+          };
+        });
+        const fetchedSlots = [];
+        const halfHour = 30 * 60 * 1000; // 30 minutes in milliseconds
+        let currentSlot = new Date(startTime);
+        while (currentSlot.getTime() + halfHour <= endTime.getTime()) {
+          const fromTime = new Date(currentSlot);
+          const toTime = new Date(currentSlot.getTime() + halfHour);
+          const isSlotAvailable = !localBookingSlots.some(
+            booking =>
+              currentSlot >= booking.currentFrom &&
+              currentSlot < booking.currentTo,
+          );
+          if (isSlotAvailable) {
+            fetchedSlots.push({
+              from: formatTimeTo12Hour(fromTime),
+              to: formatTimeTo12Hour(toTime),
+            });
+          }
+          currentSlot = new Date(currentSlot.getTime() + halfHour);
+        }
+        setFetchedHours(fetchedSlots);
+      }
+
       setLoading(false)
     } catch (error) {
       setLoading(false)
@@ -229,9 +312,8 @@ const index = () => {
               <div>
                 <Style.CenteredDropdownContainer className="dropdown-container">
                   <div>
-                    <Style.Label className="label">Select New Child:</Style.Label>
-                    <Style.Select className="input-dataa" name='child' value={selectedOption} onChange={handleSelectChange}>
-                      <option value="">Child</option>
+                    <Style.Label className="label">Select Child:</Style.Label>
+                    <Style.Select className="input-dataa" name='childrenId' value={selectedOption} onChange={handleSelectChange}>
                       {childrens && childrens.map((option) => (
                         <option key={option.id} value={option.id}>
                           {option.name}
@@ -241,8 +323,7 @@ const index = () => {
                   </div>
                   <div>
                     <Style.Label className="label">Select Coaches:</Style.Label>
-                    <Style.Select className="input-dataa" name='coach' value={selectedOptionCoach} onChange={handleSelectChangeCoach}>
-                      <option value="">Coaches</option>
+                    <Style.Select className="input-dataa" name='coachId' value={selectedOptionCoach} onChange={handleSelectChangeCoach}>
                       {coaches && coaches.map((option) => (
                         <option key={option.id} value={option.id}>
                           {option.userName}
@@ -265,13 +346,12 @@ const index = () => {
                   </div>
 
                 </Style.CenteredDropdownContainer>
-                <div style={{    display: "flex",flexDirection: "column", justifyContent: "center",alignItems: "center", marginLeft:"6%"}}>
+                <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", marginLeft: "6%" }}>
                   <Style.Label className="label">Time Slotes:</Style.Label>
                   <Style.Select className="input-dataa" name='time' value={selectedOptionTime} onChange={handleSelectChangeTime}>
-                    <option value="">Time Slotes</option>
-                    {option2.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
+                    {fetchedHours && fetchedHours.map((option, index) => (
+                      <option key={index} value={`${option.from} - ${option.to}`}>
+                        {option.from} - {option.to}
                       </option>
                     ))}
                   </Style.Select>
@@ -298,20 +378,20 @@ const index = () => {
             </thead>
             <tbody>
 
-             {allGymnast && allGymnast.map((data, index) => (
+              {allGymnast && allGymnast.map((data, index) => (
                 <Style.TableRow key={index}>
                   <Style.TableCell>{data?.id}</Style.TableCell>
                   <Style.TableCell>{data?.firstName}{" "}{data?.lastName}</Style.TableCell>
-                  <Style.TableCell>                    
+                  <Style.TableCell>
                     <ViewButton onClick={() => {
                       { router.push(`/gymnast/view/${data.id}`) }
                     }}>View</ViewButton>
-                    </Style.TableCell>
-                  
+                  </Style.TableCell>
+
                 </Style.TableRow>
               ))}
 
-              
+
             </tbody>
           </Style.TableWrapper>
         </Style.TableContainer>
@@ -342,6 +422,7 @@ const index = () => {
           </Style.TableWrapper>
         </Style.TableContainer>
       }
+      <Loader isLoading={loading}></Loader>
 
     </div>
   )

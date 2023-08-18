@@ -91,7 +91,7 @@ const index = () => {
                         {privateBookings && privateBookings.map((data, index) => (
                             <Style.TableRow key={index}>
                                 <Style.TableCell>{data.coach.userName}</Style.TableCell>
-                                <Style.TableCell>{new Date(data?.from).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} {"-"} {new Date(data?.to).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} </Style.TableCell>
+                                <Style.TableCell>{new Date(data?.from).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', })} {"-"} {new Date(data?.to).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', })} </Style.TableCell>
                                 {data.status === "PENDING"
                                     ?
                                     <Style.TableCell>
@@ -106,14 +106,12 @@ const index = () => {
                                     </Style.TableCell>
                                     :
                                     <Style.TableCell>
-                                        <AcceptButton
-                                            disabled={true}
-                                            onClick={() => {
-                                                console.log("child", data.id)
-                                                // handleApprove(data.id);
+                                        {data.status === "REJECT" ?
+                                            <p style={{ color: "#ff0000"  }}>  {data.status}ED</p>
+                                            :
+                                            <p style={{ color: "#00753D" }}>  {data.status}ED</p>
 
-                                            }}>{data.status}ED</AcceptButton>
-
+                                        }
                                     </Style.TableCell>
 
                                 }

@@ -9,6 +9,10 @@ import { axiosInterceptor } from '../../axios/axiosInterceptor';
 import Loader from '../../components/styledComponents/loader/loader';
 import swal from "sweetalert";
 import moment from "moment";
+import { setCoachName } from '../../store/slices/user/userSlice';
+
+import { useDispatch, useSelector } from "react-redux";
+
 
 const index = () => {
     const [role, setRole] = useState("");
@@ -21,6 +25,8 @@ const index = () => {
         setShowModal2(true);
         console.log("modal click")
     };
+    const CoachName = useSelector((state) => state.user.coachName);
+    const dispatch = useDispatch();
 
     const closeModal2 = () => {
         setShowModal2(false);
@@ -186,7 +192,7 @@ const index = () => {
                                         <Style.TableCell>{data?.gym.name}</Style.TableCell>
                                         <Style.TableCell>
                                             {role === "admin" &&
-                                                <ViewButton onClick={() => { router.push(`/coaches/view/${data?.id}`) }}>View</ViewButton>
+                                                <ViewButton onClick={() => { dispatch(setCoachName(data.userName)); router.push(`/coaches/view/${data?.id}`) }}>View</ViewButton>
                                             }
                                         </Style.TableCell>
 

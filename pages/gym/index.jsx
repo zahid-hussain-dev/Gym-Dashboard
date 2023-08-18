@@ -192,6 +192,14 @@ const index = () => {
               <Scheduler
                 // height={300}
                 // loading={true}
+                // eventRenderer={() => {
+                //   console.log("here")
+                //   handleButtonClick()
+
+                // }}
+                // onEventClick={() => {
+                //   handleButtonClick()
+                // }}
                 onSelectedDateChange={false}
                 events={events}
                 onConfirm={handleConfirm}

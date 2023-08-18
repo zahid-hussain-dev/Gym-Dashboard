@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Scheduler } from "@aldabil/react-scheduler";
 import { EVENTS } from "../../../components/MainComponents/Events";
-import { Button, AcceptButton,RejectButton } from '../../../components/styledComponents/button/Button';
+import { Button, AcceptButton, RejectButton } from '../../../components/styledComponents/button/Button';
 import * as Style from "../../../components/styledComponents/coachesStyle/coaches";
 import AddCoache from '../../../components/styledComponents/modal/AddCoache';
 import { axiosInterceptor } from '../../../axios/axiosInterceptor';
 import { useRouter } from 'next/router';
+import { useDispatch, useSelector } from "react-redux";
 
 const ViewId = () => {
     const router = useRouter();
@@ -15,7 +16,8 @@ const ViewId = () => {
 
     const [events, setEvents] = useState([]);
     const [bookings, setBookings] = useState([]);
-
+    const CoachName = useSelector((state) => state.user.coachName);
+    console.log("CoachName", CoachName)
 
     const handleButtonClick2 = () => {
         setShowModal2(true);
@@ -40,8 +42,8 @@ const ViewId = () => {
         console.log("firstDay", firstDay.toISOString().slice(0, 10))
 
         const Payload = {
-            from: "2023-07-25",
-            to: "2023-07-26"
+            from: "2023-08-10",
+            to: "2023-08-18"
         }
 
         try {
@@ -180,6 +182,12 @@ const ViewId = () => {
                                 <Scheduler
                                     // height={300}
                                     // loading={true}
+                                    eventRenderer={() => {
+                                        console.log("here")
+                                    }}
+                                    onEventClick={() => {
+                                        console.log("here")
+                                    }}
                                     onSelectedDateChange={false}
                                     events={events}
                                     onConfirm={handleConfirm}
@@ -193,7 +201,7 @@ const ViewId = () => {
                                 />
 
                                 :
-                                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem" }}>No Schedule Exist for this Coach {Id} </div>
+                                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem" }}>No Schedule Exist for this Coach {CoachName} </div>
                             }
                         </Style.Schedular>
 
@@ -208,6 +216,12 @@ const ViewId = () => {
                                     // height={300}
                                     // loading={true}
                                     onSelectedDateChange={false}
+                                    eventRenderer={() => {
+                                        console.log("here")
+                                    }}
+                                    onEventClick={() => {
+                                        console.log("here")
+                                    }}
                                     events={events}
                                     onConfirm={handleConfirm}
                                     week={{
@@ -219,7 +233,7 @@ const ViewId = () => {
                                     }}
                                 />
                                 :
-                                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem" }}>No Schedule Exist for this Coach {Id} </div>
+                                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem" }}>No Schedule Exist for this Coach {CoachName} </div>
 
                             }
                         </Style.Schedular>
@@ -279,7 +293,7 @@ const ViewId = () => {
 
                             </Style.TableRow>
                         ))}
-                        
+
                     </tbody>
                 </Style.TableWrapper>
             </Style.TableContainer>
