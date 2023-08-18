@@ -4,13 +4,14 @@ import Image from "next/image";
 import close from "../../../public/assests/SVGs/close-svgrepo-com (2).svg";
 import { axiosInterceptor } from '../../../axios/axiosInterceptor';
 import swal from "sweetalert";
+import moment from "moment";
 
 const AddCoachForm = ({ closeModal, id }) => {
   const [formData, setFormData] = useState({
-    timeStart: '',
-    timeEnd: '',
-    date: '',
-    type: '',
+    timeStart: moment().format("HH:mm"),
+    timeEnd: moment().format("HH:mm"),
+    date: new Date().toISOString().substring(0, 10),
+    type: 'PUBLIC',
   });
   const [loading, setLoading] = useState(false);
   const [events, setEvents] = useState([]);
@@ -26,8 +27,9 @@ const AddCoachForm = ({ closeModal, id }) => {
     { value: 'PRIVATE', label: 'PRIVATE' },
   ];
   const [selectedOption, setSelectedOption] = useState('');
-  const [selectedOptionStatus, setSelectedOptionStatus] = useState('');
-
+  const [selectedOptionStatus, setSelectedOptionStatus] = useState('PUBLIC');
+  console.log("var CurrentTime = new Date().getTime();", moment().format("HH:mm")
+  )
   const handleSelectChange = (event) => {
     setSelectedOption(event.target.value);
     const { name, value } = event.target;
@@ -97,45 +99,49 @@ const AddCoachForm = ({ closeModal, id }) => {
 
     <Styled.PopupContainer>
       <Styled.PopupMainHeading>
-        <Styled.PopupHeading style={{marginLeft:"42%"}}>Add Schedule</Styled.PopupHeading>
+        <Styled.PopupHeading style={{ marginLeft: "42%" }}>Add Schedule</Styled.PopupHeading>
         <Image src={close} className="close" onClick={closeModal} alt="close" width={20} height={20} />
       </Styled.PopupMainHeading>
       {/* Form content */}
       <form onSubmit={handleSubmit}>
         <Styled.MainForm >
           <div >
-             <div>
+            <div>
               <Styled.Label>Select Date:</Styled.Label>
               <Styled.InputData
                 type="date"
                 name="date"
+                id="date"
+                defaultValue={new Date().toISOString().substring(0, 10)}
                 onChange={handleChange}
-                value={formData.date}
+                value={formData.date && formData.date}
               />
-              </div>
-              <div>
-              <Styled.Label className="label">Time Start:</Styled.Label>
-              <Styled.InputData
-                type="time"
-                name="timeStart"
-                onChange={handleChange}
-                value={formData.timeStart}
-              />
-               </div>
-          </div>
-          <div >
-               <div>
+            </div>
+            <div>
               <Styled.Label className="label">Time End:</Styled.Label>
               <Styled.InputData
                 type="time"
                 name="timeEnd"
                 onChange={handleChange}
-                value={formData.timeEnd}
+                value={formData.timeEnd && formData.timeEnd}
+              />
+            </div>
+
+          </div>
+          <div >
+            <div>
+              <Styled.Label className="label">Time Start:</Styled.Label>
+              <Styled.InputData
+                type="time"
+                name="timeStart"
+                onChange={handleChange}
+                defaultValue={new Date().getHours() + ":" + "00" + "00"}
+                value={formData.timeStart && formData.timeStart}
               />
             </div>
             <div>
               <Styled.Label className="label">Set Time:</Styled.Label>
-              <Styled.Select className="input-dataa" name="type" value={selectedOptionStatus} onChange={handleSelectChangeStatus}>
+              <Styled.Select className="input-dataa" name="type" defaultValue={selectedOptionStatus} value={selectedOptionStatus} onChange={handleSelectChangeStatus}>
                 <option value="">Time Status</option>
                 {option3.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -143,7 +149,7 @@ const AddCoachForm = ({ closeModal, id }) => {
                   </option>
                 ))}
               </Styled.Select>
-              </div>
+            </div>
           </div>
         </Styled.MainForm>
         <Styled.SubmitForm type="submit">

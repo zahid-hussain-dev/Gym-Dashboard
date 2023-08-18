@@ -1,7 +1,7 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Scheduler } from "@aldabil/react-scheduler";
 import { EVENTS } from "../../components/MainComponents/Events";
-import { Button, ViewButton,AcceptButton,RejectButton } from '../../components/styledComponents/button/Button';
+import { Button, ViewButton, AcceptButton, RejectButton } from '../../components/styledComponents/button/Button';
 import * as Style from "../../components/styledComponents/coachesStyle/coaches";
 import AddCoache from "../../components/styledComponents/modal/AddCoache"
 import { useRouter } from 'next/navigation';
@@ -18,12 +18,24 @@ const index = () => {
     const [showModal2, setShowModal2] = useState(false);
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [isMapped, setIsMapped] = useState(false);
+
     const [allCoaches, setAllCoaches] = useState([]);
     const dispatch = useDispatch();
     const handleButtonClick2 = () => {
         setShowModal2(true);
         console.log("modal click")
-       
+
+    };
+    const CustomEditor = ({ scheduler }) => {
+        const event = scheduler.edited;
+        console.log("scheduler", scheduler);
+
+        return (
+            <div>
+                <AddCoache style={{ position: "absolute", top: "40%", left: "52%", zIndex: "1" }} closeModal={() => { closeModal2(); scheduler.close() }} />
+            </div>
+        );
     };
 
     const closeModal2 = () => {
@@ -31,7 +43,7 @@ const index = () => {
     };
     const handleConfirm = async (event, action) => {
         console.log("handleConfirm =", action, event.title);
-
+        console.log("evnets", event)
         if (action === "edit") {
             /** PUT event to remote DB */
         } else if (action === "create") {
@@ -39,7 +51,7 @@ const index = () => {
             const Payload = {
                 from: moment(event.start).format('YYYY-MM-DD HH:mm:ss'),
                 to: moment(event.end).format('YYYY-MM-DD HH:mm:ss'),
-                type: "PRIVATE",
+                type: event.TimeStatus,
             }
             console.log("payload", Payload)
 
@@ -126,6 +138,40 @@ const index = () => {
             ))
             setEvents(res.data);
             setLoading(false)
+            getCoachGymScedule();
+
+        } catch (error) {
+            setLoading(false)
+            swal('Oops!', "error.data.message", 'error')
+            console.log(error)
+        }
+    }
+    const getCoachGymScedule = async () => {
+        try {
+            setLoading(true)
+            console.log("api calling for schedule")
+            const res = await axiosInterceptor().get(
+                `/api/gym/schedule`,
+            );
+            console.log("responsse of schedule gym", res.data)
+            res.data.map((item, index) => (
+                item['event_id'] = item.id,
+                item['title'] = "Open hours",
+                item['start'] = new Date(item.from),
+                item['end'] = new Date(item.to),
+                item['editable'] = false,
+                item['deletable'] = false,
+                item['color'] = "#0000FF"
+            ))
+            setEvents(res.data)
+            // setEvents((prev) => {
+            //     return [
+            //         ...prev,
+            //         ...res.data
+            //     ]
+            // });
+            setIsMapped(true);
+            setLoading(false)
         } catch (error) {
             setLoading(false)
             swal('Oops!', "error.data.message", 'error')
@@ -138,7 +184,6 @@ const index = () => {
             console.log("api calling for all coaches")
             const res = await axiosInterceptor().get(
                 `/api/coach/`,
-
             );
             console.log("responsse of all coaches", res)
             setAllCoaches(res?.data?.data)
@@ -153,6 +198,7 @@ const index = () => {
         if (role == "coach") {
             console.log("here")
             getCoachScedule();
+            // getCoachGymScedule();
         }
         if (role == "admin") {
             console.log("here in admin")
@@ -160,19 +206,15 @@ const index = () => {
         }
     }, [role, showModal2])
 
-    const tableCell = [
-        { id: 1, gym: 'Gym1', coach: 'mudasir' },
-        { id: 2, gym: 'Gym2', coach: 'rohab' },
-    ];
-
+    console.log("evnts all", events)
     //       const headingStyle = {
     //   backgroundColor: 'white',
     // //   filter: 'blur(5px)'
     //   };
     return (
-        <div style={{marginTop: "10%" }}>
+        <div style={{ marginTop: "10%" }}>
             {role && role === "admin" &&
-                <React.Fragment style={{marginTop:"5%"}}>
+                <React.Fragment style={{ marginTop: "5%" }}>
                     <Style.TableContainer >
                         <Style.TableWrapper>
                             <thead>
@@ -194,30 +236,30 @@ const index = () => {
                                         {/* <Style.TableCell>{data?.status}
                                         
                                         </Style.TableCell> */}
-                                         {data?.status === "PENDING_APPROVAL"
-                                    ?
-                                    <Style.TableCell style={{display:"flex",justifyContent:"space-evenly"}} >
-                                        <AcceptButton onClick={() => {
-                                            handleApprove(data.id);
+                                        {data?.status === "PENDING_APPROVAL"
+                                            ?
+                                            <Style.TableCell style={{ display: "flex", justifyContent: "space-evenly" }} >
+                                                <AcceptButton onClick={() => {
+                                                    handleApprove(data.id);
 
-                                        }}>Accept</AcceptButton>
-                                        <RejectButton onClick={() => {
-                                            handleReject(data.id);
+                                                }}>Accept</AcceptButton>
+                                                <RejectButton onClick={() => {
+                                                    handleReject(data.id);
 
-                                        }}>Cancel</RejectButton>
-                                    </Style.TableCell>
-                                    :
-                                    <Style.TableCell>
-                                    <RejectButton >{data.status}</RejectButton>
-                                </Style.TableCell>
-                                }
-                               
+                                                }}>Cancel</RejectButton>
+                                            </Style.TableCell>
+                                            :
+                                            <Style.TableCell>
+                                                <RejectButton >{data.status}</RejectButton>
+                                            </Style.TableCell>
+                                        }
+
                                         <Style.TableCell>
                                             {role === "admin" &&
-                                                <ViewButton onClick={() => {  
+                                                <ViewButton onClick={() => {
                                                     dispatch(setCoachName(data.userName));
                                                     router.push(`/coaches/view/${data?.id}`)
-                                                 }}>View</ViewButton>
+                                                }}>View</ViewButton>
                                             }
                                         </Style.TableCell>
 
@@ -225,25 +267,42 @@ const index = () => {
                                 ))}
                                 {/* </Style.TableScroll> */}
                             </tbody>
-                             {/* </Style.TableScroll> */}
+                            {/* </Style.TableScroll> */}
                         </Style.TableWrapper>
                     </Style.TableContainer>
                 </React.Fragment>
             }
             {role && role !== "admin" &&
-                <React.Fragment style={{marginTop:"5%"}}>
-                    <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "84%",marginTop:"10px" }} onClick={handleButtonClick2}>+</Button>
+                <React.Fragment style={{ marginTop: "5%" }}>
+                    <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "84%", marginTop: "10px" }} onClick={handleButtonClick2}>+</Button>
                     <Style.MainDiv>
-                        <Style.Schedular   style={{filter: showModal2 ? 'blur(5px)' : 'none'  }}>
-                            <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem",textAlign:"center",filter: showModal2 ? 'blur(5px)' : 'none' }}>Schedule </div>
-                            
-                            {events.length > 0 ?
+                        <Style.Schedular style={{ filter: showModal2 ? 'blur(5px)' : 'none' }}>
+                            <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem", textAlign: "center", filter: showModal2 ? 'blur(5px)' : 'none' }}>Schedule </div>
+
+                            {events.length > 0 && isMapped ?
                                 <Scheduler
                                     // height={300}
                                     // loading={true}
-                                    eventRenderer={()=>{
-                                        console.log("event is clikce")
-                                    }}
+                                    // eventRenderer={() => {
+                                    //     console.log("event is clikce")
+                                    // }}
+                                    // customEditor={() => handleButtonClick2()}
+                                    // customEditor={(scheduler) => <CustomEditor scheduler={scheduler} />}
+                                    fields={[
+                                        {
+                                            name: "TimeStatus",
+                                            type: "select",
+                                            default: "PUBLIC",
+                                            // Should provide options with type:"select"
+                                            options: [
+                                                { id: 1, text: "Public", value: "PUBLIC" },
+                                                { id: 2, text: "Private", value: "PRIVATE" }
+                                            ],
+                                            config: { label: "Time Status", required: true, errMsg: "Plz Select Status" }
+                                        },
+
+                                    ]}
+
                                     onSelectedDateChange={false}
                                     events={events}
                                     onConfirm={handleConfirm}
@@ -254,14 +313,14 @@ const index = () => {
                                         endHour: 24
                                         // step: 30
                                     }}
-                                   
+
                                 />
                                 :
-                                <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem",textAlign:"center",filter: showModal2 ? 'blur(5px)' : 'none'  }}>No Schedule Exist </div>
+                                <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem", textAlign: "center", filter: showModal2 ? 'blur(5px)' : 'none' }}>No Schedule Exist </div>
                             }
-                            
+
                         </Style.Schedular>
-                        {showModal2 && <AddCoache style={{position:"absolute",top:"40%" ,left:"52%",zIndex:"1" }} closeModal={closeModal2} />}
+                        {showModal2 && <AddCoache style={{ position: "absolute", top: "40%", left: "52%", zIndex: "1" }} closeModal={() => closeModal2()} />}
                     </Style.MainDiv>
                 </React.Fragment>
             }
