@@ -80,7 +80,7 @@ const index = () => {
   };
 
   return (
-    <div style={{ marginTop: "4rem", marginBottom: "20px" }}>
+    <div style={{ marginTop: "10%", marginBottom: "20px" }}>
       <div className="login-card border">
         <h2 className="login-heading">Login</h2>
         <div>

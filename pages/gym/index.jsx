@@ -149,10 +149,12 @@ const index = () => {
   }, [events])
 
   return (
-    <div>
+    <div style={{marginTop: "10%" }}>
       {role && role === "gym" &&
-        <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} onClick={handleButtonClick}>Add Gym Schedule</Button>
-
+      <div>
+ <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} >Add Gym Schedule</Button>
+ <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} onClick={handleButtonClick}>+</Button>
+      </div>
       }
       {role && role === "admin" &&
 
@@ -189,7 +191,7 @@ const index = () => {
       {role && role === "gym" &&
         <div style={{ display: "flex", justifyContent: "space-around",filter: showModal? 'blur(5px)' : 'none'  }}>
           <div style={{ width: "75%", height: "50%" }}>
-            <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem" }}>Gym Schedule </div>
+            <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem", textAlign:"center" }}>Gym Schedule </div>
             {events.length > 0 &&
               <Scheduler
                 // height={300}

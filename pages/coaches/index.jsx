@@ -170,9 +170,9 @@ const index = () => {
     // //   filter: 'blur(5px)'
     //   };
     return (
-        <div>
+        <div style={{marginTop: "10%" }}>
             {role && role === "admin" &&
-                <React.Fragment>
+                <React.Fragment style={{marginTop:"5%"}}>
                     <Style.TableContainer >
                         <Style.TableWrapper>
                             <thead>
@@ -231,8 +231,8 @@ const index = () => {
                 </React.Fragment>
             }
             {role && role !== "admin" &&
-                <React.Fragment>
-                    <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} onClick={handleButtonClick2}>+</Button>
+                <React.Fragment style={{marginTop:"5%"}}>
+                    <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "84%",marginTop:"10px" }} onClick={handleButtonClick2}>+</Button>
                     <Style.MainDiv>
                         <Style.Schedular   style={{filter: showModal2 ? 'blur(5px)' : 'none'  }}>
                             <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem",textAlign:"center",filter: showModal2 ? 'blur(5px)' : 'none' }}>Schedule </div>
@@ -241,6 +241,9 @@ const index = () => {
                                 <Scheduler
                                     // height={300}
                                     // loading={true}
+                                    eventRenderer={()=>{
+                                        console.log("event is clikce")
+                                    }}
                                     onSelectedDateChange={false}
                                     events={events}
                                     onConfirm={handleConfirm}
