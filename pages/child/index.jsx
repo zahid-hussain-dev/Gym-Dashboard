@@ -53,13 +53,13 @@ const Index = () => {
     }
   }, [Id, role])
   return (
-    <div>
+    <div style={{marginTop: "10%" }}>
         {Id}
       <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} >Add Child</Button>
-      <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} onClick={handleAddChildClick} >+</Button>
+      <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem"  }} onClick={handleAddChildClick} >+</Button>
       <div>
         {showModal5 && <AddChildren onClose={handleCloseModal5} />}
-        <Style.TableContainer style={{ filter: showModal5 ? 'blur(5px)' : 'none' }} >
+        <Style.TableContainer style={{ filter: showModal5 ? 'blur(5px)' : 'none',marginTop: "5%"  }} >
           <Style.TableWrapper>
             <thead>
               <Style.TableRow>

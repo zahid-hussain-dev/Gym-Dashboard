@@ -318,10 +318,85 @@ const index = () => {
 
   return (
     
-    <div closeModal={closeModal4}>
+    <div closeModal={closeModal4} style={{marginTop: "10%" }}>
       {role!=="admin" &&
-   <Button  style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} onClick={handleAddChildClick}>Add Bookings</Button>
-     }   {/* {role && role !== "admin" &&
+      <div>
+<Button  style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} >Add Bookings</Button>
+   <Button  style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} onClick={handleAddChildClick}>+</Button>
+      </div>
+     }   
+     {showModal4 &&   <AddChildForm  Closed={handleCloseModal4} onSubmit={handleSubmitChild} />}
+{role && role === "admin"
+        ?
+        <Style.TableContainer style={{ filter: showModal4 ? 'blur(5px)' : 'none' }} >
+          <Style.TableWrapper>
+            <thead>
+              <Style.TableRow>
+                <Style.TableHead>ID</Style.TableHead>
+                <Style.TableHead>GYMNAST</Style.TableHead>
+                <Style.TableHead>ACTIONS</Style.TableHead>
+
+              </Style.TableRow>
+            </thead>
+            <tbody>
+
+              {allGymnast && allGymnast.map((data, index) => (
+                <Style.TableRow key={index}>
+                  <Style.TableCell>{data?.id}</Style.TableCell>
+                  <Style.TableCell>{data?.firstName}{" "}{data?.lastName}</Style.TableCell>
+                  <Style.TableCell>
+                    <ViewButton onClick={() => {
+                      dispatch(setGymnastName(data.firstName));
+                      { router.push(`/gymnast/view/${data.id}`) }
+                    }}>View</ViewButton>
+                  </Style.TableCell>
+
+                </Style.TableRow>
+              ))}
+
+
+            </tbody>
+          </Style.TableWrapper>
+        </Style.TableContainer>
+        :
+        <Style.TableContainer style={{ filter: showModal4 ? 'blur(5px)' : 'none' }} >
+          <Style.TableWrapper>
+            <thead>
+              <Style.TableRow>
+                <Style.TableHead>CHILD</Style.TableHead>
+                <Style.TableHead>COACH</Style.TableHead>
+                <Style.TableHead>TIME SLOT</Style.TableHead>
+                <Style.TableHead>STATUS</Style.TableHead>
+
+              </Style.TableRow>
+            </thead>
+            <tbody>
+              {gymnastBookingList && gymnastBookingList.map((data, index) => (
+                <Style.TableRow key={index}>
+                  <Style.TableCell>{data?.['children.name']}</Style.TableCell>
+                  <Style.TableCell>{data?.['coach.firstName'] + data?.['coach.lastName']}</Style.TableCell>
+                  <Style.TableCell>{new Date(data?.from).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} {"-"} {new Date(data?.to).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })}</Style.TableCell>
+                  <Style.TableCell>{data.status}</Style.TableCell>
+                </Style.TableRow>
+              ))}
+            </tbody>
+          </Style.TableWrapper>
+        </Style.TableContainer>
+      }
+     
+<Loader isLoading={loading}></Loader>
+    </div>
+  )
+}
+
+export default index
+
+
+
+
+{/* <div style={{ fontSize: "18px", color: "white", marginBottom: "0.5rem",textAlign:"center",filter: showModal4 ? 'blur(5px)' : 'none'  }}>No Listing Exist for this Coach {GymnastName} </div> */}
+
+{/* {role && role !== "admin" &&
         <Style.FormContainer className="add-child-form">
           <div className="Add-child-main">
             <Style.AddChildWrapper className="Add-child">
@@ -405,69 +480,3 @@ const index = () => {
         </Style.FormContainer>
 
       } */}
-     {showModal4 &&   <AddChildForm  Closed={handleCloseModal4} onSubmit={handleSubmitChild} />}
-{role && role === "admin"
-        ?
-        <Style.TableContainer style={{ filter: showModal4 ? 'blur(5px)' : 'none' }} >
-          <Style.TableWrapper>
-            <thead>
-              <Style.TableRow>
-                <Style.TableHead>ID</Style.TableHead>
-                <Style.TableHead>GYMNAST</Style.TableHead>
-                <Style.TableHead>ACTIONS</Style.TableHead>
-
-              </Style.TableRow>
-            </thead>
-            <tbody>
-
-              {allGymnast && allGymnast.map((data, index) => (
-                <Style.TableRow key={index}>
-                  <Style.TableCell>{data?.id}</Style.TableCell>
-                  <Style.TableCell>{data?.firstName}{" "}{data?.lastName}</Style.TableCell>
-                  <Style.TableCell>
-                    <ViewButton onClick={() => {
-                      dispatch(setGymnastName(data.firstName));
-                      { router.push(`/gymnast/view/${data.id}`) }
-                    }}>View</ViewButton>
-                  </Style.TableCell>
-
-                </Style.TableRow>
-              ))}
-
-
-            </tbody>
-          </Style.TableWrapper>
-        </Style.TableContainer>
-        :
-        <Style.TableContainer style={{ filter: showModal4 ? 'blur(5px)' : 'none' }} >
-          <Style.TableWrapper>
-            <thead>
-              <Style.TableRow>
-                <Style.TableHead>CHILD</Style.TableHead>
-                <Style.TableHead>COACH</Style.TableHead>
-                <Style.TableHead>TIME SLOT</Style.TableHead>
-                <Style.TableHead>STATUS</Style.TableHead>
-
-              </Style.TableRow>
-            </thead>
-            <tbody>
-              {gymnastBookingList && gymnastBookingList.map((data, index) => (
-                <Style.TableRow key={index}>
-                  <Style.TableCell>{data?.['children.name']}</Style.TableCell>
-                  <Style.TableCell>{data?.['coach.firstName'] + data?.['coach.lastName']}</Style.TableCell>
-                  <Style.TableCell>{new Date(data?.from).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} {"-"} {new Date(data?.to).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })}</Style.TableCell>
-                  <Style.TableCell>{data.status}</Style.TableCell>
-                </Style.TableRow>
-              ))}
-            </tbody>
-          </Style.TableWrapper>
-        </Style.TableContainer>
-      }
-     
-<Loader isLoading={loading}></Loader>
-    </div>
-  )
-}
-
-export default index
-

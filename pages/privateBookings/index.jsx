@@ -76,8 +76,8 @@ const index = () => {
     ];
     return (
         <div>
-            <Button style={{ width: "auto", marginBottom: "1rem" }}>Approve Private Booking</Button>
-            <Style.TableContainer>
+            <Button style={{ width: "auto", marginBottom: "1rem",marginTop: "10%" }}>Approve Private Booking</Button>
+            <Style.TableContainer  style={{ marginTop: "5%" }}>
                 <Style.TableWrapper>
                     <thead>
                         <Style.TableRow>
@@ -95,7 +95,7 @@ const index = () => {
                                 {data.status === "PENDING"
                                     ?
                                     <Style.TableCell >
-                                       <div style={{width:"70%",display:"flex",justifyContent:"space-between",marginLeft:"15%"}}>
+                                       <div style={{width:"50%",display:"flex",justifyContent:"space-between",marginLeft:"24%"}}>
                                         <AcceptButton onClick={() => {
                                             handleApprove(data.id);
 

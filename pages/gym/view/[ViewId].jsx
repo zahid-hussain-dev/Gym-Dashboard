@@ -93,7 +93,7 @@ const ViewId = () => {
   return (
     <>
       {/* <Styled.Globalstyle/> */}
-      <div>
+      <div style={{marginTop: "10%" }}>
         <Button
           style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }}
           onClick={handleButtonClick}

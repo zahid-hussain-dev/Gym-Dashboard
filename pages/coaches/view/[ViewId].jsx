@@ -177,7 +177,7 @@ const ViewId = () => {
 
 //     }, [])
     return (
-        <div>
+        <div style={{marginTop: "5%" }}>
             <React.Fragment >
                 <Button style={{ width: "auto", marginBottom: "1rem",marginLeft:"83%",marginTop:"4%"}} onClick={handleButtonClick2}>+</Button>
                 {showModal2 && <AddCoache closeModal={closeModal2} id={Id} />}
@@ -322,4 +322,4 @@ const ViewId = () => {
     )
 }
 
-export default ViewId
+export default ViewId;

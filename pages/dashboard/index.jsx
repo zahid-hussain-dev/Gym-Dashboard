@@ -41,7 +41,7 @@ const index = () => {
 
 
   return (
-    <React.Fragment >
+    <React.Fragment style={{marginTop: "10%" }}>
       <div style={{ fontSize: "24px", color: "white", textAlign: "center" }}> GYM Dashboard </div>
       <div style={{ fontSize: "24px", color: "white", display: "flex", justifyContent: "space-between", margin: "30px" }}>
         {role && role === "admin" ?

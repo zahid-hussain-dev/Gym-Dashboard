@@ -159,12 +159,11 @@ const ViewId = () => {
   }, [Id, role])
 
   return (
-    <div>
+    <div style={{marginTop: "10%" }}>
       {Id}
       <Style.SubTitle>Child Listing</Style.SubTitle>
       {showModal4 &&   <AddChildForm  Closed={handleCloseModal4} onSubmit={handleSubmitChild} />}
-      <div style={{ fontSize: "18px", color: "white", marginBottom: "0.5rem",textAlign:"center",filter: showModal4 ? 'blur(5px)' : 'none'  }}>No Listing Exist for this Coach {GymnastName} </div>
-      <Style.TableContainer style={{ filter: showModal4 ? 'blur(5px)' : 'none' }} >
+      <Style.TableContainer style={{ filter: showModal4 ? 'blur(5px)' : 'none', marginTop:"3%" }} >
         <Style.TableWrapper>
           <thead>
             <Style.TableRow>
@@ -183,9 +182,15 @@ const ViewId = () => {
                   <Style.TableCell>
                     <RejectButton onClick={() => { console.log(data.id) }}>Delete</RejectButton>
                   </Style.TableCell>
-
                 </Style.TableRow>
               ))}
+
+              {childList.length<=0 &&
+              (<Style.TableRow style={{ fontSize: "18px",textAlign:"center"}}>
+                 <div style={{ fontSize: "18px", color: "#E3DC22", marginTop: "35%",marginLeft:"55%",textAlign:"center",filter: showModal4 ? 'blur(5px)' : 'none'  }}>No Listing Exist for this Coach {GymnastName} </div>
+                </Style.TableRow>)
+              }
+
             {role && role === "gymnast" &&
               gymnastchildList && gymnastchildList.map((data, index) => (
                 <Style.TableRow key={index}>
@@ -201,11 +206,11 @@ const ViewId = () => {
           </tbody>
         </Style.TableWrapper>
       </Style.TableContainer>
-      <div style={{ display:"flex",alignItems:"center" }} >
+      <div style={{ display:"flex",alignItems:"center",marginTop:"5%" }} >
       <Style.SubTitle style={{ marginTop: "1rem" }}>Booking Listing</Style.SubTitle>
       <Button  style={{ width: "auto", marginTop: "1rem", marginLeft: "1rem" }} onClick={handleAddChildClick}>+</Button>
       </div>
-      <Style.TableContainer style={{ filter: showModal4 ? 'blur(5px)' : 'none' }} >
+      <Style.TableContainer style={{ filter: showModal4 ? 'blur(5px)' : 'none',marginTop: "5%" }} >
         <Style.TableWrapper>
           <thead>
             <Style.TableRow>

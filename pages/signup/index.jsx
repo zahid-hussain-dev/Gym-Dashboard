@@ -38,7 +38,7 @@ export default function Signup() {
     }
   }
   return (
-    <div style={{ marginTop: "20px" }}>
+    <div style={{ marginTop: "10%" }}>
       <div className="signup-card border">
         <h2 className="login-heading">Sign Up</h2>
         <div>
