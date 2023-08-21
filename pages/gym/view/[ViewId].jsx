@@ -7,6 +7,7 @@ import AddGymSchedule from "../../../components/styledComponents/modal/AddGymSch
 import { axiosInterceptor } from '../../../axios/axiosInterceptor';
 import Loader from '../../../components/styledComponents/loader/loader';
 import { useDispatch, useSelector } from "react-redux";
+import moment from "moment"; 
 
 const ViewId = () => {
   const router = useRouter();
@@ -84,6 +85,7 @@ const ViewId = () => {
 
     }
   };
+  
   useEffect(() => {
     if (Id) {
       getGymScedule();
@@ -96,9 +98,15 @@ const ViewId = () => {
       <div style={{marginTop: "10%" }}>
         <Button
           style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }}
-          onClick={handleButtonClick}
+          
         >
           Add Gym Schedule
+        </Button>
+        <Button
+          style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }}
+          onClick={handleButtonClick}
+        >
+          +
         </Button>
         {/* {showModal && <AddGymSchedule closeModal={closeModal} />} */}
         {showModal && <AddGymSchedule closeModal={closeModal} id={Id} />}

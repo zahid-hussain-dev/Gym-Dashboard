@@ -199,8 +199,8 @@ export const TableContainer = styled.div`
 color:#d5b93b;
 width:60%;
 margin:0px auto;
-margin-top:10px;
-height: 30rem;
+// margin-top:10px;
+height: 25rem;
 overflow-y: auto;
 
 `;

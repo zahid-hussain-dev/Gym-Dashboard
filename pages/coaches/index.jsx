@@ -178,6 +178,46 @@ const index = () => {
             console.log(error)
         }
     }
+    const handleApprove = async (id) => {
+        try {
+            setLoading(true)
+            console.log("api calling for schedule")
+            const res = await axiosInterceptor().put(
+                `/api/admin/update?id=${id}`,
+                {
+                    status: "APPROVED",
+                    private: true,
+                }
+            );
+            setLoading(false)
+            getAllCoaches();
+            console.log("responsse of Approved", res)
+        } catch (error) {
+            setLoading(false)
+            swal('Oops!', error.data.message, 'error')
+            console.log(error)
+        }
+    }
+    const handleReject = async (id) => {
+        try {
+            setLoading(true)
+            console.log("api calling for schedule")
+            const res = await axiosInterceptor().put(
+                `/api/admin/update?id=${id}`,
+                {
+                    status: "REJECTED",
+                    private: true,
+                }
+            );
+            setLoading(false)
+            getAllCoaches();
+            console.log("responsse of Reject", res)
+        } catch (error) {
+            setLoading(false)
+            swal('Oops!', error.data.message, 'error')
+            console.log(error)
+        }
+    }
     const getAllCoaches = async () => {
         try {
             setLoading(true)
@@ -241,16 +281,18 @@ const index = () => {
                                             <Style.TableCell style={{ display: "flex", justifyContent: "space-evenly" }} >
                                                 <AcceptButton onClick={() => {
                                                     handleApprove(data.id);
-
                                                 }}>Accept</AcceptButton>
                                                 <RejectButton onClick={() => {
                                                     handleReject(data.id);
-
                                                 }}>Cancel</RejectButton>
                                             </Style.TableCell>
                                             :
                                             <Style.TableCell>
-                                                <RejectButton >{data.status}</RejectButton>
+                                                {data.status === "APPROVED" ?
+                                                    <AcceptButton disabled={true}>{data.status}</AcceptButton>
+                                                    :
+                                                    <RejectButton disabled={true} > {data.status}</RejectButton>
+                                                }
                                             </Style.TableCell>
                                         }
 
@@ -300,9 +342,7 @@ const index = () => {
                                             ],
                                             config: { label: "Time Status", required: true, errMsg: "Plz Select Status" }
                                         },
-
                                     ]}
-
                                     onSelectedDateChange={false}
                                     events={events}
                                     onConfirm={handleConfirm}
@@ -313,19 +353,16 @@ const index = () => {
                                         endHour: 24
                                         // step: 30
                                     }}
-
                                 />
                                 :
                                 <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem", textAlign: "center", filter: showModal2 ? 'blur(5px)' : 'none' }}>No Schedule Exist </div>
                             }
-
                         </Style.Schedular>
                         {showModal2 && <AddCoache style={{ position: "absolute", top: "40%", left: "52%", zIndex: "1" }} closeModal={() => closeModal2()} />}
                     </Style.MainDiv>
                 </React.Fragment>
             }
             <Loader isLoading={loading}></Loader>
-
         </div>
     )
 }

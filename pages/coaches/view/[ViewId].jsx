@@ -8,6 +8,7 @@ import { axiosInterceptor } from '../../../axios/axiosInterceptor';
 import { useRouter } from 'next/router';
 import Loader from '../../../components/styledComponents/loader/loader';
 import { useDispatch, useSelector } from "react-redux";
+import moment from "moment";
 
 const ViewId = () => {
     const router = useRouter();
@@ -90,16 +91,17 @@ const ViewId = () => {
     }
     const handleConfirm = async (event, action) => {
         console.log("handleConfirm =", action, event.title);
-
+        console.log("evnets", event)
         if (action === "edit") {
             /** PUT event to remote DB */
         } else if (action === "create") {
             /**POST event to remote DB */
+            console.log("Id query",Id)
             const Payload = {
                 from: moment(event.start).format('YYYY-MM-DD HH:mm:ss'),
                 to: moment(event.end).format('YYYY-MM-DD HH:mm:ss'),
-                type: "PUBLIC",
-                coach: Id,
+                type: event.TimeStatus,
+                coach: router.query.ViewId,
             }
             console.log("payload", Payload)
 
@@ -122,6 +124,26 @@ const ViewId = () => {
             }
 
         }
+        // setTimeout(() => {
+        //   res({
+        //     ...event,
+        //     event_id: event.event_id || Math.random()
+        //   });
+        // }, 1000);
+
+        // const isFail = Math.random() > 0.6;
+        // // Make it slow just for testing
+        // console.log("isFail", isFail)
+        // setTimeout(() => {
+        //   if (isFail) {
+        //     rej("Ops... Faild");
+        //   } else {
+        //     res({
+        //       ...event,
+        //       event_id: event.event_id || Math.random()
+        //     });
+        //   }
+        // }, 1000)
     };
     const handleApprove = async (id) => {
         try {
@@ -186,35 +208,72 @@ const ViewId = () => {
                         <Style.Schedular style={{ filter: showModal2 ? 'blur(5px)' : 'none' }} >
                             <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem" }}>Schedule</div>
                             {events.length > 0 ?
+                               <Scheduler
+                               // height={300}
+                               // loading={true}
+                               // eventRenderer={() => {
+                               //     console.log("event is clikce")
+                               // }}
+                               // customEditor={() => handleButtonClick2()}
+                               // customEditor={(scheduler) => <CustomEditor scheduler={scheduler} />}
+                               fields={[
+                                   {
+                                       name: "TimeStatus",
+                                       type: "select",
+                                       default: "PUBLIC",
+                                       // Should provide options with type:"select"
+                                       options: [
+                                           { id: 1, text: "Public", value: "PUBLIC" },
+                                           { id: 2, text: "Private", value: "PRIVATE" }
+                                       ],
+                                       config: { label: "Time Status", required: true, errMsg: "Plz Select Status" }
+                                   },
+
+                               ]}
+                               onSelectedDateChange={false}
+                               events={events}
+                               onConfirm={handleConfirm}
+                               week={{
+                                   weekDays: [0, 1, 2, 3, 4, 5, 6],
+                                   weekStartOn: 0,
+                                   startHour: 9,
+                                   endHour: 24
+                                   // step: 30
+                               }}/>
+
+                                :
                                 <Scheduler
                                     // height={300}
                                     // loading={true}
+                                    // eventRenderer={() => {
+                                    //     console.log("event is clikce")
+                                    // }}
+                                    // customEditor={() => handleButtonClick2()}
+                                    // customEditor={(scheduler) => <CustomEditor scheduler={scheduler} />}
+                                    fields={[
+                                        {
+                                            name: "TimeStatus",
+                                            type: "select",
+                                            default: "PUBLIC",
+                                            // Should provide options with type:"select"
+                                            options: [
+                                                { id: 1, text: "Public", value: "PUBLIC" },
+                                                { id: 2, text: "Private", value: "PRIVATE" }
+                                            ],
+                                            config: { label: "Time Status", required: true, errMsg: "Plz Select Status" }
+                                        },
+
+                                    ]} 
                                     onSelectedDateChange={false}
                                     events={events}
                                     onConfirm={handleConfirm}
                                     week={{
                                         weekDays: [0, 1, 2, 3, 4, 5, 6],
-                                        weekStartOn: 6,
+                                        weekStartOn: 0,
                                         startHour: 9,
                                         endHour: 24
                                         // step: 30
                                     }}
-                                />
-
-                                :
-                                <Scheduler
-                                // height={300}
-                                // loading={true}
-                                onSelectedDateChange={false}
-                                events={events}
-                                onConfirm={handleConfirm}
-                                week={{
-                                    weekDays: [0, 1, 2, 3, 4, 5, 6],
-                                    weekStartOn: 6,
-                                    startHour: 9,
-                                    endHour: 24
-                                    // step: 30
-                                }}
                             />                            }
                         </Style.Schedular>
 
@@ -226,34 +285,70 @@ const ViewId = () => {
                             {events.length > 0 ?
 
                                 <Scheduler
-                                    // height={300}
-                                    // loading={true}
-                                    onSelectedDateChange={false}
-                                    events={events}
-                                    onConfirm={handleConfirm}
-                                    week={{
-                                        weekDays: [0, 1, 2, 3, 4, 5, 6],
-                                        weekStartOn: 6,
-                                        startHour: 9,
-                                        endHour: 24
-                                        // step: 30
-                                    }}
-                                />
-                                :
-                                <Scheduler
-                                // height={300}
-                                // loading={true}
+                                  // height={300}
+                                  // loading={true}
+                                  // eventRenderer={() => {
+                                  //     console.log("event is clikce")
+                                  // }}
+                                  // customEditor={() => handleButtonClick2()}
+                                  // customEditor={(scheduler) => <CustomEditor scheduler={scheduler} />}
+                                fields={[
+                                   {
+                                       name: "TimeStatus",
+                                       type: "select",
+                                       default: "PUBLIC",
+                                       // Should provide options with type:"select"
+                                       options: [
+                                            { id: 1, text: "Public", value: "PUBLIC" },
+                                            { id: 2, text: "Private", value: "PRIVATE" }
+                                       ],
+                                        config: { label: "Time Status", required: true, errMsg: "Plz Select Status" }
+                                    },
+
+                                ]}
                                 onSelectedDateChange={false}
                                 events={events}
                                 onConfirm={handleConfirm}
                                 week={{
                                     weekDays: [0, 1, 2, 3, 4, 5, 6],
-                                    weekStartOn: 6,
+                                    weekStartOn: 0,
                                     startHour: 9,
                                     endHour: 24
                                     // step: 30
-                                }}
-                            />
+                                }}/>
+                                :
+                                <Scheduler
+                                // height={300}
+                                // loading={true}
+                                // eventRenderer={() => {
+                                //     console.log("event is clikce")
+                                // }}
+                                // customEditor={() => handleButtonClick2()}
+                                // customEditor={(scheduler) => <CustomEditor scheduler={scheduler} />}
+                                fields={[
+                                    {
+                                        name: "TimeStatus",
+                                        type: "select",
+                                        default: "PUBLIC",
+                                        // Should provide options with type:"select"
+                                        options: [
+                                            { id: 1, text: "Public", value: "PUBLIC" },
+                                            { id: 2, text: "Private", value: "PRIVATE" }
+                                        ],
+                                        config: { label: "Time Status", required: true, errMsg: "Plz Select Status" }
+                                    },
+ 
+                                ]}
+                                     onSelectedDateChange={false}
+                                    events={events}
+                                    onConfirm={handleConfirm}
+                                    week={{
+                                        weekDays: [0, 1, 2, 3, 4, 5, 6],
+                                        weekStartOn: 0,
+                                        startHour: 9,
+                                        endHour: 24
+                                        // step: 30
+                                    }}/>
                             }
                         </Style.Schedular>
 
