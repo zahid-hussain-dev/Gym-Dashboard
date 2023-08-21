@@ -4,13 +4,13 @@ import Image from "next/image";
 import close from "../../../public/assests/SVGs/close-svgrepo-com (2).svg";
 import { axiosInterceptor } from '../../../axios/axiosInterceptor';
 import swal from "sweetalert";
+import moment from "moment";
 
 const AddGymSchedule = ({ closeModal, id }) => {
     const [formData, setFormData] = useState({
-        datefrom: "",
-        dateto: "",
-        timefrom: "",
-        timeto: "",
+        timefrom: moment().format("HH:mm"),
+        timeto: moment().format("HH:mm"),
+        date: new Date().toISOString().substring(0, 10),
     });
     const [loading, setLoading] = useState(false);
 
@@ -92,9 +92,11 @@ const AddGymSchedule = ({ closeModal, id }) => {
                                 // type="date"
                                 type='date'
                                 name="datefrom"
-                                onChange={handleChange}
-                                value={formData.datefrom}
                                 style={{ width:"70%" }}
+                                id="date"
+                                defaultValue={new Date().toISOString().substring(0, 10)}
+                                onChange={handleChange}
+                                value={formData.date && formData.date}
                             />
                         </div>
 
@@ -105,7 +107,8 @@ const AddGymSchedule = ({ closeModal, id }) => {
                                 type='time'
                                 name="timefrom"
                                 onChange={handleChange}
-                                value={formData.timefrom}
+                                defaultValue={new Date().getHours() + ":" + "00" + "00"}
+                                value={formData.timefrom && formData.timefrom}
                                 style={{ width:"90%" }}
                             />
                         </div>
@@ -114,10 +117,11 @@ const AddGymSchedule = ({ closeModal, id }) => {
                         <div>
                             <Styled.InputData
                                 // type="date"
-                                type='time'
+
+                                type="time"
                                 name="timeto"
                                 onChange={handleChange}
-                                value={formData.timeto}
+                                value={formData.timeto && formData.timeto}
                             />
                         </div>
                     </div>

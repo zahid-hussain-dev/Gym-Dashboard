@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { axiosInterceptor } from '../../axios/axiosInterceptor';
-import { Button, RejectButton } from '../../components/styledComponents/button/Button';
+import { Button, RejectButton,UpdateButton } from '../../components/styledComponents/button/Button';
 import * as Style from '../../components/styledComponents/gymnast/Gymnast';
 import { useRouter } from 'next/router'; 
 import AddChildren from "../../components/styledComponents/modal/AddChildren"
+import UpdateChild from "../../components/styledComponents/modal/UpdateChild"
+import Loader from '../../components/styledComponents/loader/loader'
 
 const Index = () => {
   const router = useRouter();
@@ -11,7 +13,8 @@ const Index = () => {
   const [loading, setLoading] = useState(false);
   const [childList, setChildList] = useState([]);
   const [showModal5, setShowModal5] = useState(false);
-
+  const [showModalUpdate, setshowModalUpdate] = useState(false);
+  const [clickedId, setClickedId]= useState();
   useEffect(() => {
     const userRole = JSON.parse(localStorage.getItem("Userrole"));
     setRole(userRole);
@@ -38,9 +41,36 @@ const Index = () => {
   const handleAddChildClick = () => {
     setShowModal5(true);
   };
-  
+  const handleUpdateChildClick = () => {
+    setshowModalUpdate(true);
+  };
   const handleCloseModal5 = () => {
     setShowModal5(false);
+  };
+  useEffect(() => {
+    getChildList();
+  // setTimeout();
+  }, [showModalUpdate]);
+  const deleteChild = async (id) => {
+    try {
+      setLoading(true)
+      console.log("api calling for child list")
+      const res = await axiosInterceptor().delete(
+        `/api/gymnast/children?id=${id}`,
+      );
+      console.log("responsse of children ID", res)
+      setLoading(false)
+      getChildList();
+    } catch (error) {
+      setLoading(false)
+      // swal('Oops!', error.data.message, 'error')
+      console.log(error)
+    }
+  }
+  const handleCloseModalUpdate = () => {
+    setshowModalUpdate(false);
+    setLoading(true);
+    getChildList();
   };
   useEffect(() => {
     if (Id && role == "admin") {
@@ -59,8 +89,9 @@ const Index = () => {
       <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem"  }} onClick={handleAddChildClick} >+</Button>
       <div>
         {showModal5 && <AddChildren onClose={handleCloseModal5} />}
+        {showModalUpdate && <UpdateChild onClose={handleCloseModalUpdate} id={clickedId} />}
         <Style.TableContainer style={{ filter: showModal5 ? 'blur(5px)' : 'none',marginTop: "5%"  }} >
-          <Style.TableWrapper>
+          <Style.TableWrapper style={{ filter: showModalUpdate ? 'blur(5px)' : 'none' }}>
             <thead>
               <Style.TableRow>
                 <Style.TableHead>ID</Style.TableHead>
@@ -75,7 +106,8 @@ const Index = () => {
                   <Style.TableCell>{data?.id}</Style.TableCell>
                   <Style.TableCell>{data?.name}</Style.TableCell>
                   <Style.TableCell>
-                    <RejectButton onClick={() => { console.log(data.id) }}>Delete</RejectButton>
+                  <RejectButton onClick={() => { console.log(data.id); deleteChild(data.id) }}>Delete</RejectButton>
+                    <UpdateButton onClick={()=>{handleUpdateChildClick(); setClickedId(data.id)}}>Update</UpdateButton>
                   </Style.TableCell>
 
                 </Style.TableRow>
@@ -83,6 +115,7 @@ const Index = () => {
             </tbody>
           </Style.TableWrapper>
         </Style.TableContainer>
+        <Loader isLoading={loading}></Loader>
       </div>
     </div>
   );

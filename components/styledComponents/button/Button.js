@@ -92,3 +92,20 @@ transition: all 0.3s;
     background-image: linear-gradient(to bottom, right, #0D723B, #39B54A);
 }
 `
+export const UpdateButton = styled.button`
+// width: 25%;
+padding: 0.4rem 1rem;
+background:green;
+color: black;
+margin-left:8px;
+border: 0;
+border-radius: 4px;
+font-family: gilroy;
+outline: none;
+letter-spacing: 0.087rem;
+cursor: pointer;
+transition: all 0.3s;
+&:hover{
+    background-image: linear-gradient(to bottom, right, #0D723B, #39B54A);
+}
+`
