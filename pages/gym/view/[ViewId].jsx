@@ -7,7 +7,7 @@ import AddGymSchedule from "../../../components/styledComponents/modal/AddGymSch
 import { axiosInterceptor } from '../../../axios/axiosInterceptor';
 import Loader from '../../../components/styledComponents/loader/loader';
 import { useDispatch, useSelector } from "react-redux";
-import moment from "moment"; 
+import moment from "moment";
 
 const ViewId = () => {
   const router = useRouter();
@@ -26,6 +26,15 @@ const ViewId = () => {
     //   setShowModal(false);
     setShowModal((prev) => !prev);
   };
+
+  function formatTimestamp(timestamp) {
+    const [datePart, timePart] = timestamp.split("T");
+    const [year, month, day] = datePart.split("-");
+    const [hours, minutes] = timePart.slice(0, -1).split(":");
+    const adjustedHours = String(Number(hours)).padStart(2, "0");
+    return `${year} ${Number(month)} ${Number(day)} ${adjustedHours}:${minutes}`;
+  }
+
   const getGymScedule = async (id) => {
     try {
       setLoading(true)
@@ -33,13 +42,23 @@ const ViewId = () => {
       const res = await axiosInterceptor().get(
         `/api/gym/schedule?gym=${router.query.ViewId}`,
       );
-      console.log("responsse of schedule ID", res)
+      console.log("responsse of schedule ID", res.data[0].from, new Date(res.data[0].from))
+      // let startDate = null;
+      // let endDate = null;
       res.data.map((item, index) => (
+        // startDate = new Date(item['from']).toISOString(),
+        // endDate = new Date(item['to']).toISOString(),
+        // console.log("1--------", startDate),
+        // console.log("2--------", endDate),
+        // console.log("3--------",`${startDate.getFullYear()} ${(startDate.getMonth())+1} ${startDate.getDate()} ${startDate.getHours()}:${(startDate.getMinutes()<10?'0':'') + startDate.getMinutes()}`),
+        // console.log("4--------",`${endDate.getFullYear()} ${(endDate.getMonth())+1} ${endDate.getDate()} ${endDate.getHours()}:${(endDate.getMinutes()<10?'0':'') + endDate.getMinutes()}`),
+        // item['start'] = new Date(`${startDate.getFullYear()} ${(startDate.getMonth())+1} ${startDate.getDate()} ${startDate.getHours()}:${(startDate.getMinutes()<10?'0':'') + startDate.getMinutes()}`),
+        // item['end'] = new Date(`${endDate.getFullYear()} ${(endDate.getMonth())+1} ${endDate.getDate()} ${endDate.getHours()}:${(endDate.getMinutes()<10?'0':'') + endDate.getMinutes()}`),
         item['event_id'] = item.id,
-        item['title'] = "Events",
-        item['start'] = new Date(item.from),
-        item['end'] = new Date(item.to),
-        item['editable'] = false,
+        item['title'] = "Open hours",
+        item['start'] = new Date(formatTimestamp(new Date(item.from).toISOString())),
+        item['end'] = new Date(formatTimestamp(new Date(item.to).toISOString())),
+        item['editable'] = true,
         item['deletable'] = false,
         item['color'] = "#50b500"
       ))
@@ -51,11 +70,21 @@ const ViewId = () => {
       console.log(error)
     }
   }
+
+
+
+
   const handleConfirm = async (event, action) => {
     console.log("handleConfirm =", action, event.title);
 
     if (action === "edit") {
       /** PUT event to remote DB */
+
+
+      console.log("edit able", event)
+
+
+
     } else if (action === "create") {
       /**POST event to remote DB */
       const Payload = {
@@ -85,7 +114,7 @@ const ViewId = () => {
 
     }
   };
-  
+
   useEffect(() => {
     if (Id) {
       getGymScedule();
@@ -95,10 +124,10 @@ const ViewId = () => {
   return (
     <>
       {/* <Styled.Globalstyle/> */}
-      <div style={{marginTop: "10%" }}>
+      <div style={{ marginTop: "10%" }}>
         <Button
           style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }}
-          
+
         >
           Add Gym Schedule
         </Button>
@@ -111,55 +140,21 @@ const ViewId = () => {
         {/* {showModal && <AddGymSchedule closeModal={closeModal} />} */}
         {showModal && <AddGymSchedule closeModal={closeModal} id={Id} />}
         {showModal ? (
-         <div
-          style={{
-            display: "flex",
-            justifyContent: "space-around",
-            filter: "blur(5px)",
-            textAlign:"center"
-          }}
-        >
-          <div style={{ width: "90%", height: "40%",marginTop:"2%"}}>
-            <div
-              style={{
-                fontSize: "24px",
-                color: "white",
-                marginBottom: "1rem",
-                textAlign:"center"
-              }}
-            >
-                Gym Schedule{" "}
-              </div>
-              {events.length > 0 ?
-                <Scheduler
-                  // height={300}
-                  // loading={true}
-                  onSelectedDateChange={false}
-                  onConfirm={handleConfirm}
-                  events={events}
-                  week={{
-                    weekDays: [0, 1, 2, 3, 4, 5, 6],
-                    weekStartOn: 6,
-                    startHour: 9,
-                    endHour: 24,
-                    // step: 30
-                  }}
-                />
-                :
-                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem",  textAlign:"center" }}>No Schedule Exist for this Gym {GymName} </div>
-              }
-            </div>
-          </div>
-        ) : (
-          <div style={{ display: "flex", justifyContent: "space-around" }}>
-            <div style={{ width: "90%", height: "50%",marginTop:"2%"}}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-around",
+              filter: "blur(5px)",
+              textAlign: "center"
+            }}
+          >
+            <div style={{ width: "90%", height: "40%", marginTop: "2%" }}>
               <div
                 style={{
                   fontSize: "24px",
                   color: "white",
                   marginBottom: "1rem",
-                  width:"100%",
-                  textAlign:"center"
+                  textAlign: "center"
                 }}
               >
                 Gym Schedule{" "}
@@ -174,13 +169,47 @@ const ViewId = () => {
                   week={{
                     weekDays: [0, 1, 2, 3, 4, 5, 6],
                     weekStartOn: 6,
-                    startHour: 9,
+                    startHour: 1,
                     endHour: 24,
                     // step: 30
                   }}
                 />
                 :
-                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem",  textAlign:"center" }}>No Schedule Exist for this Gym {GymName} </div>
+                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem", textAlign: "center" }}>No Schedule Exist for this Gym {GymName} </div>
+              }
+            </div>
+          </div>
+        ) : (
+          <div style={{ display: "flex", justifyContent: "space-around" }}>
+            <div style={{ width: "90%", height: "50%", marginTop: "2%" }}>
+              <div
+                style={{
+                  fontSize: "24px",
+                  color: "white",
+                  marginBottom: "1rem",
+                  width: "100%",
+                  textAlign: "center"
+                }}
+              >
+                Gym Schedule{" "}
+              </div>
+              {events.length > 0 ?
+                <Scheduler
+                  // height={300}
+                  // loading={true}
+                  onSelectedDateChange={false}
+                  onConfirm={handleConfirm}
+                  events={events}
+                  week={{
+                    weekDays: [0, 1, 2, 3, 4, 5, 6],
+                    weekStartOn: 6,
+                    startHour: 1,
+                    endHour: 24,
+                    // step: 30
+                  }}
+                />
+                :
+                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem", textAlign: "center" }}>No Schedule Exist for this Gym {GymName} </div>
               }
             </div>
           </div>

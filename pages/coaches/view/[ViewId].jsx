@@ -61,7 +61,7 @@ const ViewId = () => {
                 item['title'] = "Events",
                 item['start'] = new Date(item.from),
                 item['end'] = new Date(item.to),
-                item['editable'] = false,
+                item['editable'] = true,
                 item['deletable'] = false,
                 item['color'] = "#50b500"
             ))

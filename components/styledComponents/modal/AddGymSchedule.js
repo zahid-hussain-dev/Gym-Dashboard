@@ -94,9 +94,9 @@ const AddGymSchedule = ({ closeModal, id }) => {
                                 name="datefrom"
                                 style={{ width:"70%" }}
                                 id="date"
-                                defaultValue={new Date().toISOString().substring(0, 10)}
+                                defaultValue={formData.date && formData.date}
                                 onChange={handleChange}
-                                value={formData.date && formData.date}
+                                // value={formData.date && formData.date}
                             />
                         </div>
 

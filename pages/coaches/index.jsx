@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Scheduler } from "@aldabil/react-scheduler";
 import { EVENTS } from "../../components/MainComponents/Events";
 import { Button, ViewButton, AcceptButton, RejectButton } from '../../components/styledComponents/button/Button';
@@ -27,6 +27,76 @@ const index = () => {
         console.log("modal click")
 
     };
+    const [isFetching, setIsFetching] = useState(false);
+    let limit = 10;
+    const [page, setPage] = useState(1);
+    const observerRef = useRef();
+
+    // const handleScroll = () => {
+    //     const scrollTop = document.documentElement.scrollTop;
+    //     const scrool = document.getElementById("observer");
+    //     console.log("scrool", scrool)
+    //     const windowHeight = window.innerHeight;
+    //     const scrollHeight = document.documentElement.scrollHeight;
+    //     if (scrool + windowHeight >= scrollHeight - 100 && !loading) {
+    //         getCoaches();
+    //     }
+    // };
+    // const handleObserver = entries => {
+    //     const target = entries[0];
+    //     if (target.isIntersecting && !loading) {
+    //         getCoaches();
+    //     }
+    // };
+
+    // useEffect(() => {
+    //     getCoaches();
+    //   }, []);
+    //   useEffect(() => {
+    //     const options = {
+    //       root: null,
+    //       rootMargin: "0px",
+    //       threshold: 1.0,
+    //     };
+    //     observerRef.current = new IntersectionObserver(handleObserver, options);
+    //     if (observerRef.current) {
+    //       observerRef.current.observe(document.getElementById("observer"));
+    //     }
+    //     return () => {
+    //       if (observerRef.current) {
+    //         observerRef.current.disconnect();
+    //       }
+    //     };
+    //   }, []);
+
+    // useEffect(() => {
+    //     getCoaches();
+    //     console.log("======>", document.getElementById("observer"));
+    //     window.addEventListener("scroll", handleScroll);
+    //     return () => {
+    //         window.removeEventListener("scroll", handleScroll);
+    //     };
+    // }, []);
+
+    const getCoaches = async () => {
+        try {
+            setLoading(true)
+            console.log("api calling for all coaches")
+            const res = await axiosInterceptor().get(
+                `/api/coach/?limit=${limit}&page=${page}`,
+            );
+            console.log("responsse of all coaches", res)
+            setAllCoaches(res?.data?.data)
+            setLoading(false)
+            setPage(prevPage => prevPage + 1);
+        } catch (error) {
+            setLoading(false)
+            // swal('Oops!', error.data.message, 'error')
+            console.log(error)
+        }
+    };
+
+
     const CustomEditor = ({ scheduler }) => {
         const event = scheduler.edited;
         console.log("scheduler", scheduler);
@@ -255,7 +325,7 @@ const index = () => {
         <div style={{ marginTop: "10%" }}>
             {role && role === "admin" &&
                 <React.Fragment style={{ marginTop: "5%" }}>
-                    <Style.TableContainer >
+                    <Style.TableContainer id="observer" >
                         <Style.TableWrapper>
                             <thead>
                                 <Style.TableRow>
@@ -267,7 +337,7 @@ const index = () => {
                                 </Style.TableRow>
                             </thead>
                             {/* <Style.TableScroll> */}
-                            <tbody>
+                            <tbody >
                                 {/* <Style.TableScroll> */}
                                 {allCoaches && allCoaches.map((data, index) => (
                                     <Style.TableRow2 key={index}>
