@@ -26,6 +26,13 @@ const ViewId = () => {
     //   setShowModal(false);
     setShowModal((prev) => !prev);
   };
+  function formatTimestamp(timestamp) {
+    const [datePart, timePart] = timestamp.split("T");
+    const [year, month, day] = datePart.split("-");
+    const [hours, minutes] = timePart.slice(0, -1).split(":");
+    const adjustedHours = String(Number(hours)).padStart(2, "0");
+    return `${year} ${Number(month)} ${Number(day)} ${adjustedHours}:${minutes}`;
+  }
   const getGymScedule = async (id) => {
     try {
       setLoading(true)
@@ -36,10 +43,10 @@ const ViewId = () => {
       console.log("responsse of schedule ID", res)
       res.data.map((item, index) => (
         item['event_id'] = item.id,
-        item['title'] = "Events",
-        item['start'] = new Date(item.from),
-        item['end'] = new Date(item.to),
-        item['editable'] = false,
+        item['title'] = "Open Hours",
+        item['start'] = new Date(formatTimestamp(new Date(item.from).toISOString())),
+        item['end'] = new Date(formatTimestamp(new Date(item.to).toISOString())),
+        item['editable'] = true,
         item['deletable'] = false,
         item['color'] = "#50b500"
       ))

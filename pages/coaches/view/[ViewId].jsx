@@ -23,7 +23,13 @@ const ViewId = () => {
         setShowModal2(true);
         console.log("modal click")
     };
-
+    function formatTimestamp(timestamp) {
+        const [datePart, timePart] = timestamp.split("T");
+        const [year, month, day] = datePart.split("-");
+        const [hours, minutes] = timePart.slice(0, -1).split(":");
+        const adjustedHours = String(Number(hours)).padStart(2, "0");
+        return `${year} ${Number(month)} ${Number(day)} ${adjustedHours}:${minutes}`;
+      }
     // const closeModal2 = () => {
     //     setShowModal2(false);
     // };
@@ -59,8 +65,8 @@ const ViewId = () => {
             res.data.map((item, index) => (
                 item['event_id'] = item.id,
                 item['title'] = "Events",
-                item['start'] = new Date(item.from),
-                item['end'] = new Date(item.to),
+                item['start'] = new Date(formatTimestamp(new Date(item.from).toISOString())),
+        item['end'] = new Date(formatTimestamp(new Date(item.to).toISOString())),
                 item['editable'] = false,
                 item['deletable'] = false,
                 item['color'] = "#50b500"
@@ -354,7 +360,7 @@ const ViewId = () => {
 
                     </Style.MainDiv2>}
             </React.Fragment>
-            <Style.SubTitle style={{ marginTop: "1rem" ,marginLeft: "5%",filter: showModal2 ? 'blur(5px)' : 'none',marginTop: "30%"}}>Booking Listing</Style.SubTitle>
+            <Style.SubTitle style={{ marginTop: "1rem" ,marginLeft: "5%",filter: showModal2 ? 'blur(5px)' : 'none',marginTop: "10%"}}>Booking Listing</Style.SubTitle>
             <Style.TableContainer style={{ filter: showModal2 ? 'blur(5px)' : 'none',marginTop: "30%" ,marginTop:"4%"  }}>
                 <Style.TableWrapper>
                     <thead>

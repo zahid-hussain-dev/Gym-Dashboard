@@ -27,6 +27,13 @@ const index = () => {
         console.log("modal click")
 
     };
+    function formatTimestamp(timestamp) {
+        const [datePart, timePart] = timestamp.split("T");
+        const [year, month, day] = datePart.split("-");
+        const [hours, minutes] = timePart.slice(0, -1).split(":");
+        const adjustedHours = String(Number(hours)).padStart(2, "0");
+        return `${year} ${Number(month)} ${Number(day)} ${adjustedHours}:${minutes}`;
+      }
     const CustomEditor = ({ scheduler }) => {
         const event = scheduler.edited;
         console.log("scheduler", scheduler);
@@ -130,8 +137,8 @@ const index = () => {
             res.data.map((item, index) => (
                 item['event_id'] = item.id,
                 item['title'] = "Events",
-                item['start'] = new Date(item.from),
-                item['end'] = new Date(item.to),
+                item['start'] = new Date(formatTimestamp(new Date(item.from).toISOString())),
+                item['end'] = new Date(formatTimestamp(new Date(item.to).toISOString())),
                 item['editable'] = false,
                 item['deletable'] = false,
                 item['color'] = "#50b500"
@@ -157,8 +164,8 @@ const index = () => {
             res.data.map((item, index) => (
                 item['event_id'] = item.id,
                 item['title'] = "Open hours",
-                item['start'] = new Date(item.from),
-                item['end'] = new Date(item.to),
+                item['start'] = new Date(formatTimestamp(new Date(item.from).toISOString())),
+                item['end'] = new Date(formatTimestamp(new Date(item.to).toISOString())),
                 item['editable'] = false,
                 item['deletable'] = false,
                 item['color'] = "#0000FF"
@@ -254,8 +261,8 @@ const index = () => {
     return (
         <div style={{ marginTop: "10%" }}>
             {role && role === "admin" &&
-                <React.Fragment style={{ marginTop: "5%" }}>
-                    <Style.TableContainer >
+                <React.Fragment >
+                    <Style.TableContainer style={{ marginTop: "5%" }}>
                         <Style.TableWrapper>
                             <thead>
                                 <Style.TableRow>

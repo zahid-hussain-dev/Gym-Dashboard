@@ -31,8 +31,18 @@ export const sideItemsAdmin = [
         image: gymnastSVG,
         imageWhite: gymnastWhiteSVG,
     },
-
-
+    {
+        href: "/state",
+        title: "State",
+        image: gymnastSVG,
+        imageWhite: gymnastWhiteSVG,
+    },
+    {
+        href: "/cities",
+        title: "Cities",
+        image: gymnastSVG,
+        imageWhite: gymnastWhiteSVG,
+    }
 ];
 export const sideItemsCoach = [
     {
