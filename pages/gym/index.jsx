@@ -11,6 +11,8 @@ import swal from "sweetalert";
 import moment from "moment";
 import { setGymName } from '../../store/slices/user/userSlice';
 import { useDispatch, useSelector } from "react-redux";
+import  AddGymModal from "../../components/styledComponents/modal/AddGymModal"
+
 const index = () => {
   const [role, setRole] = useState("");
   const router = useRouter();
@@ -18,6 +20,7 @@ const index = () => {
   const [events, setEvents] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [allGyms, setAllGyms] = useState([]);
+  const [showGymModal, setShowGymModal] = useState(false);
   const dispatch = useDispatch();
   const handleButtonClick = () => {
     setShowModal(true);
@@ -27,13 +30,22 @@ const index = () => {
   const closeModal = () => {
     setShowModal(false);
   };
-
+  const handleAddGym = () => {
+    setShowGymModal(true);
+    console.log("modal click")
+  };
   useEffect(() => {
     // Perform localStorage action
     const userRole = JSON.parse(localStorage.getItem("Userrole"))
     setRole(userRole);
   }, [])
-
+  function formatTimestamp(timestamp) {
+    const [datePart, timePart] = timestamp.split("T");
+    const [year, month, day] = datePart.split("-");
+    const [hours, minutes] = timePart.slice(0, -1).split(":");
+    const adjustedHours = String(Number(hours)).padStart(2, "0");
+    return `${year} ${Number(month)} ${Number(day)} ${adjustedHours}:${minutes}`;
+  }
   const getGymSchedule = async () => {
     try {
       setLoading(true)
@@ -44,8 +56,8 @@ const index = () => {
       res.data.map((item, index) => (
         item['event_id'] = item.id,
         item['title'] = "Open Hours",
-        item['start'] = new Date(item.from),
-        item['end'] = new Date(item.to),
+        item['start'] = new Date(formatTimestamp(new Date(item.from).toISOString())),
+        item['end'] = new Date(formatTimestamp(new Date(item.to).toISOString())),
         item['editable'] = false,
         item['deletable'] = false
         // item['color'] = "#50b500"
@@ -147,6 +159,9 @@ const index = () => {
     console.log("events", events)
 
   }, [events])
+const closeGymModal = ( ) =>{
+  setShowGymModal(false);
+};
 
   return (
     <div style={{marginTop: "10%" }}>
@@ -156,10 +171,13 @@ const index = () => {
  <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} onClick={handleButtonClick}>+</Button>
       </div>
       }
+      <div>
+<Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "77%" }} onClick={handleAddGym} >+</Button>
+</div>
+{showGymModal && <AddGymModal closeModal={closeGymModal}/>}
       {role && role === "admin" &&
-
         <Style.TableContainer style={{ filter: showModal ? 'blur(5px)' : 'none' }} >
-          <Style.TableWrapper>
+          <Style.TableWrapper style={{ filter: showGymModal ? 'blur(5px)' : 'none' }}>
             <thead>
               <Style.TableRow>
                 <Style.TableHead>Gym Id</Style.TableHead>
@@ -217,7 +235,7 @@ const index = () => {
   )
 }
 
-export default index
+export default index;
 
 
 
