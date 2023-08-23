@@ -7,7 +7,7 @@ import AddGymSchedule from "../../../components/styledComponents/modal/AddGymSch
 import { axiosInterceptor } from '../../../axios/axiosInterceptor';
 import Loader from '../../../components/styledComponents/loader/loader';
 import { useDispatch, useSelector } from "react-redux";
-import moment from "moment"; 
+import moment from "moment";
 
 const ViewId = () => {
   const router = useRouter();
@@ -22,17 +22,6 @@ const ViewId = () => {
   };
   const GymName = useSelector((state) => state.user.gymName);
   console.log("CoachName", GymName)
-  const closeModal = () => {
-    //   setShowModal(false);
-    setShowModal((prev) => !prev);
-  };
-  function formatTimestamp(timestamp) {
-    const [datePart, timePart] = timestamp.split("T");
-    const [year, month, day] = datePart.split("-");
-    const [hours, minutes] = timePart.slice(0, -1).split(":");
-    const adjustedHours = String(Number(hours)).padStart(2, "0");
-    return `${year} ${Number(month)} ${Number(day)} ${adjustedHours}:${minutes}`;
-  }
   const getGymScedule = async (id) => {
     try {
       setLoading(true)
@@ -58,6 +47,20 @@ const ViewId = () => {
       console.log(error)
     }
   }
+  const closeModal = () => {
+    //   setShowModal(false);
+    setShowModal((prev) => !prev);
+    console.log("get gym schedule on close")
+    getGymScedule();
+  };
+  function formatTimestamp(timestamp) {
+    const [datePart, timePart] = timestamp.split("T");
+    const [year, month, day] = datePart.split("-");
+    const [hours, minutes] = timePart.slice(0, -1).split(":");
+    const adjustedHours = String(Number(hours)).padStart(2, "0");
+    return `${year} ${Number(month)} ${Number(day)} ${adjustedHours}:${minutes}`;
+  }
+
   const handleConfirm = async (event, action) => {
     console.log("handleConfirm =", action, event.title);
 
@@ -92,7 +95,7 @@ const ViewId = () => {
 
     }
   };
-  
+
   useEffect(() => {
     if (Id) {
       getGymScedule();
@@ -102,10 +105,10 @@ const ViewId = () => {
   return (
     <>
       {/* <Styled.Globalstyle/> */}
-      <div style={{marginTop: "10%" }}>
+      <div style={{ marginTop: "10%" }}>
         <Button
           style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }}
-          
+
         >
           Add Gym Schedule
         </Button>
@@ -118,64 +121,29 @@ const ViewId = () => {
         {/* {showModal && <AddGymSchedule closeModal={closeModal} />} */}
         {showModal && <AddGymSchedule closeModal={closeModal} id={Id} />}
         {showModal ? (
-         <div
-          style={{
-            display: "flex",
-            justifyContent: "space-around",
-            filter: "blur(5px)",
-            textAlign:"center"
-          }}
-        >
-          <div style={{ width: "90%", height: "40%",marginTop:"2%"}}>
-            <div
-              style={{
-                fontSize: "24px",
-                color: "white",
-                marginBottom: "1rem",
-                textAlign:"center",
-                padding:"1rem"
-              }}
-            >
-                Gym Schedule{" "}
-              </div>
-              {events.length > 0 ?
-                <Scheduler
-                view='month'
-                  // height={300}
-                  // loading={true}
-                  onSelectedDateChange={false}
-                  onConfirm={handleConfirm}
-                  events={events}
-                  week={{
-                    weekDays: [0, 1, 2, 3, 4, 5, 6],
-                    weekStartOn: 6,
-                    startHour: 9,
-                    endHour: 24,
-                    // step: 30
-                  }}
-                />
-                :
-                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem",  textAlign:"center" }}>No Schedule Exist for this Gym {GymName} </div>
-              }
-            </div>
-          </div>
-        ) : (
-          <div style={{ display: "flex", justifyContent: "space-around" }}>
-            <div style={{ width: "90%", height: "50%",marginTop:"2%"}}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-around",
+              filter: "blur(5px)",
+              textAlign: "center"
+            }}
+          >
+            <div style={{ width: "90%", height: "40%", marginTop: "2%" }}>
               <div
                 style={{
                   fontSize: "24px",
                   color: "white",
                   marginBottom: "1rem",
-                  width:"100%",
-                  textAlign:"center"
+                  textAlign: "center",
+                  padding: "1rem"
                 }}
               >
                 Gym Schedule{" "}
               </div>
               {events.length > 0 ?
                 <Scheduler
-                view='month'
+                  view='month'
                   // height={300}
                   // loading={true}
                   onSelectedDateChange={false}
@@ -190,7 +158,42 @@ const ViewId = () => {
                   }}
                 />
                 :
-                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem",  textAlign:"center" }}>No Schedule Exist for this Gym {GymName} </div>
+                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem", textAlign: "center" }}>No Schedule Exist for this Gym {GymName} </div>
+              }
+            </div>
+          </div>
+        ) : (
+          <div style={{ display: "flex", justifyContent: "space-around" }}>
+            <div style={{ width: "90%", height: "50%", marginTop: "2%" }}>
+              <div
+                style={{
+                  fontSize: "24px",
+                  color: "white",
+                  marginBottom: "1rem",
+                  width: "100%",
+                  textAlign: "center"
+                }}
+              >
+                Gym Schedule{" "}
+              </div>
+              {events.length > 0 ?
+                <Scheduler
+                  view='month'
+                  // height={300}
+                  // loading={true}
+                  onSelectedDateChange={false}
+                  onConfirm={handleConfirm}
+                  events={events}
+                  week={{
+                    weekDays: [0, 1, 2, 3, 4, 5, 6],
+                    weekStartOn: 6,
+                    startHour: 9,
+                    endHour: 24,
+                    // step: 30
+                  }}
+                />
+                :
+                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem", textAlign: "center" }}>No Schedule Exist for this Gym {GymName} </div>
               }
             </div>
           </div>

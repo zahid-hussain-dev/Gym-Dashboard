@@ -165,6 +165,7 @@ useEffect(()=>{
   }, [events])
 const closeGymModal = ( ) =>{
   setShowGymModal(false);
+  console.log("")
   getAllGym();
 };
 

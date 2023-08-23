@@ -162,7 +162,7 @@ const ViewId = () => {
     <div style={{marginTop: "10%" }}>
       {Id}
       <Style.SubTitle>Child Listing</Style.SubTitle>
-      {showModal4 &&   <AddChildForm  Closed={handleCloseModal4} onSubmit={handleSubmitChild} />}
+      {showModal4 &&   <AddChildForm  Closed={handleCloseModal4} onSubmit={handleSubmitChild} id={Id} />}
       <Style.TableContainer style={{ filter: showModal4 ? 'blur(5px)' : 'none', marginTop:"3%" }} >
         <Style.TableWrapper>
           <thead>

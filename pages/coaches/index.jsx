@@ -230,7 +230,7 @@ const index = () => {
             setLoading(true)
             console.log("api calling for all coaches")
             const res = await axiosInterceptor().get(
-                `/api/coach/`,
+                `/api/coach/?limit=50`,
             );
             console.log("responsse of all coaches", res)
             setAllCoaches(res?.data?.data)

@@ -9,7 +9,7 @@ import moment from "moment";
 import Loader from '../../../components/styledComponents/loader/loader';
 
 
-const AddChildForm = ({ Closed }) => {
+const AddChildForm = ({ Closed, id }) => {
   const [role, setRole] = useState("");
   const [formData, setFormData] = useState({});
   const [bookingDate, setBookingDate] = useState();
@@ -81,7 +81,9 @@ const AddChildForm = ({ Closed }) => {
       getGymnastBookingList();
     }
     if (role == "admin") {
-      console.log("admin side")
+      console.log("admin side");
+      getAdminChildren();
+      getAdminCoach();
       getAllGymnast();
     }
   }, [role])
@@ -113,6 +115,36 @@ const AddChildForm = ({ Closed }) => {
     }
   }
   const getCoach = async () => {
+    try {
+      setLoading(true)
+      const res = await axiosInterceptor().get(
+        `/api/coach/private`,
+      );
+      console.log("children data", res)
+      setCoaches(res.data.coaches)
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      // swal('Oops!', error.data.message, 'error')
+      console.log(error)
+    }
+  }
+  const getAdminChildren = async () => {
+    try {
+      setLoading(true)
+      const res = await axiosInterceptor().get(
+        `/api/gymnast/children?gymnast=${id}`,
+      );
+      console.log("children data", res)
+      setChildrens(res.data.result)
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      // swal('Oops!', error.data.message, 'error')
+      console.log(error)
+    }
+  }
+  const getAdminCoach = async () => {
     try {
       setLoading(true)
       const res = await axiosInterceptor().get(
