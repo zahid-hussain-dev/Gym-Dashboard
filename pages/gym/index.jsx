@@ -149,7 +149,11 @@ const index = () => {
       getAllGym();
     }
   }, [role, showModal])
+useEffect(()=>{
 
+  getAllGym();
+
+},[])
   const tableCell = [
     { id: 1, timeSlote: '9 - 10', name: 'Gym1', },
     { id: 4, timeSlote: '10 - 11', name: 'Gym2', },
@@ -161,10 +165,12 @@ const index = () => {
   }, [events])
 const closeGymModal = ( ) =>{
   setShowGymModal(false);
+  getAllGym();
 };
 
   return (
     <div style={{marginTop: "10%" }}>
+        <h2 style={{color:"white",marginTop: "5%"}}> Gym Listing </h2>
       {role && role === "gym" &&
       <div>
  <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} >Add Gym Schedule</Button>

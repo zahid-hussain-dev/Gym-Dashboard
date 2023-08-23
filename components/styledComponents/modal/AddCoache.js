@@ -28,7 +28,7 @@ const AddCoachForm = ({ closeModal, id }) => {
   ];
   const [selectedOption, setSelectedOption] = useState('');
   const [selectedOptionStatus, setSelectedOptionStatus] = useState('PUBLIC');
-  console.log("var CurrentTime = new Date().getTime();", moment().format("HH:mm")
+  console.log("var CurrentTime = new Date().Time();", moment().format("HH:mm")
   )
   const handleSelectChange = (event) => {
     setSelectedOption(event.target.value);

@@ -19,7 +19,7 @@ export const TableContainer = styled.div`
   width: 40%;
   margin: 0px auto;
   margin-top: 10%;
-  height: 30rem;
+  height: 20rem;
    overflow-y: auto;
   filter: showModal2 ? 'blur(5px)' : 'none';
 `;

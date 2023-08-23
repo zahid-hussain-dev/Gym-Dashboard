@@ -4,7 +4,7 @@ import { Button, RejectButton, AcceptButton } from '../../../components/styledCo
 import * as Style from '../../../components/styledComponents/gymnast/Gymnast';
 import { axiosInterceptor } from '../../../axios/axiosInterceptor';
 import Loader from '../../../components/styledComponents/loader/loader';
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import AddChildForm from '../../../components/styledComponents/modal/Booking';
 const ViewId = () => {
   const router = useRouter();

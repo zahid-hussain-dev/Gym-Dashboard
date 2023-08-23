@@ -7,7 +7,6 @@ import { axiosInterceptor } from '../../axios/axiosInterceptor';
 import Loader from '../../components/styledComponents/loader/loader';
 import swal from "sweetalert";
 import moment from "moment";
-import Select from 'react-select';
 import AddChildForm from '../../components/styledComponents/modal/Booking';
 import { setGymnastName } from '../../store/slices/user/userSlice';
 import { useDispatch, useSelector } from "react-redux";
@@ -319,6 +318,7 @@ const index = () => {
   return (
     
     <div closeModal={closeModal4} style={{marginTop: "10%" }}>
+      <h2 style={{color:"white",marginTop: "5%"}}> Gymnast Listing</h2>
       {role!=="admin" &&
       <div>
 <Button  style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} >Add Bookings</Button>
@@ -328,7 +328,7 @@ const index = () => {
      {showModal4 &&   <AddChildForm  Closed={handleCloseModal4} onSubmit={handleSubmitChild} />}
 {role && role === "admin"
         ?
-        <Style.TableContainer style={{ filter: showModal4 ? 'blur(5px)' : 'none' }} >
+        <Style.TableContainer style={{ filter: showModal4 ? 'blur(5px)' : 'none',marginTop: "5%" }} >
           <Style.TableWrapper>
             <thead>
               <Style.TableRow>
@@ -391,92 +391,3 @@ const index = () => {
 
 export default index
 
-
-
-
-{/* <div style={{ fontSize: "18px", color: "white", marginBottom: "0.5rem",textAlign:"center",filter: showModal4 ? 'blur(5px)' : 'none'  }}>No Listing Exist for this Coach {GymnastName} </div> */}
-
-{/* {role && role !== "admin" &&
-        <Style.FormContainer className="add-child-form">
-          <div className="Add-child-main">
-            <Style.AddChildWrapper className="Add-child">
-              <Style.Wrapper>
-                <Style.LabelHeader className="label">Add New Child:</Style.LabelHeader>
-                <Style.Header>
-                  <Style.InputData
-                    className="input-dataa"
-                    type="text"
-                    id="message"
-                    name="name"
-                    onChange={handleSelectChild}
-                  />
-                  <Style.AddChildButton type="submit" onClick={(e) => handleSubmitChild(e)} disabled={isButtonDisabled}>
-                    Add Child
-                  </Style.AddChildButton>
-                </Style.Header>
-              </Style.Wrapper>
-            </Style.AddChildWrapper>
-            <Style.SecondForm className="second-form">
-              <Style.AddBookingHeading className="add-booking">Add Booking</Style.AddBookingHeading>
-              <div>
-                <Style.CenteredDropdownContainer className="dropdown-container">
-                  <Style.FirstMain>
-                    <Style.SecondMain>
-                    <Style.Lbl>
-                    <Style.Labeled >Select Child:</Style.Labeled>
-                    <Select
-                      name='childrenId'
-                      value={selectedOptionValue}
-                      onChange={handleSelectChange}
-                      options={childrens.map(option => ({ value: option.id, label: option.name }))}
-                      placeholder="Select Child"
-                      isSearchable
-                    />
-                    </Style.Lbl>
-                    <Style.SecondInput >
-                    <Style.Labeled className="label" >Select Coach:</Style.Labeled>
-                    <Select
-                      name='coachId'
-                      value={selectedOptionCoaches}
-                      onChange={handleSelectChangeCoach}
-                      options={coaches.map(option => ({ value: option.id, label: option.userName }))}
-                      placeholder="Select Coach"
-                      isSearchable
-                    />
-                    </Style.SecondInput>
-                    </Style.SecondMain>
-                  </Style.FirstMain>
-                  <Style.Mains>
-                  <div>
-                    <Style.Label className="label">Select Date:</Style.Label>
-                    <Style.InputDataa
-                      type="date"
-                      name="date"
-                      onChange={(e) => {
-                        handleChange(e);
-                        console.log("date", e.target.value)
-                        setBookingDate(e.target.value)
-                      }}
-                      value={formData.date}
-                    />
-                 </div>
-                 <div>
-                  <Style.Label className="label">Time Slots:</Style.Label>
-                  <Style.Select className="input-dataa" name='time' value={selectedOptionTime} onChange={handleSelectChangeTime}>
-                   
-                  {fetchedHours && fetchedHours.map((option, index) => (
-                      <option key={index} value={`${option.from} - ${option.to}`}>
-                        {option.from} - {option.to}
-                      </option>
-                    ))}
-                  </Style.Select>
-                </div>
-              </Style.Mains>
-                </Style.CenteredDropdownContainer>
-                <Buttton onClick={(e) => handleSubmit(e)}>Book</Buttton>
-              </div>
-            </Style.SecondForm>
-          </div>
-        </Style.FormContainer>
-
-      } */}
