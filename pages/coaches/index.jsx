@@ -262,6 +262,7 @@ const index = () => {
         <div style={{ marginTop: "10%" }}>
             {role && role === "admin" &&
                 <React.Fragment >
+                    <h2 style={{color:"white"}}> Coach Listing</h2>
                     <Style.TableContainer style={{ marginTop: "5%" }}>
                         <Style.TableWrapper>
                             <thead>
@@ -330,16 +331,8 @@ const index = () => {
 
                             {events.length > 0 && isMapped ?
                                 <Scheduler
-                                    // height={300}
-                                    // loading={true}
-                                    // eventRenderer={() => {
-                                    //     console.log("event is clikce")
-                                    // }}
-                                    // customEditor={() => handleButtonClick2()}
-                                    // customEditor={(scheduler) => <CustomEditor scheduler={scheduler} />}
                                     fields={[
-                                        {
-                                            name: "TimeStatus",
+                                        {name: "TimeStatus",
                                             type: "select",
                                             default: "PUBLIC",
                                             // Should provide options with type:"select"

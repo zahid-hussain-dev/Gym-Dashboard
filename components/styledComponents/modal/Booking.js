@@ -327,6 +327,7 @@ const AddChildForm = ({ Closed }) => {
                     <Style.InputDataa
                       type="date"
                       name="date"
+                      defaultValue={new Date().toISOString().substring(0, 10)}
                       onChange={(e) => {
                         handleChange(e);
                         console.log("date", e.target.value)

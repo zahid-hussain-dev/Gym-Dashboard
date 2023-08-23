@@ -23,7 +23,22 @@ const AddGymModal = ( {closeModal}) => {
     setSelectedOptionValueID(event.value)
     setSelectedOptionCity(event.value)
   };
-  
+  const getAllGym = async () => {
+    try {
+      setLoading(true)
+      console.log("api calling for all Gyms")
+      const res = await axiosInterceptor().get(
+        `/api/gym/`,
+      );
+      console.log("responsse of all Gyms", res)
+      setAllGyms(res?.data?.data)
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      // swal('Oops!', error.data.message, 'error')
+      console.log(error)
+    }
+  }
   const getState = async () => {
     try {
       setLoading(true)
@@ -99,7 +114,7 @@ const getCity = async () => {
           formData,
         );
         if(res.status===201){
-            window.location.reload();
+        
         }
         console.log("responsse of submit", res)
         swal('Success!', res.data.message, 'success')
@@ -113,6 +128,7 @@ const getCity = async () => {
     };
 
     console.log("formData", formData)
+    getAllGym();
 
     closeModal();
   };

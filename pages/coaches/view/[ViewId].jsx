@@ -206,15 +206,17 @@ const ViewId = () => {
 //     }, [])
     return (
         <div style={{marginTop: "5%" }}>
+            
             <React.Fragment >
-                <Button style={{ width: "auto", marginBottom: "1rem",marginLeft:"83%",marginTop:"4%"}} onClick={handleButtonClick2}>+</Button>
+                <Button style={{ width: "auto",marginLeft:"83%",marginTop:"2%"}} onClick={handleButtonClick2}>+</Button>
                 {showModal2 && <AddCoache closeModal={closeModal2} id={Id} />}
                 {showModal2 ?
-                    <Style.MainDiv style={{ filter: showModal2 ? 'blur(5px)' : 'none',marginTop:"4%" }}> 
+                    <Style.MainDiv style={{ filter: showModal2 ? 'blur(5px)' : 'none' }}> 
                         <Style.Schedular style={{ filter: showModal2 ? 'blur(5px)' : 'none' }} >
-                            <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem" }}>Schedule</div>
+                            <div style={{ fontSize: "24px", color: "white",marginBottum:"20%",padding:"1%" }}>Schedule</div>
                             {events.length > 0 ?
                                <Scheduler
+                               view='month'
                                // height={300}
                                // loading={true}
                                // eventRenderer={() => {
@@ -249,6 +251,7 @@ const ViewId = () => {
 
                                 :
                                 <Scheduler
+                                view='month'
                                     // height={300}
                                     // loading={true}
                                     // eventRenderer={() => {
@@ -285,12 +288,13 @@ const ViewId = () => {
 
                     </Style.MainDiv>
                     :
-                    <Style.MainDiv2 style={{ filter: showModal2 ? 'blur(5px)' : 'none',marginTop:"4%"  }} >
+                    <Style.MainDiv2 style={{ filter: showModal2 ? 'blur(5px)' : 'none',marginTop:"0%"  }} >
                         <Style.Schedular >
                             <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem",textAlign:"center"  }}>Schedule </div>
                             {events.length > 0 ?
 
                                 <Scheduler
+                                view='month'
                                   // height={300}
                                   // loading={true}
                                   // eventRenderer={() => {
@@ -324,6 +328,7 @@ const ViewId = () => {
                                 }}/>
                                 :
                                 <Scheduler
+                                view='month'
                                 // height={300}
                                 // loading={true}
                                 // eventRenderer={() => {
@@ -365,7 +370,7 @@ const ViewId = () => {
                 <Style.TableWrapper>
                     <thead>
                         <Style.TableRow>
-                            <Style.TableHead>CHILD</Style.TableHead>
+                            <Style.TableHead>GYMNAST</Style.TableHead>
                             <Style.TableHead>COACH</Style.TableHead>
                             <Style.TableHead>TIME SLOT</Style.TableHead>
                             <Style.TableHead>ACTIONS</Style.TableHead>

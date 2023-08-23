@@ -132,13 +132,15 @@ const ViewId = () => {
                 fontSize: "24px",
                 color: "white",
                 marginBottom: "1rem",
-                textAlign:"center"
+                textAlign:"center",
+                padding:"1rem"
               }}
             >
                 Gym Schedule{" "}
               </div>
               {events.length > 0 ?
                 <Scheduler
+                view='month'
                   // height={300}
                   // loading={true}
                   onSelectedDateChange={false}
@@ -173,6 +175,7 @@ const ViewId = () => {
               </div>
               {events.length > 0 ?
                 <Scheduler
+                view='month'
                   // height={300}
                   // loading={true}
                   onSelectedDateChange={false}

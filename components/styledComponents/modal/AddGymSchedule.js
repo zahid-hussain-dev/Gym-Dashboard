@@ -10,7 +10,7 @@ const AddGymSchedule = ({ closeModal, id }) => {
     const [formData, setFormData] = useState({
         timefrom: moment().format("HH:mm"),
         timeto: moment().format("HH:mm"),
-        date: new Date().toISOString().substring(0, 10),
+        date: "",
     });
     const [loading, setLoading] = useState(false);
 
@@ -96,7 +96,7 @@ const AddGymSchedule = ({ closeModal, id }) => {
                                 id="date"
                                 defaultValue={new Date().toISOString().substring(0, 10)}
                                 onChange={handleChange}
-                                value={formData.date && formData.date}
+                                // value={formData.date && formData.date}
                             />
                         </div>
 

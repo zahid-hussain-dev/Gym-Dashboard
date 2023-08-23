@@ -7,14 +7,14 @@ import { axiosInterceptor } from '../../axios/axiosInterceptor';
 import Loader from '../../components/styledComponents/loader/loader';
 import swal from "sweetalert";
 import moment from "moment";
-
+import AddState from "../../../Gym-Dashboard/components/styledComponents/modal/AddState"
 const index = () => {
     const [role, setRole] = useState("");
     const router = useRouter();
     const [showModal2, setShowModal2] = useState(false);
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(false);
-
+    const [showStateModal, setShowStateModal] = useState(false);
     const [allStates, setAllStates] = useState([]);
     const dispatch = useDispatch();
     const handleButtonClick2 = () => {
@@ -50,15 +50,30 @@ const index = () => {
     }
     useEffect(() => {
         getAllStates();
-
+   
     }, [])
-
+    const handleAddChildClick = () => {
+        setShowStateModal(true);
+      };
+      const handleCloseStateModal = () => {
+        setShowStateModal(false);
+        console.log("modal false")
+        getAllStates();
+      };
     console.log("evnts all", events)
     return (
         <div style={{ marginTop: "10%" }}>
+                <div style={{marginTop: "10%", display:"flex", justifyContent:"space-around",alignItems:"center" }}>
+                <h2 style={{color:"white",marginRight:"40%"}}> States Listing</h2>
+                <div>
+      <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} >Add State</Button>
+      <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem"  }} onClick={handleAddChildClick} >+</Button>
+      </div>
+      {showStateModal && <AddState onClose={handleCloseStateModal} />}
+      </div>
             {role && role === "admin" &&
                 <React.Fragment >
-                    <Style.TableContainer style={{ marginTop: "5%" }}>
+                    <Style.TableContainer style={{ marginTop: "5%", filter: showStateModal ? 'blur(5px)' : 'none' }}>
                         <Style.TableWrapper>
                             <thead>
                                 <Style.TableRow>
