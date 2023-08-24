@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Scheduler } from "@aldabil/react-scheduler";
-import { EVENTS } from "../../../components/MainComponents/Events";
 import { Button, AcceptButton,RejectButton } from '../../../components/styledComponents/button/Button';
 import * as Style from "../../../components/styledComponents/coachesStyle/coaches";
 import AddCoache from '../../../components/styledComponents/modal/AddCoache';
 import { axiosInterceptor } from '../../../axios/axiosInterceptor';
 import { useRouter } from 'next/router';
 import Loader from '../../../components/styledComponents/loader/loader';
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import moment from "moment";
 
 const ViewId = () => {
@@ -19,6 +18,7 @@ const ViewId = () => {
     // const GymName = router.query.GymName;
     const [events, setEvents] = useState([]);
     const [bookings, setBookings] = useState([]);
+    const schRef = React.createRef()
     const handleButtonClick2 = () => {
         setShowModal2(true);
         console.log("modal click")
@@ -30,9 +30,6 @@ const ViewId = () => {
         const adjustedHours = String(Number(hours)).padStart(2, "0");
         return `${year} ${Number(month)} ${Number(day)} ${adjustedHours}:${minutes}`;
       }
-    // const closeModal2 = () => {
-    //     setShowModal2(false);
-    // };
     const CoachName = useSelector((state) => state.user.coachName);
     console.log("CoachName", CoachName)
     const getCoachScedule = async (id) => {
@@ -75,7 +72,7 @@ const ViewId = () => {
             setLoading(false)
         } catch (error) {
             setLoading(false)
-            swal('Oops!', "error.data.message", 'error')
+            swal('Oops!', "No Data Found", 'error')
             console.log(error)
         }
     }
@@ -99,9 +96,7 @@ const ViewId = () => {
         console.log("handleConfirm =", action, event.title);
         console.log("evnets", event)
         if (action === "edit") {
-            /** PUT event to remote DB */
         } else if (action === "create") {
-            /**POST event to remote DB */
             console.log("Id query",Id)
             const Payload = {
                 from: moment(event.start).format('YYYY-MM-DD HH:mm:ss'),
@@ -110,7 +105,6 @@ const ViewId = () => {
                 coach: router.query.ViewId,
             }
             console.log("payload", Payload)
-
             try {
                 setLoading(true)
                 const res = await axiosInterceptor().post(
@@ -128,28 +122,7 @@ const ViewId = () => {
                 console.log(error)
                 throw error
             }
-
         }
-        // setTimeout(() => {
-        //   res({
-        //     ...event,
-        //     event_id: event.event_id || Math.random()
-        //   });
-        // }, 1000);
-
-        // const isFail = Math.random() > 0.6;
-        // // Make it slow just for testing
-        // console.log("isFail", isFail)
-        // setTimeout(() => {
-        //   if (isFail) {
-        //     rej("Ops... Faild");
-        //   } else {
-        //     res({
-        //       ...event,
-        //       event_id: event.event_id || Math.random()
-        //     });
-        //   }
-        // }, 1000)
     };
     const handleApprove = async (id) => {
         try {
@@ -157,7 +130,6 @@ const ViewId = () => {
             console.log("api calling for schedule")
             const res = await axiosInterceptor().put(
                 `/api/bookings?id=${id}&status=ACCEPT`
-
             );
             setLoading(false)
             console.log("responsse of Approved", res)
@@ -172,7 +144,7 @@ const ViewId = () => {
             setLoading(true)
             console.log("api calling for schedule")
             const res = await axiosInterceptor().put(
-                `/api/bookings?id=${id}&status=CANCEL`,
+                `/api/bookings?id=${id}&status=REJECT`,
             );
             setLoading(false)
             console.log("responsse of Reject", res)
@@ -187,23 +159,18 @@ const ViewId = () => {
             getCoachScedule();
             getCoachBookings();
         }
-
     }, [showModal2, Id])
     console.log("events", events);
     const closeModal2 = () => {
         setShowModal2(false);
-        // const modalElement = document.getElementById('modal');
-        // modalElement.style.filter = 'blur(5px)';
     };
     const tableCell = [
         { id: 1, timeSlote: '9 - 10', child: 'wasiq', coach: 'mudasir' },
         { id: 2, timeSlote: '10 - 11', child: 'shakeel', coach: 'rohab' },
     ];
-//     useEffect(() => {
-//         const GymName = useSelector((state) => state.user.GymName);
-// setCoachName(GymName)
-
-//     }, [])
+    useEffect(() => {
+        schRef.current?.scheduler.handleState(events, "events")
+    }, [events])
     return (
         <div style={{marginTop: "5%" }}>
             
@@ -217,27 +184,19 @@ const ViewId = () => {
                             {events.length > 0 ?
                                <Scheduler
                                view='month'
-                               // height={300}
-                               // loading={true}
-                               // eventRenderer={() => {
-                               //     console.log("event is clikce")
-                               // }}
-                               // customEditor={() => handleButtonClick2()}
-                               // customEditor={(scheduler) => <CustomEditor scheduler={scheduler} />}
                                fields={[
                                    {
                                        name: "TimeStatus",
                                        type: "select",
                                        default: "PUBLIC",
-                                       // Should provide options with type:"select"
                                        options: [
                                            { id: 1, text: "Public", value: "PUBLIC" },
                                            { id: 2, text: "Private", value: "PRIVATE" }
                                        ],
                                        config: { label: "Time Status", required: true, errMsg: "Plz Select Status" }
                                    },
-
                                ]}
+                               ref={schRef}
                                onSelectedDateChange={false}
                                events={events}
                                onConfirm={handleConfirm}
@@ -246,33 +205,23 @@ const ViewId = () => {
                                    weekStartOn: 0,
                                    startHour: 9,
                                    endHour: 24
-                                   // step: 30
                                }}/>
-
                                 :
                                 <Scheduler
                                 view='month'
-                                    // height={300}
-                                    // loading={true}
-                                    // eventRenderer={() => {
-                                    //     console.log("event is clikce")
-                                    // }}
-                                    // customEditor={() => handleButtonClick2()}
-                                    // customEditor={(scheduler) => <CustomEditor scheduler={scheduler} />}
                                     fields={[
                                         {
                                             name: "TimeStatus",
                                             type: "select",
                                             default: "PUBLIC",
-                                            // Should provide options with type:"select"
                                             options: [
                                                 { id: 1, text: "Public", value: "PUBLIC" },
                                                 { id: 2, text: "Private", value: "PRIVATE" }
                                             ],
                                             config: { label: "Time Status", required: true, errMsg: "Plz Select Status" }
                                         },
-
                                     ]} 
+                                    ref={schRef}
                                     onSelectedDateChange={false}
                                     events={events}
                                     onConfirm={handleConfirm}
@@ -285,37 +234,27 @@ const ViewId = () => {
                                     }}
                             />                            }
                         </Style.Schedular>
-
                     </Style.MainDiv>
                     :
                     <Style.MainDiv2 style={{ filter: showModal2 ? 'blur(5px)' : 'none',marginTop:"0%"  }} >
                         <Style.Schedular >
                             <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem",textAlign:"center"  }}>Schedule </div>
                             {events.length > 0 ?
-
                                 <Scheduler
                                 view='month'
-                                  // height={300}
-                                  // loading={true}
-                                  // eventRenderer={() => {
-                                  //     console.log("event is clikce")
-                                  // }}
-                                  // customEditor={() => handleButtonClick2()}
-                                  // customEditor={(scheduler) => <CustomEditor scheduler={scheduler} />}
                                 fields={[
                                    {
                                        name: "TimeStatus",
                                        type: "select",
                                        default: "PUBLIC",
-                                       // Should provide options with type:"select"
                                        options: [
                                             { id: 1, text: "Public", value: "PUBLIC" },
                                             { id: 2, text: "Private", value: "PRIVATE" }
                                        ],
                                         config: { label: "Time Status", required: true, errMsg: "Plz Select Status" }
                                     },
-
                                 ]}
+                                ref={schRef}
                                 onSelectedDateChange={false}
                                 events={events}
                                 onConfirm={handleConfirm}
@@ -324,33 +263,24 @@ const ViewId = () => {
                                     weekStartOn: 0,
                                     startHour: 9,
                                     endHour: 24
-                                    // step: 30
                                 }}/>
                                 :
                                 <Scheduler
                                 view='month'
-                                // height={300}
-                                // loading={true}
-                                // eventRenderer={() => {
-                                //     console.log("event is clikce")
-                                // }}
-                                // customEditor={() => handleButtonClick2()}
-                                // customEditor={(scheduler) => <CustomEditor scheduler={scheduler} />}
                                 fields={[
                                     {
                                         name: "TimeStatus",
                                         type: "select",
                                         default: "PUBLIC",
-                                        // Should provide options with type:"select"
                                         options: [
                                             { id: 1, text: "Public", value: "PUBLIC" },
                                             { id: 2, text: "Private", value: "PRIVATE" }
                                         ],
                                         config: { label: "Time Status", required: true, errMsg: "Plz Select Status" }
                                     },
- 
                                 ]}
-                                     onSelectedDateChange={false}
+                                ref={schRef}
+                                    onSelectedDateChange={false}
                                     events={events}
                                     onConfirm={handleConfirm}
                                     week={{
@@ -358,11 +288,9 @@ const ViewId = () => {
                                         weekStartOn: 0,
                                         startHour: 9,
                                         endHour: 24
-                                        // step: 30
                                     }}/>
                             }
                         </Style.Schedular>
-
                     </Style.MainDiv2>}
             </React.Fragment>
             <Style.SubTitle style={{ marginTop: "1rem" ,marginLeft: "5%",filter: showModal2 ? 'blur(5px)' : 'none',marginTop: "10%"}}>Booking Listing</Style.SubTitle>
@@ -374,7 +302,6 @@ const ViewId = () => {
                             <Style.TableHead>COACH</Style.TableHead>
                             <Style.TableHead>TIME SLOT</Style.TableHead>
                             <Style.TableHead>ACTIONS</Style.TableHead>
-
                         </Style.TableRow>
                     </thead>
                     <tbody>
@@ -385,46 +312,38 @@ const ViewId = () => {
                                 <Style.TableCell>{new Date(data?.from).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} {"-"} {new Date(data?.to).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} </Style.TableCell>
                                 {data.status === "PENDING"
                                     &&
-                                    <Style.TableCell style={{width:"40%",display:"flex",justifyContent:"space-between",marginLeft:"30%"}} >
+                                    <Style.TableCell style={{display:"flex",justifyContent:"space-evenly"}} >
                                         <AcceptButton onClick={() => {
                                             handleApprove(data.id);
-
                                         }}>Accept</AcceptButton>
                                         <RejectButton onClick={() => {
                                             handleReject(data.id);
-
                                         }}>Cancel</RejectButton>
                                     </Style.TableCell>
                                 }
                                 {data.status === "ACCEPT"
                                     &&
-                                    <Style.TableCell>
+                                    <Style.TableCell style={{display:"flex",justifyContent:"space-evenly"}}>
                                         <RejectButton onClick={() => {
                                             handleReject(data.id);
-
                                         }}>Cancel</RejectButton>
                                     </Style.TableCell>
                                 }
-                                {data.status === "CANCEL"
+                                {data.status === "REJECT"
                                     &&
-                                    <Style.TableCell>
+                                    <Style.TableCell style={{display:"flex",justifyContent:"space-evenly"}}>
                                         <AcceptButton onClick={() => {
                                             handleApprove(data.id);
-
                                         }}>Accept</AcceptButton>
                                     </Style.TableCell>
                                 }
-
-
                             </Style.TableRow>
                         ))}
-                        
                     </tbody>
                 </Style.TableWrapper>
             </Style.TableContainer>
             <Loader isLoading={loading}></Loader>
         </div>
-        
     )
 }
 

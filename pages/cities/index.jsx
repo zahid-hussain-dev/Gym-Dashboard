@@ -4,17 +4,18 @@ import * as Style from "../../components/styledComponents/state/State";
 import { useRouter } from 'next/navigation';
 import { axiosInterceptor } from '../../axios/axiosInterceptor';
 import Loader from '../../components/styledComponents/loader/loader';
-import swal from "sweetalert";
-import moment from "moment";
 import { useDispatch,useSelector  } from "react-redux";
-import AddCities from "../../../Gym-Dashboard/components/styledComponents/modal/AddCities"
+import AddCities from "../../components/styledComponents/modal/AddCities"
+import UpdateCities from "../../components/styledComponents/modal/UpdateCity"
 const index = () => {
     const [role, setRole] = useState("");
     const router = useRouter();
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(false);
     const [showCitiesModal, setShowCitiesModal] = useState(false);
+    const [showUpdateCitiesModal, setShowUpdateCitiesModal] = useState(false);
     const [allCities, setAllCities] = useState([]);
+    const [clickedId, setClickedId]= useState();
     const dispatch = useDispatch();
    
 
@@ -53,16 +54,54 @@ const index = () => {
         setLoading(true)
         getAllCities();
       };
+      const handleUpdateCityClick = () => {
+        setShowUpdateCitiesModal(true);
+        };
+      const handleCloseUpdateModal = () => {
+        setShowUpdateCitiesModal(false);
+        setLoading(true)
+        getAllCities();
+      };
+      const deleteCity = async (id) => {
+        try {
+            setLoading(true)
+            console.log("api calling for delete City")
+            const res = await axiosInterceptor().delete(
+                `/api/city?id=${id}`,
+            );
+            setLoading(false);
+            getAllCities();
+        } catch (error) {
+            setLoading(false)
+            console.log(error)
+        }
+    }
+    // const updateCity = async (id) => {
+    //     try {
+    //         setLoading(true)
+    //         setShowUpdateCitiesModal(true);
+    //         console.log("api calling for delete City")
+    //         const res = await axiosInterceptor().put(
+    //             `/api/city?id=${id}`,
+    //         );
+    //         setLoading(false);
+    //         getAllCities();
+    //     } catch (error) {
+    //         setLoading(false)
+    //         console.log(error)
+    //     }
+    // }
     console.log("evnts all", events)
     return (
         <div style={{ marginTop: "10%" }}>
-                <div style={{marginTop: "10%", display:"flex", justifyContent:"space-around",alignItems:"center" }}>
+                <div style={{marginTop: "10%", display:"flex", justifyContent:"space-between",alignItems:"center" }}>
                 <h2 style={{color:"white",marginRight:"40%"}}> City Listing</h2>
-                <div>
+                <div style={{marginRight:"10%"}}>
                 <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} >Add Cities</Button>
                 <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem"  }} onClick={handleAddChildClick} >+</Button>
                </div>
       {showCitiesModal && <AddCities onClose={handleCloseCitiesModal} />}
+      {showUpdateCitiesModal && <UpdateCities onClose={handleCloseUpdateModal} id={clickedId}/>}
       </div>
             {role && role === "admin" &&
                 <React.Fragment >
@@ -73,6 +112,7 @@ const index = () => {
                                     <Style.TableHead>ID</Style.TableHead>
                                     <Style.TableHead>CITIES</Style.TableHead>
                                     <Style.TableHead>STATE</Style.TableHead>
+                                    <Style.TableHead>ACTIONS</Style.TableHead>
                                 </Style.TableRow>
                             </thead>
                             <tbody>
@@ -81,6 +121,20 @@ const index = () => {
                                         <Style.TableCell>{data?.id}</Style.TableCell>
                                         <Style.TableCell>{data?.name}</Style.TableCell>
                                         <Style.TableCell>{data['state.name']}</Style.TableCell>
+                                        <Style.TableCell style={{ display: "flex", justifyContent: "space-evenly" }}>
+
+                                            <AcceptButton onClick={() => {
+                                                handleUpdateCityClick()
+                                                // updateCity(data?.id);
+                                                setClickedId(data.id)
+                                            }} >Update</AcceptButton>
+
+                                            <RejectButton onClick={() => {
+                                                deleteCity(data?.id)
+                                            }} >Delete</RejectButton>
+
+
+                                        </Style.TableCell>
                                     </Style.TableRow2>
                                 ))}
                             </tbody>

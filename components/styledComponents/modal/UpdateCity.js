@@ -4,16 +4,14 @@ import Image from "next/image";
 import close from "../../../public/assests/SVGs/close-svgrepo-com (2).svg";
 import { axiosInterceptor } from '../../../axios/axiosInterceptor';
 import Loader from '../../../components/styledComponents/loader/loader';
-import swal from "sweetalert";
 import Select from 'react-select';
 import { useDispatch, useSelector } from "react-redux";
 
-const AddCities = ({ onClose, id }) => {
+const UpdateCities = ({ onClose, id }) => {
     const [selectedOptionValue, setSelectedOptionValue] = useState('');
     const [selectedOptionValueID, setSelectedOptionValueID] = useState('');
     const [selectedOptionCity, setSelectedOptionCity] = useState('');
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-  const [childrens, setChildrens] = useState([]);
   const [stateData, setStateData] = useState({});
   const [selectedOption, setSelectedOption] = useState('');
   const [loading, setLoading] = useState(false);
@@ -25,6 +23,7 @@ const AddCities = ({ onClose, id }) => {
   });
   const handleSelectChange = (event) => {
     console.log(event)
+    // setSelectedOption(event.value);
     setSelectedOptionValue(event.name)
     setSelectedOptionValueID(event.value)
     setSelectedOptionCity(event.value)
@@ -35,6 +34,7 @@ const AddCities = ({ onClose, id }) => {
     setFormData((prevFormData) => ({
         ...prevFormData,
         "stateId": event.value,
+        id:id,
       }));
   };
   const getState = async () => {
@@ -51,15 +51,9 @@ const AddCities = ({ onClose, id }) => {
       console.log(error)
     }
   }
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-  };
   useEffect(() => {
     getState();
+  
 }, [onClose])
 
   const handleSelectState = (event) => {
@@ -69,7 +63,6 @@ const AddCities = ({ onClose, id }) => {
     setStateData((prevChildData) => ({
       ...prevChildData,
       [name]: value,
-      id:id,
     }));
   };
 
@@ -78,8 +71,8 @@ const AddCities = ({ onClose, id }) => {
     onClose();
     try {
       setLoading(true)
-      const res = await axiosInterceptor().post(
-        `/api/city`,
+      const res = await axiosInterceptor().put(
+        `/api/city?id=${id}`,
         stateData,
       );
       console.log("responsse of cities", res)
@@ -99,7 +92,7 @@ const AddCities = ({ onClose, id }) => {
   return (
     <Styled.PopupContainer>
       <Styled.PopupMainHeading>
-        <Styled.PopupHeading style={{marginRight:"10%"}}>Add Cities</Styled.PopupHeading>
+        <Styled.PopupHeading style={{marginRight:"10%"}}>Update Cities</Styled.PopupHeading>
         <Image src={close} className="close" onClick={onClose} alt="close" width={20} height={20} />
       </Styled.PopupMainHeading>
       <form>
@@ -131,7 +124,7 @@ const AddCities = ({ onClose, id }) => {
                 </div>
                < div style={{marginBottom:"18px"}}>
                   <Styled.SubmitForm type="submit" onClick={(e) => handleSubmitState(e)} disabled={isButtonDisabled}>
-                  Add Cities
+                  Update Cities
                 </Styled.SubmitForm>
                   </div>
               </Styled.MainForm>
@@ -140,4 +133,4 @@ const AddCities = ({ onClose, id }) => {
   );
 };
 
-export default AddCities;
+export default UpdateCities;

@@ -102,7 +102,6 @@ const AddCoachForm = ({ closeModal, id }) => {
         <Styled.PopupHeading style={{ marginLeft: "42%" }}>Add Schedule</Styled.PopupHeading>
         <Image src={close} className="close" onClick={closeModal} alt="close" width={20} height={20} />
       </Styled.PopupMainHeading>
-      {/* Form content */}
       <form onSubmit={handleSubmit}>
         <Styled.MainForm >
           <div >

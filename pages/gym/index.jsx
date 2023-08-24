@@ -22,6 +22,7 @@ const index = () => {
   const [allGyms, setAllGyms] = useState([]);
   const [showGymModal, setShowGymModal] = useState(false);
   const dispatch = useDispatch();
+  const schRef = React.createRef()
   const handleButtonClick = () => {
     setShowModal(true);
     console.log("modal click")
@@ -165,13 +166,14 @@ useEffect(()=>{
   }, [events])
 const closeGymModal = ( ) =>{
   setShowGymModal(false);
-  console.log("")
   getAllGym();
 };
-
+useEffect(() => {
+  schRef.current?.scheduler.handleState(events, "events")
+}, [events])
   return (
     <div style={{marginTop: "10%" }}>
-        <h2 style={{color:"white",marginTop: "5%"}}> Gym Listing </h2>
+       
       {role && role === "gym" &&
       <div>
  <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} >Add Gym Schedule</Button>
@@ -179,7 +181,9 @@ const closeGymModal = ( ) =>{
       </div>
       }
       <div>
+      {role && role === "admin" &&
 <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "77%" }} onClick={handleAddGym} >+</Button>
+}
 </div>
 {showGymModal && <AddGymModal closeModal={closeGymModal}/>}
       {role && role === "admin" &&
@@ -222,6 +226,7 @@ const closeGymModal = ( ) =>{
                 // height={300}
                 // loading={true}
                 onSelectedDateChange={false}
+                ref={schRef}
                 events={events}
                 onConfirm={handleConfirm}
                 week={{
@@ -243,6 +248,3 @@ const closeGymModal = ( ) =>{
 }
 
 export default index;
-
-
-

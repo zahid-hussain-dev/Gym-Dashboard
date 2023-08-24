@@ -130,14 +130,14 @@ const index = () => {
           </Button>
 
           <div style={{ marginTop: "1rem", display: "flex", justifyContent: "center" }}>
-            <InputGroup>
+            {/* <InputGroup>
               <label>
                 Don't have an account?{' '}
                 <span style={{ color: "rgb(57, 181, 74)" }}>
                   <Link href="/signup">Sign up</Link>
                 </span>
               </label>
-            </InputGroup>
+            </InputGroup> */}
           </div>
         </div>
       </div>

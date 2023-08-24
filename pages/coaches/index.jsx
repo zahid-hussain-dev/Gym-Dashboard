@@ -22,6 +22,8 @@ const index = () => {
 
     const [allCoaches, setAllCoaches] = useState([]);
     const dispatch = useDispatch();
+    
+    const schRef = React.createRef()
     const handleButtonClick2 = () => {
         setShowModal2(true);
         console.log("modal click")
@@ -258,6 +260,9 @@ const index = () => {
     //   backgroundColor: 'white',
     // //   filter: 'blur(5px)'
     //   };
+    useEffect(() => {
+        schRef.current?.scheduler.handleState(events, "events")
+    }, [events])
     return (
         <div style={{ marginTop: "10%" }}>
             {role && role === "admin" &&
@@ -343,6 +348,7 @@ const index = () => {
                                             config: { label: "Time Status", required: true, errMsg: "Plz Select Status" }
                                         },
                                     ]}
+                                    ref={schRef}
                                     onSelectedDateChange={false}
                                     events={events}
                                     onConfirm={handleConfirm}
