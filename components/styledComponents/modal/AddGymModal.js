@@ -144,8 +144,10 @@ const getCity = async () => {
       <form onSubmit={handleSubmit}>
         <Styled.MainGymForm >
 
-            <div style={{margin:"20px"}}>
+            <div style={{margin:"20px",width:"30%"}}>
+               <div    style={{marginBottom: "10%"}}>
             <Styled.Labels className="label">Select State:</Styled.Labels>
+            </div>
             <Select
                       name='childrenId'
                       value={formData.State}
@@ -156,8 +158,10 @@ const getCity = async () => {
                     />
 
             </div>
-            <div>
+            <div style={{margin:"20px",width:"30%"}}>
+            <div  style={{marginBottom: "10%"}}>
             <Styled.Labels>Select City:</Styled.Labels>
+            </div>
             <Select
                       name='cityId'
                       value={formData.City}
@@ -167,7 +171,7 @@ const getCity = async () => {
                       isSearchable
                     />
             </div>
-            <div>
+            <div style={{marginTop: "2%"}}>
             <Styled.Label className="label">Gym Name:</Styled.Label>
               <Styled.InputData
                 type="input"

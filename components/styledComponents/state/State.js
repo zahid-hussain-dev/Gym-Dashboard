@@ -16,7 +16,7 @@ export const Schedular = styled.div`
 `;
 export const TableContainer = styled.div`
   color: #d5b93b;
-  width: 40%;
+  width: 50%;
   margin: 0px auto;
   margin-top: 10%;
   height: 20rem;

@@ -44,6 +44,7 @@ const index = () => {
 
             );
             setLoading(false)
+            getPrivateBookings()
             console.log("responsse of Approved", res)
         } catch (error) {
             setLoading(false)
@@ -59,6 +60,7 @@ const index = () => {
                 `/api/bookings?id=${id}&status=REJECT`,
             );
             setLoading(false)
+            getPrivateBookings()
             console.log("responsse of Reject", res)
         } catch (error) {
             setLoading(false)
@@ -95,7 +97,7 @@ const index = () => {
                                 {data.status === "PENDING"
                                     ?
                                     <Style.TableCell >
-                                       <div style={{width:"50%",display:"flex",justifyContent:"space-between",marginLeft:"24%"}}>
+                                       <div style={{width:"75%",display:"flex",justifyContent:"space-between",marginLeft:"12%"}}>
                                         <AcceptButton onClick={() => {
                                             handleApprove(data.id);
 

@@ -318,7 +318,6 @@ const index = () => {
   return (
     
     <div closeModal={closeModal4} style={{marginTop: "10%" }}>
-      <h2 style={{color:"white",marginTop: "5%"}}> Gymnast Listing</h2>
       {role!=="admin" &&
       <div>
 <Button  style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} >Add Bookings</Button>
@@ -326,8 +325,12 @@ const index = () => {
       </div>
      }   
      {showModal4 &&   <AddChildForm  Closed={handleCloseModal4} onSubmit={handleSubmitChild} />}
+     
 {role && role === "admin"
+      
         ?
+        //  <h2 style={{color:"white",textAlign:"center",marginBottom:"10%"}}> Gymnast Listing</h2> 
+        //  ?
         <Style.TableContainer style={{ filter: showModal4 ? 'blur(5px)' : 'none',marginTop: "5%" }} >
           <Style.TableWrapper>
             <thead>

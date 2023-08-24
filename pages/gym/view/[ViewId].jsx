@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Scheduler } from "@aldabil/react-scheduler";
-import { EVENTS } from "../../../components/MainComponents/Events";
 import { Button } from "../../../components/styledComponents/button/Button";
 import AddGymSchedule from "../../../components/styledComponents/modal/AddGymSchedule";
 import { axiosInterceptor } from '../../../axios/axiosInterceptor';
 import Loader from '../../../components/styledComponents/loader/loader';
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import moment from "moment";
 
 const ViewId = () => {
@@ -15,7 +14,7 @@ const ViewId = () => {
   const [showModal, setShowModal] = useState(false);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const schRef = React.createRef()
   const handleButtonClick = () => {
     setShowModal(true);
     console.log("modal click");
@@ -43,13 +42,11 @@ const ViewId = () => {
       setLoading(false)
     } catch (error) {
       setLoading(false)
-      // swal('Oops!', error.data.message, 'error')
       console.log(error)
     }
   }
   const closeModal = () => {
-    //   setShowModal(false);
-    setShowModal((prev) => !prev);
+    setShowModal(false);
     console.log("get gym schedule on close")
     getGymScedule();
   };
@@ -74,7 +71,6 @@ const ViewId = () => {
         gym: Id,
       }
       console.log("payload", Payload)
-
       try {
         setLoading(true)
         const res = await axiosInterceptor().post(
@@ -92,23 +88,24 @@ const ViewId = () => {
         console.log(error)
         throw error
       }
-
     }
   };
-
+  useEffect(() => {
+      getGymScedule();
+  }, [])
   useEffect(() => {
     if (Id) {
       getGymScedule();
     }
-
   }, [showModal, Id])
+  useEffect(() => {
+    schRef.current?.scheduler.handleState(events, "events")
+}, [events])
   return (
     <>
-      {/* <Styled.Globalstyle/> */}
       <div style={{ marginTop: "10%" }}>
         <Button
           style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }}
-
         >
           Add Gym Schedule
         </Button>
@@ -118,7 +115,6 @@ const ViewId = () => {
         >
           +
         </Button>
-        {/* {showModal && <AddGymSchedule closeModal={closeModal} />} */}
         {showModal && <AddGymSchedule closeModal={closeModal} id={Id} />}
         {showModal ? (
           <div
@@ -144,17 +140,15 @@ const ViewId = () => {
               {events.length > 0 ?
                 <Scheduler
                   view='month'
-                  // height={300}
-                  // loading={true}
                   onSelectedDateChange={false}
                   onConfirm={handleConfirm}
                   events={events}
+                  ref={schRef}
                   week={{
                     weekDays: [0, 1, 2, 3, 4, 5, 6],
                     weekStartOn: 6,
                     startHour: 9,
                     endHour: 24,
-                    // step: 30
                   }}
                 />
                 :
@@ -179,8 +173,7 @@ const ViewId = () => {
               {events.length > 0 ?
                 <Scheduler
                   view='month'
-                  // height={300}
-                  // loading={true}
+                  ref={schRef}
                   onSelectedDateChange={false}
                   onConfirm={handleConfirm}
                   events={events}
@@ -189,7 +182,6 @@ const ViewId = () => {
                     weekStartOn: 6,
                     startHour: 9,
                     endHour: 24,
-                    // step: 30
                   }}
                 />
                 :
@@ -198,6 +190,7 @@ const ViewId = () => {
             </div>
           </div>
         )}
+              <Loader isLoading={loading}></Loader>
       </div>
     </>
   );

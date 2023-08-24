@@ -95,6 +95,7 @@ const axiosInterceptor = () => {
                     Authorization: 'Bearer ' + token,
                 };
         }
+        console.log('TOKENNNNN ISSSSS================',token);
         return config;
     });
     instance.interceptors.response.use(
