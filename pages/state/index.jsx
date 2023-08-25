@@ -1,30 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { Button, ViewButton, AcceptButton, RejectButton } from '../../components/styledComponents/button/Button';
+import { Button, AcceptButton, RejectButton } from '../../components/styledComponents/button/Button';
 import * as Style from "../../components/styledComponents/state/State";
-import { useRouter } from 'next/navigation';
-import { useDispatch, useSelector } from "react-redux";
 import { axiosInterceptor } from '../../axios/axiosInterceptor';
 import Loader from '../../components/styledComponents/loader/loader';
-import swal from "sweetalert";
-import moment from "moment";
 import AddState from "../../components/styledComponents/modal/AddState"
 import UpdateState from "../../components/styledComponents/modal/UpdateState"
 const index = () => {
     const [role, setRole] = useState("");
-    const router = useRouter();
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(false);
     const [showStateModal, setShowStateModal] = useState(false);
     const [showUpdateStateModal, setShowUpdateStateModal] = useState(false);
     const [clickedId, setClickedId]= useState();
     const [allStates, setAllStates] = useState([]);
-    const dispatch = useDispatch();
+    const [clickedStateName, setClickedStateName]= useState();
 
     useEffect(() => {
         const userRole = JSON.parse(localStorage.getItem("Userrole"))
         setRole(userRole);
     }, [])
-
     const getAllStates = async () => {
         try {
             setLoading(true)
@@ -40,21 +34,6 @@ const index = () => {
             console.log(error)
         }
     }
-    // const updateState = async (id) => {
-    //     try {
-    //         setLoading(true)
-    //         setShowUpdateStateModal(true);
-    //         console.log("api calling for update states")
-    //         const res = await axiosInterceptor().put(
-    //             `/api/states?id=${id}`,
-    //         );
-    //         setLoading(false);
-    //         getAllStates();
-    //     } catch (error) {
-    //         setLoading(false)
-    //         console.log(error)
-    //     }
-    // }
     const deleteState = async (id) => {
         try {
             setLoading(true)
@@ -99,15 +78,15 @@ const index = () => {
       <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem"  }} onClick={handleAddChildClick} >+</Button>
       </div>
       {showStateModal && <AddState onClose={handleCloseStateModal} />}
-      {showUpdateStateModal && <UpdateState onClose={handleCloseUpdateStateModal} id={clickedId}/>}
+      {showUpdateStateModal && <UpdateState onClose={handleCloseUpdateStateModal} stateName={clickedStateName} id={clickedId}/>}
       </div>
             {role && role === "admin" &&
                 <React.Fragment >
-                    <Style.TableContainer style={{ marginTop: "5%", filter: showStateModal ? 'blur(5px)' : 'none' }}>
+                    <Style.TableContainer style={{ marginTop: "5%", filter: showStateModal || showUpdateStateModal ? 'blur(5px)' : 'none', pointerEvents:  showStateModal || showUpdateStateModal? 'none' : 'auto' }}>
                         <Style.TableWrapper>
                             <thead>
                                 <Style.TableRow>
-                                    <Style.TableHead>ID</Style.TableHead>
+                                    {/* <Style.TableHead>ID</Style.TableHead> */}
                                     <Style.TableHead>STATES</Style.TableHead>
                                     <Style.TableHead>ACTIONS</Style.TableHead>
                                 </Style.TableRow>
@@ -115,20 +94,17 @@ const index = () => {
                             <tbody>
                                 {allStates && allStates.map((data, index) => (
                                     <Style.TableRow2 key={index}>
-                                        <Style.TableCell>{data?.id}</Style.TableCell>
+                                        {/* <Style.TableCell>{data?.id}</Style.TableCell> */}
                                         <Style.TableCell>{data?.name}</Style.TableCell>
                                         <Style.TableCell style={{ display: "flex", justifyContent: "space-evenly" }}>
-
                                             <AcceptButton onClick={() => {
-                                                handleUpdateStateClick() 
+                                                handleUpdateStateClick()
                                                 setClickedId(data.id)
+                                                setClickedStateName(data.name)
                                             }} >Update</AcceptButton>
-
                                             <RejectButton onClick={() => {
                                                 deleteState(data?.id)
                                             }} >Delete</RejectButton>
-
-
                                         </Style.TableCell>
                                     </Style.TableRow2>
                                 ))}
@@ -142,4 +118,4 @@ const index = () => {
     )
 }
 
-export default index
+export default index;

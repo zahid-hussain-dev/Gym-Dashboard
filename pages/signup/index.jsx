@@ -81,7 +81,7 @@ export default function Signup() {
               name="userName"
             ></Input>
           </InputGroup>
-                    <InputGroup>
+          <InputGroup>
           <label>Phone </label>
           <Input
               onChange={(e) => {

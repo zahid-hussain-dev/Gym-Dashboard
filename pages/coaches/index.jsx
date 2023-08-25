@@ -19,15 +19,12 @@ const index = () => {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(false);
     const [isMapped, setIsMapped] = useState(false);
-
     const [allCoaches, setAllCoaches] = useState([]);
     const dispatch = useDispatch();
-    
     const schRef = React.createRef()
     const handleButtonClick2 = () => {
         setShowModal2(true);
         console.log("modal click")
-
     };
     function formatTimestamp(timestamp) {
         const [datePart, timePart] = timestamp.split("T");
@@ -39,14 +36,12 @@ const index = () => {
     const CustomEditor = ({ scheduler }) => {
         const event = scheduler.edited;
         console.log("scheduler", scheduler);
-
         return (
             <div>
                 <AddCoache style={{ position: "absolute", top: "40%", left: "52%", zIndex: "1" }} closeModal={() => { closeModal2(); scheduler.close() }} />
             </div>
         );
     };
-
     const closeModal2 = () => {
         setShowModal2(false);
     };
@@ -54,16 +49,13 @@ const index = () => {
         console.log("handleConfirm =", action, event.title);
         console.log("evnets", event)
         if (action === "edit") {
-            /** PUT event to remote DB */
         } else if (action === "create") {
-            /**POST event to remote DB */
             const Payload = {
                 from: moment(event.start).format('YYYY-MM-DD HH:mm:ss'),
                 to: moment(event.end).format('YYYY-MM-DD HH:mm:ss'),
                 type: event.TimeStatus,
             }
             console.log("payload", Payload)
-
             try {
                 setLoading(true)
                 const res = await axiosInterceptor().post(
@@ -81,28 +73,7 @@ const index = () => {
                 console.log(error)
                 throw error
             }
-
         }
-        // setTimeout(() => {
-        //   res({
-        //     ...event,
-        //     event_id: event.event_id || Math.random()
-        //   });
-        // }, 1000);
-
-        // const isFail = Math.random() > 0.6;
-        // // Make it slow just for testing
-        // console.log("isFail", isFail)
-        // setTimeout(() => {
-        //   if (isFail) {
-        //     rej("Ops... Faild");
-        //   } else {
-        //     res({
-        //       ...event,
-        //       event_id: event.event_id || Math.random()
-        //     });
-        //   }
-        // }, 1000)
     };
     useEffect(() => {
         // Perform localStorage action
@@ -111,7 +82,6 @@ const index = () => {
     }, [])
     const getCoachScedule = async () => {
         const today = new Date();
-
         // ✅ Get the first day of the current week (Sunday)
         const firstDay = new Date(
             today.setDate(today.getDate() - today.getDay()),
@@ -122,12 +92,10 @@ const index = () => {
             today.setDate(today.getDate() - today.getDay() + 6),
         );
         console.log("firstDay", firstDay.toISOString().slice(0, 10))
-
         const Payload = {
             from: "2023-08-10",
             to: "2023-08-18"
         }
-
         try {
             setLoading(true)
             console.log("api calling for schedule")
@@ -148,7 +116,6 @@ const index = () => {
             setEvents(res.data);
             setLoading(false)
             getCoachGymScedule();
-
         } catch (error) {
             setLoading(false)
             swal('Oops!', "error.data.message", 'error')
@@ -173,12 +140,6 @@ const index = () => {
                 item['color'] = "#0000FF"
             ))
             setEvents(res.data)
-            // setEvents((prev) => {
-            //     return [
-            //         ...prev,
-            //         ...res.data
-            //     ]
-            // });
             setIsMapped(true);
             setLoading(false)
         } catch (error) {
@@ -247,19 +208,13 @@ const index = () => {
         if (role == "coach") {
             console.log("here")
             getCoachScedule();
-            // getCoachGymScedule();
         }
         if (role == "admin") {
             console.log("here in admin")
             getAllCoaches();
         }
     }, [role, showModal2])
-
     console.log("evnts all", events)
-    //       const headingStyle = {
-    //   backgroundColor: 'white',
-    // //   filter: 'blur(5px)'
-    //   };
     useEffect(() => {
         schRef.current?.scheduler.handleState(events, "events")
     }, [events])
@@ -276,19 +231,13 @@ const index = () => {
                                     <Style.TableHead>GYM</Style.TableHead>
                                     <Style.TableHead>STATUS</Style.TableHead>
                                     <Style.TableHead>ACTIONS</Style.TableHead>
-
                                 </Style.TableRow>
                             </thead>
-                            {/* <Style.TableScroll> */}
                             <tbody>
-                                {/* <Style.TableScroll> */}
                                 {allCoaches && allCoaches.map((data, index) => (
                                     <Style.TableRow2 key={index}>
                                         <Style.TableCell>{data?.userName}</Style.TableCell>
                                         <Style.TableCell>{data?.gym.name}</Style.TableCell>
-                                        {/* <Style.TableCell>{data?.status}
-                                        
-                                        </Style.TableCell> */}
                                         {data?.status === "PENDING_APPROVAL"
                                             ?
                                             <Style.TableCell style={{ display: "flex", justifyContent: "space-evenly" }} >
@@ -308,7 +257,6 @@ const index = () => {
                                                 }
                                             </Style.TableCell>
                                         }
-
                                         <Style.TableCell>
                                             {role === "admin" &&
                                                 <ViewButton onClick={() => {
@@ -317,12 +265,9 @@ const index = () => {
                                                 }}>View</ViewButton>
                                             }
                                         </Style.TableCell>
-
                                     </Style.TableRow2>
                                 ))}
-                                {/* </Style.TableScroll> */}
                             </tbody>
-                            {/* </Style.TableScroll> */}
                         </Style.TableWrapper>
                     </Style.TableContainer>
                 </React.Fragment>
@@ -333,14 +278,12 @@ const index = () => {
                     <Style.MainDiv>
                         <Style.Schedular style={{ filter: showModal2 ? 'blur(5px)' : 'none' }}>
                             <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem", textAlign: "center", filter: showModal2 ? 'blur(5px)' : 'none' }}>Schedule </div>
-
                             {events.length > 0 && isMapped ?
                                 <Scheduler
                                     fields={[
                                         {name: "TimeStatus",
                                             type: "select",
                                             default: "PUBLIC",
-                                            // Should provide options with type:"select"
                                             options: [
                                                 { id: 1, text: "Public", value: "PUBLIC" },
                                                 { id: 2, text: "Private", value: "PRIVATE" }
@@ -357,7 +300,6 @@ const index = () => {
                                         weekStartOn: 0,
                                         startHour: 9,
                                         endHour: 24
-                                        // step: 30
                                     }}
                                 />
                                 :

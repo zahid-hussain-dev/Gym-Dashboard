@@ -13,18 +13,13 @@ const SideBar = () => {
   const router = useRouter();
   const showCollapse = useSelector((state) => state.user.showCollapse);
   const dispatch = useDispatch();
-
-
   const [role, setRole] = useState("");
-
   const [sidebarItems, setSidebarItems] = useState([]);
   useEffect(() => {
-    // Perform localStorage action
     const userRole = JSON.parse(localStorage.getItem("Userrole"))
     setRole(userRole);
     if (userRole === "admin") {
       setSidebarItems(sideItemsAdmin);
-
     }
     else if (userRole === "coach") {
       setSidebarItems(sideItemsCoach)
@@ -35,10 +30,7 @@ const SideBar = () => {
     else if (userRole === "gymnast") {
       setSidebarItems(sideItemsGymnast) 
     }
-
   }, [])
-
-
   const [isMenuOpened, setIsMenuOpened] = useState(false);
   const handleCollapse = () => {
     setIsMenuOpened(!isMenuOpened);
@@ -60,7 +52,6 @@ const SideBar = () => {
               <div className='' onClick={handleCollapse} style={{ cursor: "pointer", marginLeft: "20px", marginTop: "40px" }}>
                 <Image src={menu} alt='menu' width={30} height={30} className="" />
               </div>
-
             </div>
             {!isMenuOpened ?
               <ul className="metismenu in nav" id="side-menu">
@@ -114,12 +105,9 @@ const SideBar = () => {
                 ))}
               </ul>
             }
-
           </div>
         </nav>
-
       </aside>
-
     </div>
   )
 }

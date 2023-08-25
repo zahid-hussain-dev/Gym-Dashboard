@@ -32,8 +32,8 @@ const ViewId = () => {
       res.data.map((item, index) => (
         item['event_id'] = item.id,
         item['title'] = "Open Hours",
-        item['start'] = new Date(formatTimestamp(new Date(item.from).toISOString())),
-        item['end'] = new Date(formatTimestamp(new Date(item.to).toISOString())),
+        item['start'] = new Date(item.from),
+        item['end'] = new Date(item.to),
         item['editable'] = true,
         item['deletable'] = false,
         item['color'] = "#50b500"
@@ -57,14 +57,10 @@ const ViewId = () => {
     const adjustedHours = String(Number(hours)).padStart(2, "0");
     return `${year} ${Number(month)} ${Number(day)} ${adjustedHours}:${minutes}`;
   }
-
   const handleConfirm = async (event, action) => {
     console.log("handleConfirm =", action, event.title);
-
     if (action === "edit") {
-      /** PUT event to remote DB */
     } else if (action === "create") {
-      /**POST event to remote DB */
       const Payload = {
         from: moment(event.start).format('YYYY-MM-DD HH:mm:ss'),
         to: moment(event.end).format('YYYY-MM-DD HH:mm:ss'),
@@ -121,8 +117,9 @@ const ViewId = () => {
             style={{
               display: "flex",
               justifyContent: "space-around",
-              filter: "blur(5px)",
-              textAlign: "center"
+              textAlign: "center",
+              filter: showModal? 'blur(5px)' : 'none', 
+              pointerEvents:  showModal? 'none' : 'auto' 
             }}
           >
             <div style={{ width: "90%", height: "40%", marginTop: "2%" }}>
@@ -152,8 +149,19 @@ const ViewId = () => {
                   }}
                 />
                 :
-                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem", textAlign: "center" }}>No Schedule Exist for this Gym {GymName} </div>
-              }
+                <Scheduler
+                  view='month'
+                  onSelectedDateChange={false}
+                  onConfirm={handleConfirm}
+                  events={events}
+                  ref={schRef}
+                  week={{
+                    weekDays: [0, 1, 2, 3, 4, 5, 6],
+                    weekStartOn: 6,
+                    startHour: 9,
+                    endHour: 24,
+                  }}
+                />              }
             </div>
           </div>
         ) : (
@@ -165,7 +173,9 @@ const ViewId = () => {
                   color: "white",
                   marginBottom: "1rem",
                   width: "100%",
-                  textAlign: "center"
+                  textAlign: "center",
+                  filter: showModal? 'blur(5px)' : 'none', 
+                  pointerEvents:  showModal? 'none' : 'auto' 
                 }}
               >
                 Gym Schedule{" "}
@@ -185,8 +195,19 @@ const ViewId = () => {
                   }}
                 />
                 :
-                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem", textAlign: "center" }}>No Schedule Exist for this Gym {GymName} </div>
-              }
+                <Scheduler
+                  view='month'
+                  ref={schRef}
+                  onSelectedDateChange={false}
+                  onConfirm={handleConfirm}
+                  events={events}
+                  week={{
+                    weekDays: [0, 1, 2, 3, 4, 5, 6],
+                    weekStartOn: 6,
+                    startHour: 9,
+                    endHour: 24,
+                  }}
+                />              }
             </div>
           </div>
         )}

@@ -15,13 +15,15 @@ const Index = () => {
   const [showModal5, setShowModal5] = useState(false);
   const [showModalUpdate, setshowModalUpdate] = useState(false);
   const [clickedId, setClickedId]= useState();
+  const [clickUpdateChild, setClickUpdateChild]= useState();
+
   useEffect(() => {
     const userRole = JSON.parse(localStorage.getItem("Userrole"));
     setRole(userRole);
     getChildList();
   }, []);
   const Id = router.query.ViewId;
-  const getChildList = async (id) => {
+  const getChildList = async () => {
     try {
       setLoading(true)
       console.log("api calling for child list")
@@ -46,10 +48,10 @@ const Index = () => {
   };
   const handleCloseModal5 = () => {
     setShowModal5(false);
+    getChildList();
   };
   useEffect(() => {
     getChildList();
-  // setTimeout();
   }, [showModalUpdate]);
   const deleteChild = async (id) => {
     try {
@@ -89,9 +91,9 @@ const Index = () => {
       <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem"  }} onClick={handleAddChildClick} >+</Button>
       <div>
         {showModal5 && <AddChildren onClose={handleCloseModal5} />}
-        {showModalUpdate && <UpdateChild onClose={handleCloseModalUpdate} id={clickedId} />}
-        <Style.TableContainer style={{ filter: showModal5 ? 'blur(5px)' : 'none',marginTop: "5%"  }} >
-          <Style.TableWrapper style={{ filter: showModalUpdate ? 'blur(5px)' : 'none' }}>
+        {showModalUpdate && <UpdateChild onClose={handleCloseModalUpdate} id={clickedId} childUpdate={clickUpdateChild} />}
+        <Style.TableContainer style={{  filter: showModal5 || showModalUpdate ? 'blur(5px)' : 'none', pointerEvents: showModal5 || showModalUpdate ? 'none' : 'auto'  }} >
+          <Style.TableWrapper >
             <thead>
               <Style.TableRow>
                 <Style.TableHead>ID</Style.TableHead>
@@ -107,7 +109,11 @@ const Index = () => {
                   <Style.TableCell>{data?.name}</Style.TableCell>
                   <Style.TableCell>
                   <RejectButton onClick={() => { console.log(data.id); deleteChild(data.id) }}>Delete</RejectButton>
-                    <UpdateButton onClick={()=>{handleUpdateChildClick(); setClickedId(data.id)}}>Update</UpdateButton>
+                    <UpdateButton onClick={()=>{
+                      handleUpdateChildClick(); 
+                      setClickUpdateChild(data?.name)
+                      setClickedId(data.id)
+                    }}>Update</UpdateButton>
                   </Style.TableCell>
 
                 </Style.TableRow>

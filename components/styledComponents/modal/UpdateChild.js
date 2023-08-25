@@ -5,8 +5,8 @@ import close from "../../../public/assests/SVGs/close-svgrepo-com (2).svg";
 import { axiosInterceptor } from '../../../axios/axiosInterceptor';
 import Loader from '../../../components/styledComponents/loader/loader';
 import swal from "sweetalert";
-
-const AddChildrensModal = ({ onClose, id }) => {
+// childUpdate
+const AddChildrensModal = ({ onClose, id ,childUpdate }) => {
     console.log("new child cild",id)
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [childrens, setChildrens] = useState([]);
@@ -20,13 +20,13 @@ const AddChildrensModal = ({ onClose, id }) => {
     status: '',
   });
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-  };
+  // const handleChange = (event) => {
+  //   const { name, value } = event.target;
+  //   setFormData((prevFormData) => ({
+  //     ...prevFormData,
+  //     [name]: value,
+  //   }));
+  // };
 
   const handleSelectChild = (event) => {
     setSelectedOption(event.target.value);
@@ -42,7 +42,7 @@ const AddChildrensModal = ({ onClose, id }) => {
   const handleSubmitChild = async (event) => {
     event.preventDefault();
     onClose();
-    console.log("ChildData", childData)
+    console.log("ChildData==========", childData)
     try {
       setLoading(true)
       const res = await axiosInterceptor().put(
@@ -78,6 +78,7 @@ const AddChildrensModal = ({ onClose, id }) => {
                     id="message"
                     name="name"
                     onChange={handleSelectChild}
+                    defaultValue={childUpdate}
                   />
                 </div>
                < div style={{marginBottom:"20px"}}>

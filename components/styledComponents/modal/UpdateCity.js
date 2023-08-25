@@ -7,7 +7,7 @@ import Loader from '../../../components/styledComponents/loader/loader';
 import Select from 'react-select';
 import { useDispatch, useSelector } from "react-redux";
 
-const UpdateCities = ({ onClose, id }) => {
+const UpdateCities = ({ onClose, id, cityName,stateName }) => {
     const [selectedOptionValue, setSelectedOptionValue] = useState('');
     const [selectedOptionValueID, setSelectedOptionValueID] = useState('');
     const [selectedOptionCity, setSelectedOptionCity] = useState('');
@@ -35,6 +35,7 @@ const UpdateCities = ({ onClose, id }) => {
         ...prevFormData,
         "stateId": event.value,
         id:id,
+        
       }));
   };
   const getState = async () => {
@@ -104,6 +105,7 @@ const UpdateCities = ({ onClose, id }) => {
             <Select
                       name='stateId'
                       value={formData.State}
+                      defaultValue={stateName}
                       onChange={handleSelectChange}
                       options={state && state.map(option => ({ value: option.id, label: option.name }))}
                       placeholder="Select State"
@@ -120,6 +122,7 @@ const UpdateCities = ({ onClose, id }) => {
                     name="name"
                     placeholder="Add City"
                     onChange={handleSelectState}
+                    defaultValue={cityName}
                   />
                 </div>
                < div style={{marginBottom:"18px"}}>
