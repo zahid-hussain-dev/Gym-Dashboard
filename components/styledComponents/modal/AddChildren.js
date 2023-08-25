@@ -18,7 +18,22 @@ const AddChildrensModal = ({ onClose }) => {
     date: '',
     status: '',
   });
-
+  const getChildList = async (id) => {
+    try {
+      setLoading(true)
+      console.log("api calling for child list")
+      const res = await axiosInterceptor().get(
+        `/api/gymnast/children?gymnast=${router.query.ViewId}`,
+      );
+      console.log("responsse of children ID", res)
+      setLoading(false)
+      setChildList(res?.data?.result)
+    } catch (error) {
+      setLoading(false)
+      // swal('Oops!', error.data.message, 'error')
+      console.log(error)
+    }
+  }
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevFormData) => ({
@@ -43,14 +58,17 @@ const AddChildrensModal = ({ onClose }) => {
     console.log("ChildData", childData)
     try {
       setLoading(true)
+      getChildList()
       const res = await axiosInterceptor().post(
         `/api/gymnast/children`,
         childData,
       );
       console.log("responsse of login", res)
       swal('Success!', res.data.message, 'success')
+      onClose();
       AddChildrensModal();
-      setLoading(false)
+      setLoading(true)
+      getChildList()
     } catch (error) {
       setLoading(false)
       // swal('Oops!', error.data.message, 'error')

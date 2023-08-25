@@ -16,8 +16,6 @@ const index = () => {
     }, [])
     const [loading, setLoading] = useState(false);
     const [privateBookings, setPrivateBookings] = useState(false);
-
-
     const getPrivateBookings = async () => {
         try {
             setLoading(true)
@@ -39,9 +37,7 @@ const index = () => {
             setLoading(true)
             console.log("api calling for schedule")
             const res = await axiosInterceptor().put(
-                // `/api/bookings`,
                 `/api/bookings?id=${id}&status=ACCEPT`
-
             );
             setLoading(false)
             getPrivateBookings()
@@ -71,11 +67,6 @@ const index = () => {
     useEffect(() => {
         getPrivateBookings();
     }, [])
-
-    const tableCell = [
-        { timeSlote: '9 - 10', client: 'wasiq' },
-        { timeSlote: '10 - 11', client: 'shakeel' },
-    ];
     return (
         <div>
             <Button style={{ width: "auto", marginBottom: "1rem",marginTop: "10%" }}>Approve Private Booking</Button>
@@ -86,7 +77,6 @@ const index = () => {
                             <Style.TableHead>Client</Style.TableHead>
                             <Style.TableHead>TIME SLOT</Style.TableHead>
                             <Style.TableHead>ACTIONS</Style.TableHead>
-
                         </Style.TableRow>
                     </thead>
                     <tbody>
@@ -100,11 +90,9 @@ const index = () => {
                                        <div style={{width:"75%",display:"flex",justifyContent:"space-between",marginLeft:"12%"}}>
                                         <AcceptButton onClick={() => {
                                             handleApprove(data.id);
-
                                         }}>Accept</AcceptButton>
                                         <RejectButton onClick={() => {
                                             handleReject(data.id);
-
                                         }}>Reject</RejectButton>
                                          </div>
                                     </Style.TableCell>
@@ -114,20 +102,15 @@ const index = () => {
                                             <p style={{ color: "#ff0000"  }}>  {data.status}ED</p>
                                             :
                                             <p style={{ color: "#00753D" }}>  {data.status}ED</p>
-
                                         }
                                     </Style.TableCell>
-
                                 }
-
                             </Style.TableRow>
                         ))}
-
                     </tbody>
                 </Style.TableWrapper>
             </Style.TableContainer>
             <Loader isLoading={loading}></Loader>
-
         </div>
     )
 }

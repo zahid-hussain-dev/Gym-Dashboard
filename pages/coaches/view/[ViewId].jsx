@@ -15,7 +15,6 @@ const ViewId = () => {
     const [showModal2, setShowModal2] = useState(false);
     const [loading, setLoading] = useState(false);
     const [coachName, setCoachName] = useState('');
-    // const GymName = router.query.GymName;
     const [events, setEvents] = useState([]);
     const [bookings, setBookings] = useState([]);
     const schRef = React.createRef()
@@ -34,23 +33,19 @@ const ViewId = () => {
     console.log("CoachName", CoachName)
     const getCoachScedule = async (id) => {
         const today = new Date();
-
         // ✅ Get the first day of the current week (Sunday)
         const firstDay = new Date(
             today.setDate(today.getDate() - today.getDay()),
         );
-
         // ✅ Get the last day of the current week (Saturday)
         const lastDay = new Date(
             today.setDate(today.getDate() - today.getDay() + 6),
         );
         console.log("firstDay", firstDay.toISOString().slice(0, 10))
-
         const Payload = {
             from: "2023-08-01",
             to: "2023-08-02"
         }
-
         try {
             setLoading(true)
             console.log("api calling for schedule")
@@ -178,8 +173,8 @@ const ViewId = () => {
                 <Button style={{ width: "auto",marginLeft:"83%",marginTop:"2%"}} onClick={handleButtonClick2}>+</Button>
                 {showModal2 && <AddCoache closeModal={closeModal2} id={Id} />}
                 {showModal2 ?
-                    <Style.MainDiv style={{ filter: showModal2 ? 'blur(5px)' : 'none' }}> 
-                        <Style.Schedular style={{ filter: showModal2 ? 'blur(5px)' : 'none' }} >
+                    <Style.MainDiv style={{   filter: showModal2? 'blur(5px)' : 'none', pointerEvents:  showModal2? 'none' : 'auto' }}> 
+                        <Style.Schedular style={{ filter: showModal2? 'blur(5px)' : 'none', pointerEvents:  showModal2? 'none' : 'auto' }} >
                             <div style={{ fontSize: "24px", color: "white",marginBottum:"20%",padding:"1%" }}>Schedule</div>
                             {events.length > 0 ?
                                <Scheduler
@@ -236,7 +231,7 @@ const ViewId = () => {
                         </Style.Schedular>
                     </Style.MainDiv>
                     :
-                    <Style.MainDiv2 style={{ filter: showModal2 ? 'blur(5px)' : 'none',marginTop:"0%"  }} >
+                    <Style.MainDiv2 style={{ filter: showModal2? 'blur(5px)' : 'none', pointerEvents:  showModal2? 'none' : 'auto',marginTop:"0%"  }} >
                         <Style.Schedular >
                             <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem",textAlign:"center"  }}>Schedule </div>
                             {events.length > 0 ?
@@ -293,8 +288,8 @@ const ViewId = () => {
                         </Style.Schedular>
                     </Style.MainDiv2>}
             </React.Fragment>
-            <Style.SubTitle style={{ marginTop: "1rem" ,marginLeft: "5%",filter: showModal2 ? 'blur(5px)' : 'none',marginTop: "10%"}}>Booking Listing</Style.SubTitle>
-            <Style.TableContainer style={{ filter: showModal2 ? 'blur(5px)' : 'none',marginTop: "30%" ,marginTop:"4%"  }}>
+            <Style.SubTitle style={{ marginTop: "1rem" ,marginLeft: "5%",filter: showModal2? 'blur(5px)' : 'none', pointerEvents:  showModal2? 'none' : 'auto',marginTop: "10%"}}>Booking Listing</Style.SubTitle>
+            <Style.TableContainer style={{ filter: showModal2? 'blur(5px)' : 'none', pointerEvents:  showModal2? 'none' : 'auto',marginTop: "30%" ,marginTop:"4%"  }}>
                 <Style.TableWrapper>
                     <thead>
                         <Style.TableRow>

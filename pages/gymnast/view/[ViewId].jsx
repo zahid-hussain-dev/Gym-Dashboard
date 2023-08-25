@@ -13,21 +13,14 @@ const ViewId = () => {
   const [childData, setChildData] = useState({});
   const [childrens, setChildrens] = useState([]);
   const Id = router.query.ViewId;
-  const tableCell = [
-    { id: 1, timeSlote: '9 - 10', child: 'wasiq', coach: 'mudasir' },
-    { id: 2, timeSlote: '10 - 11', child: 'shakeel', coach: 'rohab' },
-  ];
-
   const [loading, setLoading] = useState(false);
   const [childList, setChildList] = useState([]);
   const [bookingList, setBookingList] = useState([]);
   const [gymnastchildList, setGymnastChildList] = useState([]);
   const [gymnastbookingList, setGymnastBookingList] = useState([]);
   useEffect(() => {
-    // Perform localStorage action
     const userRole = JSON.parse(localStorage.getItem("Userrole"))
     setRole(userRole);
-
   }, [])
   const handleSelectChild = (event) => {
     setSelectedOption(event.target.value);
@@ -56,12 +49,10 @@ const ViewId = () => {
       console.log(error)
     }
   }
-
   const handleAddChildClick = () => {
     setShowModal4(true);
     console.log("modal click")
   };
-
   const getBookingList = async (id) => {
     try {
       setLoading(true)
@@ -155,54 +146,47 @@ const ViewId = () => {
       getGymnastChildList();
       getGymnastBookingList();
     }
-
   }, [Id, role])
-
   return (
     <div style={{marginTop: "10%" }}>
       {Id}
       <Style.SubTitle>Child Listing</Style.SubTitle>
       {showModal4 &&   <AddChildForm  Closed={handleCloseModal4} onSubmit={handleSubmitChild} id={Id} />}
-      <Style.TableContainer style={{ filter: showModal4 ? 'blur(5px)' : 'none', marginTop:"3%" }} >
+      <Style.TableContainer style={{ marginTop:"3%", filter: showModal4 ? 'blur(5px)' : 'none', pointerEvents: showModal4 ? 'none' : 'auto' }} >
         <Style.TableWrapper>
           <thead>
             <Style.TableRow>
-              <Style.TableHead>ID</Style.TableHead>
+              {/* <Style.TableHead>ID</Style.TableHead> */}
               <Style.TableHead>CHILD</Style.TableHead>
               <Style.TableHead>ACTIONS</Style.TableHead>
-
             </Style.TableRow>
           </thead>
           <tbody>
             {role && role === "admin" &&
               childList && childList.map((data, index) => (
                 <Style.TableRow key={index}>
-                  <Style.TableCell>{data?.id}</Style.TableCell>
+                  {/* <Style.TableCell>{data?.id}</Style.TableCell> */}
                   <Style.TableCell>{data?.name}</Style.TableCell>
                   <Style.TableCell>
                     <RejectButton onClick={() => { console.log(data.id) }}>Delete</RejectButton>
                   </Style.TableCell>
                 </Style.TableRow>
               ))}
-
               {childList.length<=0 &&
               (<Style.TableRow style={{ fontSize: "18px",textAlign:"center"}}>
-                 <div style={{ fontSize: "18px", color: "#E3DC22", marginTop: "35%",marginLeft:"55%",textAlign:"center",filter: showModal4 ? 'blur(5px)' : 'none'  }}>No Listing Exist for this Coach {GymnastName} </div>
+                 <div style={{ fontSize: "18px", color: "#E3DC22", marginTop: "35%",marginLeft:"38%",textAlign:"center", filter: showModal4 ? 'blur(5px)' : 'none', pointerEvents: showModal4 ? 'none' : 'auto'  }}>No Listing Exist for this Coach {GymnastName} </div>
                 </Style.TableRow>)
               }
-
             {role && role === "gymnast" &&
               gymnastchildList && gymnastchildList.map((data, index) => (
                 <Style.TableRow key={index}>
-                  <Style.TableCell>{data?.id}</Style.TableCell>
+                  {/* <Style.TableCell>{data?.id}</Style.TableCell> */}
                   <Style.TableCell>{data?.name}</Style.TableCell>
                   <Style.TableCell>
                     <RejectButton onClick={() => { console.log(data.id) }}>Delete</RejectButton>
                   </Style.TableCell>
-
                 </Style.TableRow>
               ))}
-     
           </tbody>
         </Style.TableWrapper>
       </Style.TableContainer>
@@ -210,33 +194,30 @@ const ViewId = () => {
       <Style.SubTitle style={{ marginTop: "1rem" }}>Booking Listing</Style.SubTitle>
       <Button  style={{ width: "auto", marginTop: "1rem", marginLeft: "1rem" }} onClick={handleAddChildClick}>+</Button>
       </div>
-      <Style.TableContainer style={{ filter: showModal4 ? 'blur(5px)' : 'none',marginTop: "5%" }} >
+      <Style.TableContainer style={{marginTop: "5%", filter: showModal4 ? 'blur(5px)' : 'none', pointerEvents: showModal4 ? 'none' : 'auto' }} >
         <Style.TableWrapper>
           <thead>
             <Style.TableRow>
-              <Style.TableHead>ID</Style.TableHead>
+              {/* <Style.TableHead>ID</Style.TableHead> */}
               <Style.TableHead>CHILD</Style.TableHead>
               <Style.TableHead>COACH</Style.TableHead>
               <Style.TableHead>TIME SLOT</Style.TableHead>
               <Style.TableHead>ACTIONS</Style.TableHead>
-
             </Style.TableRow>
           </thead>
           <tbody>
             {role && role === "admin" &&
               bookingList && bookingList.map((data, index) => (
                 <Style.TableRow key={index}>
-                  <Style.TableCell>{data?.id}</Style.TableCell>
+                  {/* <Style.TableCell>{data?.id}</Style.TableCell> */}
                   <Style.TableCell>{data?.childrenId}</Style.TableCell>
                   <Style.TableCell>{data?.coachId}</Style.TableCell>
                   <Style.TableCell>{new Date(data?.from).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} {"-"} {new Date(data?.to).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })}</Style.TableCell>
                   <Style.TableCell>
                     <AcceptButton onClick={() => { console.log(data.id) }}>Cancel</AcceptButton>
                   </Style.TableCell>
-
                 </Style.TableRow>
               ))}
-
             {role && role === "gymnast" &&
               gymnastbookingList && gymnastbookingList.map((data, index) => (
                 <Style.TableRow key={index}>
@@ -247,7 +228,6 @@ const ViewId = () => {
                   <Style.TableCell>
                     <AcceptButton onClick={() => { console.log(data.id) }}>Cancel</AcceptButton>
                   </Style.TableCell>
-
                 </Style.TableRow>
               ))}
           </tbody>

@@ -8,7 +8,6 @@ import { setuserId, setloginData } from "store/slices/user/userSlice";
 import { axiosInterceptor } from '../../axios/axiosInterceptor';
 import swal from "sweetalert";
 import Loader from '../../components/styledComponents/loader/loader';
-import Link from 'next/link';
 
 const index = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
@@ -20,22 +19,18 @@ const index = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const loginData = useSelector((state) => state.user.loginData);
-
   const handleKeyPress = (event) => {
     if (event.key === "Enter" && !isButtonDisabled) {
       handleLogin();
     }
   };
-
   const handleLogin = async () => {
     dispatch(setloginData(userData));
     loginSuccess();
   };
-
   const updateButtonState = (emailValue, passwordValue) => {
     setIsButtonDisabled(emailValue === '' || passwordValue === '');
   };
-
   const loginSuccess = async () => {
     try {
       setLoading(true);
@@ -51,7 +46,6 @@ const index = () => {
         localStorage.setItem("userData", JSON.stringify(res.data.user));
         localStorage.setItem("role", JSON.stringify(res.data.user.roles))
         localStorage.setItem("Userrole", JSON.stringify(res.data.user.roles[0].name))
-
         localStorage.setItem("userLoginToken", res.data.token)
         dispatch(setuserId(res.data.user.id))
         if (res.data.user.roles[0].name === "admin") {
@@ -68,17 +62,13 @@ const index = () => {
         }
       }
       else {
-        // history.push("/otpvalidation");
-        // swal("ERROR!", "While Login....")
       }
-
     } catch (error) {
       setLoading(false);
       swal('Oops!', error.data.message);
       console.log(error);
     }
   };
-
   return (
     <div style={{ marginTop: "10%", marginBottom: "20px" }}>
       <div className="login-card border">
@@ -101,7 +91,6 @@ const index = () => {
               name="email"
             />
           </InputGroup>
-
           <InputGroup>
             <label style={{ color: "white" }}>Password</label>
             <Input
@@ -120,7 +109,6 @@ const index = () => {
               name="password"
             />
           </InputGroup>
-
           <Button
             disabled={isButtonDisabled}
             style={{ marginTop: "1rem" }}
@@ -128,7 +116,6 @@ const index = () => {
           >
             Login
           </Button>
-
           <div style={{ marginTop: "1rem", display: "flex", justifyContent: "center" }}>
             {/* <InputGroup>
               <label>

@@ -16,18 +16,15 @@ const index = () => {
     const [showUpdateCitiesModal, setShowUpdateCitiesModal] = useState(false);
     const [allCities, setAllCities] = useState([]);
     const [clickedId, setClickedId]= useState();
+    const [clickedName, setClickedName]= useState();
+    const [clickedStateName, setClickedStateName]= useState();
     const dispatch = useDispatch();
-   
-
     const getRequest = useSelector((state) => state.user.getRequest);
     console.log("GetRequest", getRequest)
-
     useEffect(() => {
-        // Perform localStorage action
         const userRole = JSON.parse(localStorage.getItem("Userrole"))
         setRole(userRole);
     }, [])
-
     const getAllCities = async () => {
         try {
             setLoading(true)
@@ -76,21 +73,6 @@ const index = () => {
             console.log(error)
         }
     }
-    // const updateCity = async (id) => {
-    //     try {
-    //         setLoading(true)
-    //         setShowUpdateCitiesModal(true);
-    //         console.log("api calling for delete City")
-    //         const res = await axiosInterceptor().put(
-    //             `/api/city?id=${id}`,
-    //         );
-    //         setLoading(false);
-    //         getAllCities();
-    //     } catch (error) {
-    //         setLoading(false)
-    //         console.log(error)
-    //     }
-    // }
     console.log("evnts all", events)
     return (
         <div style={{ marginTop: "10%" }}>
@@ -101,15 +83,15 @@ const index = () => {
                 <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem"  }} onClick={handleAddChildClick} >+</Button>
                </div>
       {showCitiesModal && <AddCities onClose={handleCloseCitiesModal} />}
-      {showUpdateCitiesModal && <UpdateCities onClose={handleCloseUpdateModal} id={clickedId}/>}
+      {showUpdateCitiesModal && <UpdateCities onClose={handleCloseUpdateModal} id={clickedId} stateName={clickedStateName} cityName={clickedName}/>}
       </div>
             {role && role === "admin" &&
                 <React.Fragment >
-                    <Style.TableContainer style={{ marginTop: "5%", filter: showCitiesModal ? 'blur(5px)' : 'none' }}>
-                        <Style.TableWrapper>
+                    <Style.TableContainer style={{ marginTop: "5%", filter: showCitiesModal || showUpdateCitiesModal ? 'blur(5px)' : 'none', pointerEvents: showCitiesModal || showUpdateCitiesModal ? 'none' : 'auto' }}>
+                        <Style.TableWrapper >
                             <thead>
                                 <Style.TableRow>
-                                    <Style.TableHead>ID</Style.TableHead>
+                                    {/* <Style.TableHead>ID</Style.TableHead> */}
                                     <Style.TableHead>CITIES</Style.TableHead>
                                     <Style.TableHead>STATE</Style.TableHead>
                                     <Style.TableHead>ACTIONS</Style.TableHead>
@@ -118,7 +100,7 @@ const index = () => {
                             <tbody>
                                 {allCities && allCities.map((data, index) => (
                                     <Style.TableRow2 key={index}>
-                                        <Style.TableCell>{data?.id}</Style.TableCell>
+                                        {/* <Style.TableCell>{data?.id}</Style.TableCell> */}
                                         <Style.TableCell>{data?.name}</Style.TableCell>
                                         <Style.TableCell>{data['state.name']}</Style.TableCell>
                                         <Style.TableCell style={{ display: "flex", justifyContent: "space-evenly" }}>
@@ -127,6 +109,8 @@ const index = () => {
                                                 handleUpdateCityClick()
                                                 // updateCity(data?.id);
                                                 setClickedId(data.id)
+                                                setClickedName(data.name)
+                                                setClickedStateName(data['state.name'])
                                             }} >Update</AcceptButton>
 
                                             <RejectButton onClick={() => {

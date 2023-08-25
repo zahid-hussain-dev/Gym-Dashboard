@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { Scheduler } from "@aldabil/react-scheduler";
-import { EVENTS } from "../../components/MainComponents/Events";
 import { Button, ViewButton } from '../../components/styledComponents/button/Button';
 import AddGymSchedule from '../../components/styledComponents/modal/AddGymSchedule';
 import * as Style from "../../components/styledComponents/coachesStyle/coaches";
@@ -27,7 +26,6 @@ const index = () => {
     setShowModal(true);
     console.log("modal click")
   };
-
   const closeModal = () => {
     setShowModal(false);
   };
@@ -36,7 +34,6 @@ const index = () => {
     console.log("modal click")
   };
   useEffect(() => {
-    // Perform localStorage action
     const userRole = JSON.parse(localStorage.getItem("Userrole"))
     setRole(userRole);
   }, [])
@@ -61,7 +58,6 @@ const index = () => {
         item['end'] = new Date(formatTimestamp(new Date(item.to).toISOString())),
         item['editable'] = false,
         item['deletable'] = false
-        // item['color'] = "#50b500"
       ))
       setEvents(res.data);
       setLoading(false)
@@ -89,17 +85,13 @@ const index = () => {
   }
   const handleConfirm = async (event, action) => {
     console.log("handleConfirm =", action, event.title);
-
     if (action === "edit") {
-      /** PUT event to remote DB */
     } else if (action === "create") {
-      /**POST event to remote DB */
       const Payload = {
         from: moment(event.start).format('YYYY-MM-DD HH:mm:ss'),
         to: moment(event.end).format('YYYY-MM-DD HH:mm:ss'),
       }
       console.log("payload", Payload)
-
       try {
         setLoading(true)
         const res = await axiosInterceptor().post(
@@ -117,33 +109,10 @@ const index = () => {
         console.log(error)
         throw error
       }
-
     }
-    // setTimeout(() => {
-    //   res({
-    //     ...event,
-    //     event_id: event.event_id || Math.random()
-    //   });
-    // }, 1000);
-
-    // const isFail = Math.random() > 0.6;
-    // // Make it slow just for testing
-    // console.log("isFail", isFail)
-    // setTimeout(() => {
-    //   if (isFail) {
-    //     rej("Ops... Faild");
-    //   } else {
-    //     res({
-    //       ...event,
-    //       event_id: event.event_id || Math.random()
-    //     });
-    //   }
-    // }, 1000)
   };
-
   useEffect(() => {
     if (role == "gym") {
-
       getGymSchedule();
     }
     if (role == "admin") {
@@ -151,18 +120,14 @@ const index = () => {
     }
   }, [role, showModal])
 useEffect(()=>{
-
   getAllGym();
-
 },[])
   const tableCell = [
     { id: 1, timeSlote: '9 - 10', name: 'Gym1', },
     { id: 4, timeSlote: '10 - 11', name: 'Gym2', },
   ];
-
   useEffect(() => {
     console.log("events", events)
-
   }, [events])
 const closeGymModal = ( ) =>{
   setShowGymModal(false);
@@ -173,7 +138,6 @@ useEffect(() => {
 }, [events])
   return (
     <div style={{marginTop: "10%" }}>
-       
       {role && role === "gym" &&
       <div>
  <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} >Add Gym Schedule</Button>
@@ -182,34 +146,34 @@ useEffect(() => {
       }
       <div>
       {role && role === "admin" &&
-<Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "77%" }} onClick={handleAddGym} >+</Button>
+<div style={{display:"flex", justifyContent:"space-between" }}> 
+<h2  style={{ color:"white"}}>Gym Listing</h2> 
+<Button style={{ width: "auto" ,marginRight: "10rem" }} onClick={handleAddGym} >+</Button>
+</div>
 }
 </div>
 {showGymModal && <AddGymModal closeModal={closeGymModal}/>}
       {role && role === "admin" &&
-        <Style.TableContainer style={{ filter: showModal ? 'blur(5px)' : 'none' }} >
-          <Style.TableWrapper style={{ filter: showGymModal ? 'blur(5px)' : 'none' }}>
+        <Style.TableContainer style={{ filter: showModal || showGymModal ? 'blur(5px)' : 'none', pointerEvents:  showModal || showGymModal? 'none' : 'auto' }}>
+          <Style.TableWrapper>
             <thead>
               <Style.TableRow>
-                <Style.TableHead>Gym Id</Style.TableHead>
+                {/* <Style.TableHead>Gym Id</Style.TableHead> */}
                 <Style.TableHead>Gym Name</Style.TableHead>
                 <Style.TableHead>Actions</Style.TableHead>
-
               </Style.TableRow>
             </thead>
             <tbody>
               {allGyms && allGyms.map((data, index) => (
                 <Style.TableRow key={index}>
-                  <Style.TableCell>{data?.id}</Style.TableCell>
-                  <Style.TableCell>{data?.name}</Style.TableCell>
-                  
+                  {/* <Style.TableCell>{data?.id}</Style.TableCell> */}
+                  <Style.TableCell>{data?.name}</Style.TableCell>                 
                   <Style.TableCell>
                     <ViewButton onClick={() => {
                       dispatch(setGymName(data.name));
                       { router.push(`/gym/view/${data.id}`) }
                     }}>View</ViewButton>
                   </Style.TableCell>
-
                 </Style.TableRow>
               ))}
             </tbody>
@@ -218,13 +182,11 @@ useEffect(() => {
       }
       {showModal && <AddGymSchedule closeModal={closeModal} />}
       {role && role === "gym" &&
-        <div style={{ display: "flex", justifyContent: "space-around",filter: showModal? 'blur(5px)' : 'none'  }}>
+        <div style={{ display: "flex", justifyContent: "space-around",filter: showModal? 'blur(5px)' : 'none', pointerEvents:  showModal? 'none' : 'auto'  }}>
           <div style={{ width: "75%", height: "50%" }}>
             <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem", textAlign:"center" }}>Gym Schedule </div>
             {events.length > 0 &&
               <Scheduler
-                // height={300}
-                // loading={true}
                 onSelectedDateChange={false}
                 ref={schRef}
                 events={events}
@@ -234,15 +196,12 @@ useEffect(() => {
                   weekStartOn: 6,
                   startHour: 0,
                   endHour: 24
-                  // step: 30
                 }}
               />}
           </div>
-
         </div>
       }
       <Loader isLoading={loading}></Loader>
-
     </div>
   )
 }

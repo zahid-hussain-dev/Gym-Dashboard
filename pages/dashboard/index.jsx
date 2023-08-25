@@ -8,38 +8,25 @@ const index = () => {
   const [showModal, setShowModal] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
   const [loading, setLoading] = useState(false);
-  // var userRole = ""
-  // if (typeof window !== 'undefined') {
-  //   userRole = JSON.parse(localStorage.getItem("Userrole"))
-  // }
-
-
   const handleButtonClick2 = () => {
     setShowModal2(true);
     setShowModal(false);
   };
-
   const closeModal2 = () => {
     setShowModal2(false);
   };
-
-
   const handleButtonClick = () => {
     setShowModal(true);
     setShowModal2(false);
     setLoading(true)
   };
-
   const closeModal = () => {
     setShowModal(false);
   };
   useEffect(() => {
-    // Perform localStorage action
     const userRole = JSON.parse(localStorage.getItem("Userrole"))
     setRole(userRole);
   }, [])
-
-
   return (
     <React.Fragment style={{marginTop: "10%" }}>
       <div style={{ fontSize: "24px", color: "white", textAlign: "center" }}> GYM Dashboard </div>
@@ -47,13 +34,11 @@ const index = () => {
         {role && role === "admin" ?
           <Button style={{ width: "auto" }} onClick={handleButtonClick}>Add Coach</Button>
           :
-
           <Button style={{ width: "auto" }}>New</Button>
         }
         {role && role === "admin" ?
           <Button style={{ width: "auto" }} onClick={handleButtonClick2}>Add Booking</Button>
           :
-
           <Button style={{ width: "auto" }}>New</Button>
         }
       </div>
@@ -61,7 +46,6 @@ const index = () => {
       {showModal2 && <AddCoache closeModal={closeModal2} />}
       <Loader isLoading={loading}></Loader>
     </React.Fragment>
-   
   )
 }
 
