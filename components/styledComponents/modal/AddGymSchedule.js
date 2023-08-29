@@ -20,20 +20,32 @@ const AddGymSchedule = ({ closeModal, id, }) => {
             [name]: value,
         }));
     };
+    const handleSelectChange = (event) => {
+        console.log(event);
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            ["day"]: event.value,
+        }));
+
+    };
     const handleSubmit = async (event) => {
         event.preventDefault();
         let Payload = {};
         if (id) {
             Payload = {
-                from: formData.datefrom + " " + formData.timefrom,
-                to: formData.datefrom + " " + formData.timeto,
+                from: formData.timefrom,
+                to: formData.timeto,
+                day: formData.day,
                 gym: id,
+                timeZone:Intl.DateTimeFormat().resolvedOptions().timeZone,
             }
         }
         else {
             Payload = {
-                from: formData.datefrom + " " + formData.timefrom,
-                to: formData.datefrom + " " + formData.timeto,
+                from: formData.timefrom,
+                to: formData.timeto,
+                day: formData.day,
+                timeZone:Intl.DateTimeFormat().resolvedOptions().timeZone,
             }
         }
         try {
@@ -64,7 +76,18 @@ const AddGymSchedule = ({ closeModal, id, }) => {
             <form onSubmit={handleSubmit}>
                 <Styled.MainForm style={{ display:"block" }}>
                     <div style={{ display: "flex", marginTop: "20px", justifyContent:"space-evenly",alignItems:"center" }}>
-                        <div>
+                    <div>
+                            <Styled.Label>Select Day:</Styled.Label>
+                            <Select
+                                name='day'
+                                value={formData.day && formData.day}
+                                onChange={handleSelectChange}
+                                options={days && days.map(option => ({ value: option.name, label: option.name }))}
+                                placeholder="Select Day"
+                                isSearchable
+                            />
+                        </div>
+                        {/* <div>
                             <Styled.Label>Start Date:</Styled.Label>
                             <Styled.InputData
                                 type='date'
@@ -74,7 +97,7 @@ const AddGymSchedule = ({ closeModal, id, }) => {
                                 defaultValue={new Date().toISOString().substring(0, 10)}
                                 onChange={handleChange}
                             />
-                        </div>
+                        </div> */}
                         <div style={{     marginRight: "8%" }}>
                             <Styled.Label>Start:</Styled.Label>
                             <Styled.InputData
