@@ -15,6 +15,7 @@ const ViewId = () => {
   const [showModal, setShowModal] = useState(false);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
+  const schRef = React.createRef()
 
   const handleButtonClick = () => {
     setShowModal(true);
@@ -29,7 +30,7 @@ const ViewId = () => {
       const res = await axiosInterceptor().get(
         `/api/gym/schedule?gym=${router.query.ViewId}`,
       );
-      console.log("responsse of schedule ID", res)
+      console.log("responsse of gym schedule", res.data)
       res.data.map((item, index) => (
         item['event_id'] = item.id,
         item['title'] = "Open Hours",
@@ -39,6 +40,7 @@ const ViewId = () => {
         item['deletable'] = false,
         item['color'] = "#50b500"
       ))
+      console.log("ghjgjjhgj", schRef)
       setEvents(res.data);
       setLoading(false)
     } catch (error) {
@@ -47,10 +49,12 @@ const ViewId = () => {
       console.log(error)
     }
   }
-  const closeModal = () => {
+  const closeModal = (event) => {
     //   setShowModal(false);
+    console.log(event)
     setShowModal((prev) => !prev);
     console.log("get gym schedule on close")
+    // schRef.current?.scheduler.handleConfirm(event,"create")
     getGymScedule();
   };
   function formatTimestamp(timestamp) {
@@ -97,11 +101,19 @@ const ViewId = () => {
   };
 
   useEffect(() => {
-    if (Id) {
+    if (Id && events.length == 0) {
       getGymScedule();
     }
 
   }, [showModal, Id])
+  useEffect(() => {
+    console.log("events after update", events)
+
+  }, [showModal])
+
+  useEffect(() => {
+    schRef.current?.scheduler.handleState(events, "events")
+  }, [events])
   return (
     <>
       {/* <Styled.Globalstyle/> */}
@@ -141,10 +153,11 @@ const ViewId = () => {
               >
                 Gym Schedule{" "}
               </div>
-              {events.length > 0 ?
+              {events && events.length > 0 ?
                 <Scheduler
                   view='month'
                   // height={300}
+                  ref={schRef}
                   // loading={true}
                   onSelectedDateChange={false}
                   onConfirm={handleConfirm}
@@ -158,8 +171,23 @@ const ViewId = () => {
                   }}
                 />
                 :
-                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem", textAlign: "center" }}>No Schedule Exist for this Gym {GymName} </div>
-              }
+                
+                <Scheduler
+                view='month'
+                // height={300}
+                ref={schRef}
+                // loading={true}
+                onSelectedDateChange={false}
+                onConfirm={handleConfirm}
+                // events={events}
+                week={{
+                  weekDays: [0, 1, 2, 3, 4, 5, 6],
+                  weekStartOn: 6,
+                  startHour: 9,
+                  endHour: 24,
+                  // step: 30
+                }}
+              />              }
             </div>
           </div>
         ) : (
@@ -177,27 +205,45 @@ const ViewId = () => {
                 Gym Schedule{" "}
               </div>
               {events.length > 0 ?
-                <Scheduler
-                  view='month'
-                  // height={300}
-                  // loading={true}
-                  onSelectedDateChange={false}
-                  onConfirm={handleConfirm}
-                  events={events}
-                  week={{
-                    weekDays: [0, 1, 2, 3, 4, 5, 6],
-                    weekStartOn: 6,
-                    startHour: 9,
-                    endHour: 24,
-                    // step: 30
-                  }}
-                />
+                <>{events.length}
+                  <Scheduler
+                    ref={schRef}
+                    view='month'
+                    // height={300}
+                    // loading={true}
+                    onSelectedDateChange={false}
+                    onConfirm={handleConfirm}
+                    events={events}
+                    week={{
+                      weekDays: [0, 1, 2, 3, 4, 5, 6],
+                      weekStartOn: 6,
+                      startHour: 9,
+                      endHour: 24,
+                      // step: 30
+                    }}
+                  />
+                </>
                 :
-                <div style={{ fontSize: "18px", color: "white", marginBottom: "1rem", textAlign: "center" }}>No Schedule Exist for this Gym {GymName} </div>
-              }
+                <Scheduler
+                view='month'
+                // height={300}
+                ref={schRef}
+                // loading={true}
+                onSelectedDateChange={false}
+                onConfirm={handleConfirm}
+                // events={events}
+                week={{
+                  weekDays: [0, 1, 2, 3, 4, 5, 6],
+                  weekStartOn: 6,
+                  startHour: 9,
+                  endHour: 24,
+                  // step: 30
+                }}
+              />              }
             </div>
           </div>
         )}
+        <Loader isLoading={loading}></Loader>
       </div>
     </>
   );

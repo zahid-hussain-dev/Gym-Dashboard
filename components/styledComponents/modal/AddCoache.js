@@ -63,6 +63,7 @@ const AddCoachForm = ({ closeModal, id }) => {
         to: formData.date + " " + formData.timeEnd,
         type: formData.type,
         coach: id,
+        timeZone:Intl.DateTimeFormat().resolvedOptions().timeZone,
 
       }
       console.log("with id")
@@ -72,6 +73,7 @@ const AddCoachForm = ({ closeModal, id }) => {
         from: formData.date + " " + formData.timeStart,
         to: formData.date + " " + formData.timeEnd,
         type: formData.type,
+        timeZone:Intl.DateTimeFormat().resolvedOptions().timeZone,
 
       }
       console.log("without id")

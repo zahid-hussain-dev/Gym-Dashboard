@@ -19,6 +19,7 @@ const index = () => {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(false);
     const [isMapped, setIsMapped] = useState(false);
+    const schRef = React.createRef()
 
     const [allCoaches, setAllCoaches] = useState([]);
     const dispatch = useDispatch();
@@ -33,7 +34,7 @@ const index = () => {
         const [hours, minutes] = timePart.slice(0, -1).split(":");
         const adjustedHours = String(Number(hours)).padStart(2, "0");
         return `${year} ${Number(month)} ${Number(day)} ${adjustedHours}:${minutes}`;
-      }
+    }
     const CustomEditor = ({ scheduler }) => {
         const event = scheduler.edited;
         console.log("scheduler", scheduler);
@@ -258,11 +259,14 @@ const index = () => {
     //   backgroundColor: 'white',
     // //   filter: 'blur(5px)'
     //   };
+    useEffect(() => {
+        schRef.current?.scheduler.handleState(events, "events")
+    }, [events])
     return (
         <div style={{ marginTop: "10%" }}>
             {role && role === "admin" &&
                 <React.Fragment >
-                    <h2 style={{color:"white"}}> Coach Listing</h2>
+                    <h2 style={{ color: "white" }}> Coach Listing</h2>
                     <Style.TableContainer style={{ marginTop: "5%" }}>
                         <Style.TableWrapper>
                             <thead>
@@ -332,7 +336,8 @@ const index = () => {
                             {events.length > 0 && isMapped ?
                                 <Scheduler
                                     fields={[
-                                        {name: "TimeStatus",
+                                        {
+                                            name: "TimeStatus",
                                             type: "select",
                                             default: "PUBLIC",
                                             // Should provide options with type:"select"
@@ -343,6 +348,7 @@ const index = () => {
                                             config: { label: "Time Status", required: true, errMsg: "Plz Select Status" }
                                         },
                                     ]}
+                                    ref={schRef}
                                     onSelectedDateChange={false}
                                     events={events}
                                     onConfirm={handleConfirm}

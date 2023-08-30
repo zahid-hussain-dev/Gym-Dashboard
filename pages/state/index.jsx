@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Button, ViewButton, AcceptButton, RejectButton } from '../../components/styledComponents/button/Button';
+import { Button, AcceptButton, RejectButton } from '../../components/styledComponents/button/Button';
 import * as Style from "../../components/styledComponents/state/State";
 import { useRouter } from 'next/navigation';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { axiosInterceptor } from '../../axios/axiosInterceptor';
 import Loader from '../../components/styledComponents/loader/loader';
-import swal from "sweetalert";
-import moment from "moment";
-import AddState from "../../../Gym-Dashboard/components/styledComponents/modal/AddState"
+import AddState from "../../components/styledComponents/modal/AddState";
 const index = () => {
     const [role, setRole] = useState("");
     const router = useRouter();
@@ -22,8 +20,6 @@ const index = () => {
         console.log("modal click")
 
     };
-
-
     const closeModal2 = () => {
         setShowModal2(false);
     };
@@ -48,29 +44,57 @@ const index = () => {
             console.log(error)
         }
     }
+    const updateState = async (id) => {
+        // try {
+        //     setLoading(true)
+        //     console.log("api calling for all states")
+        //     const res = await axiosInterceptor().delete(
+        //         `/api/states?id=${id}`,
+        //     );
+        //     setLoading(false);
+        //     getAllStates();
+        // } catch (error) {
+        //     setLoading(false)
+        //     console.log(error)
+        // }
+    }
+    const deleteState = async (id) => {
+        try {
+            setLoading(true)
+            console.log("api calling for all states")
+            const res = await axiosInterceptor().delete(
+                `/api/states?id=${id}`,
+            );
+            setLoading(false);
+            getAllStates();
+        } catch (error) {
+            setLoading(false)
+            console.log(error)
+        }
+    }
     useEffect(() => {
         getAllStates();
-   
+
     }, [])
     const handleAddChildClick = () => {
         setShowStateModal(true);
-      };
-      const handleCloseStateModal = () => {
+    };
+    const handleCloseStateModal = () => {
         setShowStateModal(false);
         console.log("modal false")
         getAllStates();
-      };
+    };
     console.log("evnts all", events)
     return (
         <div style={{ marginTop: "10%" }}>
-                <div style={{marginTop: "10%", display:"flex", justifyContent:"space-around",alignItems:"center" }}>
-                <h2 style={{color:"white",marginRight:"40%"}}> States Listing</h2>
+            <div style={{ marginTop: "10%", display: "flex", justifyContent: "space-around", alignItems: "center" }}>
+                <h2 style={{ color: "white", marginRight: "40%" }}> States Listing</h2>
                 <div>
-      <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} >Add State</Button>
-      <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem"  }} onClick={handleAddChildClick} >+</Button>
-      </div>
-      {showStateModal && <AddState onClose={handleCloseStateModal} />}
-      </div>
+                    <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} >Add State</Button>
+                    <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} onClick={handleAddChildClick} >+</Button>
+                </div>
+                {showStateModal && <AddState onClose={handleCloseStateModal} />}
+            </div>
             {role && role === "admin" &&
                 <React.Fragment >
                     <Style.TableContainer style={{ marginTop: "5%", filter: showStateModal ? 'blur(5px)' : 'none' }}>
@@ -79,6 +103,8 @@ const index = () => {
                                 <Style.TableRow>
                                     <Style.TableHead>ID</Style.TableHead>
                                     <Style.TableHead>STATES</Style.TableHead>
+                                    <Style.TableHead>ACTIONS</Style.TableHead>
+
                                 </Style.TableRow>
                             </thead>
                             <tbody>
@@ -86,6 +112,19 @@ const index = () => {
                                     <Style.TableRow2 key={index}>
                                         <Style.TableCell>{data?.id}</Style.TableCell>
                                         <Style.TableCell>{data?.name}</Style.TableCell>
+                                        <Style.TableCell style={{ display: "flex", justifyContent: "space-evenly" }}>
+
+                                            <AcceptButton onClick={() => {
+                                                updateState(data?.id);
+                                            }} >Update</AcceptButton>
+
+                                            <RejectButton onClick={() => {
+                                                deleteState(data?.id)
+                                            }} >Delete</RejectButton>
+
+
+                                        </Style.TableCell>
+
                                     </Style.TableRow2>
                                 ))}
                             </tbody>

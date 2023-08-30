@@ -7,7 +7,7 @@ import Loader from '../../components/styledComponents/loader/loader';
 import swal from "sweetalert";
 import moment from "moment";
 import { useDispatch,useSelector  } from "react-redux";
-import AddCities from "../../../Gym-Dashboard/components/styledComponents/modal/AddCities"
+import AddCities from "../../components/styledComponents/modal/AddCities"
 const index = () => {
     const [role, setRole] = useState("");
     const router = useRouter();

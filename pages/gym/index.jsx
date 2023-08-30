@@ -21,6 +21,8 @@ const index = () => {
   const [showModal, setShowModal] = useState(false);
   const [allGyms, setAllGyms] = useState([]);
   const [showGymModal, setShowGymModal] = useState(false);
+  const schRef = React.createRef()
+
   const dispatch = useDispatch();
   const handleButtonClick = () => {
     setShowModal(true);
@@ -168,7 +170,9 @@ const closeGymModal = ( ) =>{
   console.log("")
   getAllGym();
 };
-
+useEffect(() => {
+  schRef.current?.scheduler.handleState(events, "events")
+}, [events])
   return (
     <div style={{marginTop: "10%" }}>
         <h2 style={{color:"white",marginTop: "5%"}}> Gym Listing </h2>
@@ -221,6 +225,7 @@ const closeGymModal = ( ) =>{
               <Scheduler
                 // height={300}
                 // loading={true}
+                ref={schRef}
                 onSelectedDateChange={false}
                 events={events}
                 onConfirm={handleConfirm}
