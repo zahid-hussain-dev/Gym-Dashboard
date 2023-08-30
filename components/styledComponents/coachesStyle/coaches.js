@@ -7,12 +7,23 @@ export const MainDiv = styled.div`
 `;
 export const MainDiv2 = styled.div`
   display: flex;
-  justify-content: space-around;
-  
+  flex-direction:column;
+  justify-content: space-evenly;
+  align-items:center;
+
 `;
 export const Schedular = styled.div`
   width: 75%;
-  height: 50%;
+  height: 30rem;
+  overflow-y: auto;
+  border-radius:5px;
+`;
+export const Select = styled.select`
+margin: 10px;
+padding: 6px;
+border-radius: 2px;
+border: none;
+width:100%;
 `;
 export const TableContainer = styled.div`
   color: #d5b93b;
@@ -22,6 +33,7 @@ export const TableContainer = styled.div`
   height: 30rem;
    overflow-y: auto;
   filter: showModal2 ? 'blur(5px)' : 'none';
+ 
 `;
 export const TableWrapper = styled.table`
   border-collapse: collapse;
@@ -43,6 +55,7 @@ export const TableRow = styled.tr`
     background-color: #f2f2f2;
     border-radius: 5px;
     text-align: center;
+    border-bottom: 2px solid #d5b93b;
   }
 `;
 
@@ -53,8 +66,12 @@ export const TableRow2 = styled.tr`
     color: #d5b93b;
     height: 20px;
     overflow-y: auto;
+    border-bottom: 2px solid #d5b93b;
   }
 `;
+// export const InputData = styled.div`
+//     height: 50%;
+// `;
 export const TableCell = styled.td`
   padding: 10px;
   background-color: black;

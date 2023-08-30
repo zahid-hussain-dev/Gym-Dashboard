@@ -154,7 +154,7 @@ useEffect(() => {
 </div>
 {showGymModal && <AddGymModal closeModal={closeGymModal}/>}
       {role && role === "admin" &&
-        <Style.TableContainer style={{ filter: showModal || showGymModal ? 'blur(5px)' : 'none', pointerEvents:  showModal || showGymModal? 'none' : 'auto' }}>
+        <Style.TableContainer style={{ filter: showModal || showGymModal ? 'blur(5px)' : 'none', pointerEvents:  showModal || showGymModal? 'none' : 'auto' ,borderBottom:" 2px solid #d5b93b"}}>
           <Style.TableWrapper>
             <thead>
               <Style.TableRow>
@@ -187,6 +187,7 @@ useEffect(() => {
             <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem", textAlign:"center" }}>Gym Schedule </div>
             {events.length > 0 &&
               <Scheduler
+              view='week'
                 onSelectedDateChange={false}
                 ref={schRef}
                 events={events}

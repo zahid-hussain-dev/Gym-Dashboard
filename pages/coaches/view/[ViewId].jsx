@@ -31,6 +31,32 @@ const ViewId = () => {
       }
     const CoachName = useSelector((state) => state.user.coachName);
     console.log("CoachName", CoachName)
+    const getGymScedule = async (id) => {
+        try {
+            setLoading(true)
+            console.log("api calling for schedule")
+            const res = await axiosInterceptor().get(
+                `/api/gym/schedule?gym=${20}`,
+            );
+            console.log("responsse of gym schedule", res.data)
+            res.data.map((item, index) => (
+                item['event_id'] = item.id,
+                item['title'] = "Open Hours",
+                item['start'] = new Date(formatTimestamp(new Date(item.from).toISOString())),
+                item['end'] = new Date(formatTimestamp(new Date(item.to).toISOString())),
+                item['editable'] = true,
+                item['deletable'] = false,
+                item['color'] = "#50b500"
+            ))
+            console.log("ghjgjjhgj", schRef)
+            setEvents(res.data);
+            setLoading(false)
+        } catch (error) {
+            setLoading(false)
+            // swal('Oops!', error.data.message, 'error')
+            console.log(error)
+        }
+    }
     const getCoachScedule = async (id) => {
         const today = new Date();
         // ✅ Get the first day of the current week (Sunday)
@@ -64,6 +90,7 @@ const ViewId = () => {
                 item['color'] = "#50b500"
             ))
             setEvents(res.data);
+            // setEvents(prevState => [...prevState, res.data])
             setLoading(false)
         } catch (error) {
             setLoading(false)
@@ -174,11 +201,12 @@ const ViewId = () => {
                 {showModal2 && <AddCoache closeModal={closeModal2} id={Id} />}
                 {showModal2 ?
                     <Style.MainDiv style={{   filter: showModal2? 'blur(5px)' : 'none', pointerEvents:  showModal2? 'none' : 'auto' }}> 
-                        <Style.Schedular style={{ filter: showModal2? 'blur(5px)' : 'none', pointerEvents:  showModal2? 'none' : 'auto' }} >
-                            <div style={{ fontSize: "24px", color: "white",marginBottum:"20%",padding:"1%" }}>Schedule</div>
+                     <div style={{ fontSize: "24px", color: "white",marginBottum:"20%",padding:"1%" }}>Schedule</div>
+                        <Style.Schedular>
+                            {/* <div style={{ fontSize: "24px", color: "white",marginBottum:"20%",padding:"1%" }}>Schedule</div> */}
                             {events.length > 0 ?
                                <Scheduler
-                               view='month'
+                               view='week'
                                fields={[
                                    {
                                        name: "TimeStatus",
@@ -198,12 +226,12 @@ const ViewId = () => {
                                week={{
                                    weekDays: [0, 1, 2, 3, 4, 5, 6],
                                    weekStartOn: 0,
-                                   startHour: 9,
+                                   startHour: 0,
                                    endHour: 24
                                }}/>
                                 :
                                 <Scheduler
-                                view='month'
+                                view='week'
                                     fields={[
                                         {
                                             name: "TimeStatus",
@@ -223,7 +251,7 @@ const ViewId = () => {
                                     week={{
                                         weekDays: [0, 1, 2, 3, 4, 5, 6],
                                         weekStartOn: 0,
-                                        startHour: 9,
+                                        startHour: 0,
                                         endHour: 24
                                         // step: 30
                                     }}
@@ -232,11 +260,12 @@ const ViewId = () => {
                     </Style.MainDiv>
                     :
                     <Style.MainDiv2 style={{ filter: showModal2? 'blur(5px)' : 'none', pointerEvents:  showModal2? 'none' : 'auto',marginTop:"0%"  }} >
+                        <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem",textAlign:"center"  }}>Schedule </div>
                         <Style.Schedular >
-                            <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem",textAlign:"center"  }}>Schedule </div>
+                            {/* <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem",textAlign:"center"  }}>Schedule </div> */}
                             {events.length > 0 ?
                                 <Scheduler
-                                view='month'
+                                view='week'
                                 fields={[
                                    {
                                        name: "TimeStatus",
@@ -256,12 +285,12 @@ const ViewId = () => {
                                 week={{
                                     weekDays: [0, 1, 2, 3, 4, 5, 6],
                                     weekStartOn: 0,
-                                    startHour: 9,
+                                    startHour: 0,
                                     endHour: 24
                                 }}/>
                                 :
                                 <Scheduler
-                                view='month'
+                                view='week'
                                 fields={[
                                     {
                                         name: "TimeStatus",
@@ -281,7 +310,7 @@ const ViewId = () => {
                                     week={{
                                         weekDays: [0, 1, 2, 3, 4, 5, 6],
                                         weekStartOn: 0,
-                                        startHour: 9,
+                                        startHour: 0,
                                         endHour: 24
                                     }}/>
                             }

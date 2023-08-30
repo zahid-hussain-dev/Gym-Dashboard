@@ -21,30 +21,31 @@ const ViewId = () => {
   };
   const GymName = useSelector((state) => state.user.gymName);
   console.log("CoachName", GymName)
-  const getGymScedule = async (id) => {
-    try {
-      setLoading(true)
-      console.log("api calling for schedule")
-      const res = await axiosInterceptor().get(
-        `/api/gym/schedule?gym=${router.query.ViewId}`,
-      );
-      console.log("responsse of schedule ID", res)
-      res.data.map((item, index) => (
-        item['event_id'] = item.id,
-        item['title'] = "Open Hours",
-        item['start'] = new Date(item.from),
-        item['end'] = new Date(item.to),
-        item['editable'] = true,
-        item['deletable'] = false,
-        item['color'] = "#50b500"
-      ))
-      setEvents(res.data);
-      setLoading(false)
-    } catch (error) {
-      setLoading(false)
-      console.log(error)
-    }
-  }
+  // const getGymScedule = async (id) => {
+  //   try {
+  //     setLoading(true)
+  //     console.log("api calling for schedule")
+  //     const res = await axiosInterceptor().get(
+  //       `/api/gym/schedule?gym=${router.query.ViewId}`,
+  //     );
+  //     console.log("responsse of schedule ID", res)
+  //     res.data.map((item, index) => (
+  //       item['event_id'] = item.id,
+  //       item['title'] = "Open Hours",
+  //       item['start'] = new time(item.from),
+  //       item['end'] = new time(item.to),
+  //       item['day'] = new day(days),
+  //       item['editable'] = true,
+  //       item['deletable'] = false,
+  //       item['color'] = "#50b500"
+  //     ))
+  //     setEvents(res.data);
+  //     setLoading(false)
+  //   } catch (error) {
+  //     setLoading(false)
+  //     console.log(error)
+  //   }
+  // }
   const closeModal = () => {
     setShowModal(false);
     console.log("get gym schedule on close")
@@ -97,6 +98,103 @@ const ViewId = () => {
   useEffect(() => {
     schRef.current?.scheduler.handleState(events, "events")
 }, [events])
+
+
+// function getAllDaysOfWeek(d, endDate) {
+//   d = d ? new Date(+d) : new Date();
+//   d.setHours(0, 0, 0, 0);
+
+//   var daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+//   var dates = [];
+//   while (d <= endDate) {
+//     dates.push(new Date(d));
+//     d.setDate(d.getDate() + 1);
+//   }
+
+//   var daysWithNames = dates.map(function(date) {
+//     return {
+//       date: date,
+//       dayOfWeek: daysOfWeek[date.getDay()]
+//     };
+//   });
+
+//   return daysWithNames;
+// }
+
+const getGymScedule = async (id) => {
+  try {
+    setLoading(true)
+    console.log("api calling for schedule")
+    const res = await axiosInterceptor().get(
+      `/api/gym/schedule?gym=1`,
+      // `/api/gym/schedule?gym=${router.query.ViewId}`,
+    );
+    console.log("responsse of schedule ID", res)
+    if (res?.status === 200) {
+      const eventData = res.data.map(item => ({
+        day: item.day,
+        start: item.from,
+        end: item.to,
+        title: item.status,
+      }));
+      const daysOfWeek = [
+        'Sunday',
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+      ];
+      const currentYear = new Date().getFullYear();
+      const filteredEvents = [];
+      daysOfWeek.forEach(day => {
+        const eventsForDay = eventData.filter(event => event.day === day);
+        const currentDate = new Date(`${currentYear}-01-01`);
+        while (currentDate.getFullYear() === currentYear) {
+          if (currentDate.getDay() === daysOfWeek.indexOf(day)) {
+            const formattedDate = currentDate.toISOString().split('T')[0];
+            filteredEvents.push(
+              ...eventsForDay.map(event => ({
+                ...event,
+                start: `${formattedDate} ${event.start}`,
+                end: `${formattedDate} ${event.end}`,
+              })),
+            );
+          }
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
+      });
+      console.log('Filtered Events======', filteredEvents);
+      setEvents(filteredEvents);
+    }
+    setEvents(res.data);
+    setLoading(false)
+  } catch (error) {
+    setLoading(false)
+    console.log(error)
+  }
+}
+
+
+// var startDate = new Date(); // Current date
+// startDate.setFullYear(startDate.getFullYear() - 1); // One year ago
+// var endDate = new Date(); // Current date
+
+// var daysList = getAllDaysOfWeek(startDate, endDate);
+
+// daysList.forEach(function(day) {
+//   console.log(day.date.toLocaleString('en-US', {
+//     weekday: 'short',
+//     day: 'numeric',
+//     month: 'short',
+//     year: 'numeric'
+//   }) + ' - ' + day.dayOfWeek);
+// });
+
+// console.log('There are ' + daysList.length + ' days in the range');
+
   return (
     <>
       <div style={{ marginTop: "10%" }}>
@@ -135,8 +233,9 @@ const ViewId = () => {
                 Gym Schedule{" "}
               </div>
               {events.length > 0 ?
+              <div style={{height: "30rem",overflowY:"auto",borderRadius:"5px"}}>
                 <Scheduler
-                  view='month'
+                view='week'
                   onSelectedDateChange={false}
                   onConfirm={handleConfirm}
                   events={events}
@@ -144,13 +243,15 @@ const ViewId = () => {
                   week={{
                     weekDays: [0, 1, 2, 3, 4, 5, 6],
                     weekStartOn: 6,
-                    startHour: 9,
+                    startHour: 0,
                     endHour: 24,
                   }}
                 />
+              </div>
                 :
+                <div style={{height: "30rem",overflowY:"auto",borderRadius:"5px"}}>
                 <Scheduler
-                  view='month'
+                view='week'
                   onSelectedDateChange={false}
                   onConfirm={handleConfirm}
                   events={events}
@@ -158,10 +259,11 @@ const ViewId = () => {
                   week={{
                     weekDays: [0, 1, 2, 3, 4, 5, 6],
                     weekStartOn: 6,
-                    startHour: 9,
+                    startHour: 0,
                     endHour: 24,
                   }}
-                />              }
+                />   
+                </div>           }
             </div>
           </div>
         ) : (
@@ -181,8 +283,9 @@ const ViewId = () => {
                 Gym Schedule{" "}
               </div>
               {events.length > 0 ?
+              <div style={{height: "30rem",overflowY:"auto",borderRadius:"5px"}}>
                 <Scheduler
-                  view='month'
+                view='week'
                   ref={schRef}
                   onSelectedDateChange={false}
                   onConfirm={handleConfirm}
@@ -190,13 +293,15 @@ const ViewId = () => {
                   week={{
                     weekDays: [0, 1, 2, 3, 4, 5, 6],
                     weekStartOn: 6,
-                    startHour: 9,
+                    startHour: 0,
                     endHour: 24,
                   }}
                 />
+                </div>
                 :
+                <div style={{height: "30rem",overflowY:"auto",borderRadius:"5px"}}>
                 <Scheduler
-                  view='month'
+                view='week'
                   ref={schRef}
                   onSelectedDateChange={false}
                   onConfirm={handleConfirm}
@@ -204,10 +309,11 @@ const ViewId = () => {
                   week={{
                     weekDays: [0, 1, 2, 3, 4, 5, 6],
                     weekStartOn: 6,
-                    startHour: 9,
+                    startHour: 0,
                     endHour: 24,
                   }}
-                />              }
+                />  
+                </div>            }
             </div>
           </div>
         )}
