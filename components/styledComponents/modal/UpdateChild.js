@@ -19,15 +19,6 @@ const AddChildrensModal = ({ onClose, id ,childUpdate }) => {
     date: '',
     status: '',
   });
-
-  // const handleChange = (event) => {
-  //   const { name, value } = event.target;
-  //   setFormData((prevFormData) => ({
-  //     ...prevFormData,
-  //     [name]: value,
-  //   }));
-  // };
-
   const handleSelectChild = (event) => {
     setSelectedOption(event.target.value);
     const { name, value } = event.target;
