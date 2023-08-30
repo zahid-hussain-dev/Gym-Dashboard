@@ -5,6 +5,8 @@ import close from "../../../public/assests/SVGs/close-svgrepo-com (2).svg";
 import { axiosInterceptor } from '../../../axios/axiosInterceptor';
 import swal from "sweetalert";
 import moment from "moment";
+import Select from 'react-select';
+import Loader from '../../../components/styledComponents/loader/loader';
 
 const AddGymSchedule = ({ closeModal, id, }) => {
     const [formData, setFormData] = useState({
@@ -28,6 +30,7 @@ const AddGymSchedule = ({ closeModal, id, }) => {
         }));
 
     };
+    const days = [{ name: "Monday", id: "1" }, { name: "Tuesday", id: "2" }, { name: "Wednesday", id: "3" }, { name: "Thursday", id: "4" }, { name: "Friday", id: "5" }, { name: "Saturday", id: "1" }]
     const handleSubmit = async (event) => {
         event.preventDefault();
         let Payload = {};
@@ -60,7 +63,7 @@ const AddGymSchedule = ({ closeModal, id, }) => {
             closeModal();
         } catch (error) {
             setLoading(false)
-            // swal('Oops!', error.data.message, 'error')
+            swal('Oops!', error.data.message, 'error')
             console.log(error)
         }
         console.log("formData", formData)
@@ -75,17 +78,21 @@ const AddGymSchedule = ({ closeModal, id, }) => {
             </Styled.PopupMainHeading>
             <form onSubmit={handleSubmit}>
                 <Styled.MainForm style={{ display:"block" }}>
-                    <div style={{ display: "flex", marginTop: "20px", justifyContent:"space-evenly",alignItems:"center" }}>
+                    <div style={{ display: "flex", marginTop: "20px", justifyContent:"space-evenly",alignItems:"center",marginLeft:"20px" }}>
                     <div>
-                            <Styled.Label>Select Day:</Styled.Label>
-                            <Select
-                                name='day'
-                                value={formData.day && formData.day}
+                        <div style={{height:"10%",marginBottom:"8%"}}>
+                        <Styled.Labels>Select Day:</Styled.Labels>
+                        </div>
+                          <div style={{width:"10rem"}}>
+                          <Select
+                                name='days'
+                                value={formData.days && formData.days}
                                 onChange={handleSelectChange}
                                 options={days && days.map(option => ({ value: option.name, label: option.name }))}
                                 placeholder="Select Day"
                                 isSearchable
                             />
+                          </div>
                         </div>
                         {/* <div>
                             <Styled.Label>Start Date:</Styled.Label>
@@ -98,7 +105,7 @@ const AddGymSchedule = ({ closeModal, id, }) => {
                                 onChange={handleChange}
                             />
                         </div> */}
-                        <div style={{     marginRight: "8%" }}>
+                        <div style={{ marginTop:"10px" }}>
                             <Styled.Label>Start:</Styled.Label>
                             <Styled.InputData
                                 type='time'
@@ -109,7 +116,7 @@ const AddGymSchedule = ({ closeModal, id, }) => {
                                 style={{ width:"90%" }}
                             />
                         </div>
-                        <div >
+                        <div  style={{ marginTop:"10px" }}>
                         <Styled.Label className="label">End:</Styled.Label>
                         <div>
                             <Styled.InputData
@@ -117,6 +124,7 @@ const AddGymSchedule = ({ closeModal, id, }) => {
                                 name="timeto"
                                 onChange={handleChange}
                                 value={formData.timeto && formData.timeto}
+                                style={{ width:"9rem"}}
                             />
                         </div>
                     </div>
@@ -125,7 +133,9 @@ const AddGymSchedule = ({ closeModal, id, }) => {
                 <Styled.SubmitForm type="submit">
                     Submit
                 </Styled.SubmitForm>
+               
             </form>
+            <Loader isLoading={loading}></Loader>
         </Styled.PopupContainer>
     );
 };

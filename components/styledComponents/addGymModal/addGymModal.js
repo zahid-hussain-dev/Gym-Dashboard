@@ -25,7 +25,7 @@ export const Select = styled.select`
 //   margin-left: 20px;
 //   width: 100%;
 // height:1rem;
-  // background-color: #f8f8f8; /* Optional: Add background color to the dropdown */
+//   background-color: #f8f8f8; /* Optional: Add background color to the dropdown */
 `;
 export const MainForm = styled.div`
   display: flex;
@@ -42,13 +42,13 @@ export const MainGymForm = styled.div`
   margin-top: 15px;
   padding-right: 4%;
   width:100%;
-margin-left:50px;
+// margin-left:50px;
 `;
 
 export const Label = styled.label`
   color: rgb(251, 235, 64);
   font-size: medium;
-  margin-left: 32px;
+  margin-left: 30px;
 `;
 export const Labels = styled.label`
   color: rgb(251, 235, 64);
@@ -60,8 +60,8 @@ export const InputData = styled.input`
   padding: 6px;
   border-radius: 2px;
   border: none;
-  width:60%;
-  height:40px;
+  width:80%;
+  height:38px;
   margin-left: 30px;
 `;
 

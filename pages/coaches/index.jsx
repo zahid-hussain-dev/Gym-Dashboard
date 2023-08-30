@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Scheduler } from "@aldabil/react-scheduler";
-import { EVENTS } from "../../components/MainComponents/Events";
 import { Button, ViewButton, AcceptButton, RejectButton } from '../../components/styledComponents/button/Button';
 import * as Style from "../../components/styledComponents/coachesStyle/coaches";
 import AddCoache from "../../components/styledComponents/modal/AddCoache"
@@ -280,6 +279,7 @@ const index = () => {
                             <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem", textAlign: "center", filter: showModal2 ? 'blur(5px)' : 'none' }}>Schedule </div>
                             {events.length > 0 && isMapped ?
                                 <Scheduler
+                                view='week'
                                     fields={[
                                         {name: "TimeStatus",
                                             type: "select",
@@ -298,7 +298,7 @@ const index = () => {
                                     week={{
                                         weekDays: [0, 1, 2, 3, 4, 5, 6],
                                         weekStartOn: 0,
-                                        startHour: 9,
+                                        startHour: 0,
                                         endHour: 24
                                     }}
                                 />

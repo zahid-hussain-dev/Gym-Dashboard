@@ -174,7 +174,7 @@ const ViewId = () => {
               ))}
               {childList.length<=0 &&
               (<Style.TableRow style={{ fontSize: "18px",textAlign:"center"}}>
-                 <div style={{ fontSize: "18px", color: "#E3DC22", marginTop: "35%",marginLeft:"38%",textAlign:"center", filter: showModal4 ? 'blur(5px)' : 'none', pointerEvents: showModal4 ? 'none' : 'auto'  }}>No Listing Exist for this Coach {GymnastName} </div>
+                 <p style={{ fontSize: "18px", color: "#E3DC22", marginTop: "35%",marginLeft:"38%",textAlign:"center", filter: showModal4 ? 'blur(5px)' : 'none', pointerEvents: showModal4 ? 'none' : 'auto'  }}>No Listing Exist for this Coach {GymnastName} </p>
                 </Style.TableRow>)
               }
             {role && role === "gymnast" &&
@@ -190,10 +190,10 @@ const ViewId = () => {
           </tbody>
         </Style.TableWrapper>
       </Style.TableContainer>
-      <div style={{ display:"flex",alignItems:"center",marginTop:"5%" }} >
+      <span style={{ display:"flex",alignItems:"center",marginTop:"5%" }} >
       <Style.SubTitle style={{ marginTop: "1rem" }}>Booking Listing</Style.SubTitle>
       <Button  style={{ width: "auto", marginTop: "1rem", marginLeft: "1rem" }} onClick={handleAddChildClick}>+</Button>
-      </div>
+      </span>
       <Style.TableContainer style={{marginTop: "5%", filter: showModal4 ? 'blur(5px)' : 'none', pointerEvents: showModal4 ? 'none' : 'auto' }} >
         <Style.TableWrapper>
           <thead>

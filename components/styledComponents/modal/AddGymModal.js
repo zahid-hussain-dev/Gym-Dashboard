@@ -143,9 +143,19 @@ const getCity = async () => {
       {/* Form content */}
       <form onSubmit={handleSubmit}>
         <Styled.MainGymForm >
-
-            <div style={{margin:"20px",width:"30%"}}>
-               <div    style={{marginBottom: "10%"}}>
+        <div style={{marginTop: "1%", marginLeft:"5%"}}>
+            <Styled.Label className="label">Gym Name:</Styled.Label>
+              <Styled.InputData
+                type="input"
+                name="name"
+                onChange={handleChange}
+                placeholder="Gym Name"
+                value={formData.Name}
+                // value={selectedOption}
+              />
+            </div>
+            <div style={{width:"30%", marginRight:"0%"}}>
+               <div    style={{marginBottom: "5%"}}>
             <Styled.Labels className="label">Select State:</Styled.Labels>
             </div>
             <Select
@@ -159,7 +169,7 @@ const getCity = async () => {
 
             </div>
             <div style={{margin:"20px",width:"30%"}}>
-            <div  style={{marginBottom: "10%"}}>
+            <div  style={{marginBottom: "5%"}}>
             <Styled.Labels>Select City:</Styled.Labels>
             </div>
             <Select
@@ -171,17 +181,7 @@ const getCity = async () => {
                       isSearchable
                     />
             </div>
-            <div style={{marginTop: "2%"}}>
-            <Styled.Label className="label">Gym Name:</Styled.Label>
-              <Styled.InputData
-                type="input"
-                name="name"
-                onChange={handleChange}
-                placeholder="Gym Name"
-                value={formData.Name}
-                // value={selectedOption}
-              />
-            </div>
+
         </Styled.MainGymForm>
         <Styled.SubmitForm type="submit">
           Submit
