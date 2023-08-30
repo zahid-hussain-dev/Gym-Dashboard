@@ -136,6 +136,8 @@ const AddCities = ({ onClose, id }) => {
                   </div>
               </Styled.MainForm>
       </form>
+      <Loader isLoading={loading}></Loader>
+
     </Styled.PopupContainer>
   );
 };

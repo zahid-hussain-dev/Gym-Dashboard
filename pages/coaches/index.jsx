@@ -4,7 +4,7 @@ import { Button, ViewButton, AcceptButton, RejectButton } from '../../components
 import * as Style from "../../components/styledComponents/coachesStyle/coaches";
 import AddCoache from "../../components/styledComponents/modal/AddCoache"
 import { useRouter } from 'next/navigation';
-import { setCoachName } from '../../store/slices/user/userSlice';
+import { setCoachName, setGymId } from '../../store/slices/user/userSlice';
 import { useDispatch, useSelector } from "react-redux";
 import { axiosInterceptor } from '../../axios/axiosInterceptor';
 import Loader from '../../components/styledComponents/loader/loader';
@@ -31,7 +31,7 @@ const index = () => {
         const [hours, minutes] = timePart.slice(0, -1).split(":");
         const adjustedHours = String(Number(hours)).padStart(2, "0");
         return `${year} ${Number(month)} ${Number(day)} ${adjustedHours}:${minutes}`;
-      }
+    }
     const CustomEditor = ({ scheduler }) => {
         const event = scheduler.edited;
         console.log("scheduler", scheduler);
@@ -92,10 +92,12 @@ const index = () => {
         );
         console.log("firstDay", firstDay.toISOString().slice(0, 10))
         const Payload = {
-            from: "2023-08-10",
-            to: "2023-08-18"
+            from: firstDay.toISOString().slice(0, 10),
+            to: lastDay.toISOString().slice(0, 10)
         }
         try {
+            getCoachGymScedule();
+
             setLoading(true)
             console.log("api calling for schedule")
             const res = await axiosInterceptor().post(
@@ -112,9 +114,9 @@ const index = () => {
                 item['deletable'] = false,
                 item['color'] = "#50b500"
             ))
-            setEvents(res.data);
+            // setEvents(res.data);
+            setEvents(prevState => [...prevState, ...res.data])
             setLoading(false)
-            getCoachGymScedule();
         } catch (error) {
             setLoading(false)
             swal('Oops!', "error.data.message", 'error')
@@ -126,24 +128,57 @@ const index = () => {
             setLoading(true)
             console.log("api calling for schedule")
             const res = await axiosInterceptor().get(
+                // `/api/gym/schedule?gym=${gymId}`,
                 `/api/gym/schedule`,
             );
-            console.log("responsse of schedule gym", res.data)
-            res.data.map((item, index) => (
-                item['event_id'] = item.id,
-                item['title'] = "Open hours",
-                item['start'] = new Date(formatTimestamp(new Date(item.from).toISOString())),
-                item['end'] = new Date(formatTimestamp(new Date(item.to).toISOString())),
-                item['editable'] = false,
-                item['deletable'] = false,
-                item['color'] = "#0000FF"
-            ))
-            setEvents(res.data)
-            setIsMapped(true);
+            console.log("responsse of schedule ID", res)
+            if (res?.status === 200) {
+                const eventData = res.data.map(item => ({
+                    day: item.day,
+                    start: item.from,
+                    end: item.to,
+                    title: item.status,
+                }));
+                const daysOfWeek = [
+                    'Sunday',
+                    'Monday',
+                    'Tuesday',
+                    'Wednesday',
+                    'Thursday',
+                    'Friday',
+                    'Saturday',
+                ];
+                const currentYear = new Date().getFullYear();
+                const filteredEvents = [];
+                daysOfWeek.forEach(day => {
+                    const eventsForDay = eventData.filter(event => event.day === day);
+                    const currentDate = new Date(`${currentYear}-01-01`);
+                    while (currentDate.getFullYear() === currentYear) {
+                        if (currentDate.getDay() === daysOfWeek.indexOf(day)) {
+                            const formattedDate = currentDate.toISOString().split('T')[0];
+                            console.log("formattedDate", formattedDate)
+                            filteredEvents.push(
+                                ...eventsForDay.map(event => ({
+                                    ...event,
+                                    start: new Date(`${formattedDate} ${event.start}`),
+                                    end: new Date(`${formattedDate} ${event.end}`),
+                                    // color: "#50b500",
+                                    editable: false,
+                                    deletable: false,
+                                    title: "Open Hours",
+                                })),
+                            );
+                        }
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                });
+                console.log('Filtered Events======', filteredEvents);
+                setEvents(filteredEvents);
+            }
+            //   setEvents(res.data);
             setLoading(false)
         } catch (error) {
             setLoading(false)
-            swal('Oops!', "error.data.message", 'error')
             console.log(error)
         }
     }
@@ -216,12 +251,13 @@ const index = () => {
     console.log("evnts all", events)
     useEffect(() => {
         schRef.current?.scheduler.handleState(events, "events")
+        console.log("all events",events)
     }, [events])
     return (
         <div style={{ marginTop: "10%" }}>
             {role && role === "admin" &&
                 <React.Fragment >
-                    <h2 style={{color:"white"}}> Coach Listing</h2>
+                    <h2 style={{ color: "white" }}> Coach Listing</h2>
                     <Style.TableContainer style={{ marginTop: "5%" }}>
                         <Style.TableWrapper>
                             <thead>
@@ -260,6 +296,7 @@ const index = () => {
                                             {role === "admin" &&
                                                 <ViewButton onClick={() => {
                                                     dispatch(setCoachName(data.userName));
+                                                    dispatch(setGymId(data?.gym.id));
                                                     router.push(`/coaches/view/${data?.id}`)
                                                 }}>View</ViewButton>
                                             }
@@ -279,9 +316,10 @@ const index = () => {
                             <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem", textAlign: "center", filter: showModal2 ? 'blur(5px)' : 'none' }}>Schedule </div>
                             {events.length > 0 && isMapped ?
                                 <Scheduler
-                                view='week'
+                                    view='week'
                                     fields={[
-                                        {name: "TimeStatus",
+                                        {
+                                            name: "TimeStatus",
                                             type: "select",
                                             default: "PUBLIC",
                                             options: [
@@ -303,8 +341,31 @@ const index = () => {
                                     }}
                                 />
                                 :
-                                <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem", textAlign: "center", filter: showModal2 ? 'blur(5px)' : 'none' }}>No Schedule Exist </div>
-                            }
+                                <Scheduler
+                                    view='week'
+                                    fields={[
+                                        {
+                                            name: "TimeStatus",
+                                            type: "select",
+                                            default: "PUBLIC",
+                                            options: [
+                                                { id: 1, text: "Public", value: "PUBLIC" },
+                                                { id: 2, text: "Private", value: "PRIVATE" }
+                                            ],
+                                            config: { label: "Time Status", required: true, errMsg: "Plz Select Status" }
+                                        },
+                                    ]}
+                                    ref={schRef}
+                                    onSelectedDateChange={false}
+                                    events={events}
+                                    onConfirm={handleConfirm}
+                                    week={{
+                                        weekDays: [0, 1, 2, 3, 4, 5, 6],
+                                        weekStartOn: 0,
+                                        startHour: 0,
+                                        endHour: 24
+                                    }}
+                                />}
                         </Style.Schedular>
                         {showModal2 && <AddCoache style={{ position: "absolute", top: "40%", left: "52%", zIndex: "1" }} closeModal={() => closeModal2()} />}
                     </Style.MainDiv>

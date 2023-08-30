@@ -383,6 +383,8 @@ const AddChildForm = ({ Closed, id }) => {
                 </Style.CenteredDropdownContainer>
                 <Buttton onClick={(e) => {handleSubmit(e); Closed()} }   >Book</Buttton>
       </form>
+      <Loader isLoading={loading}></Loader>
+
     </Style.PopupContainer>
   );
 };

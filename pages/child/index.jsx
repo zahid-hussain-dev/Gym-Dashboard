@@ -28,7 +28,9 @@ const Index = () => {
       setLoading(true)
       console.log("api calling for child list")
       const res = await axiosInterceptor().get(
-        `/api/gymnast/children?gymnast=${router.query.ViewId}`,
+        // `/api/gymnast/children?gymnast=${router.query.ViewId}`,
+        `/api/gymnast/children`,
+
       );
       console.log("responsse of children ID", res)
       setLoading(false)
@@ -71,7 +73,7 @@ const Index = () => {
   }
   const handleCloseModalUpdate = () => {
     setshowModalUpdate(false);
-    setLoading(true);
+    // setLoading(true);
     getChildList();
   };
   useEffect(() => {

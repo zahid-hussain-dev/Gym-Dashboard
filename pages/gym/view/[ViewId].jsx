@@ -88,7 +88,7 @@ const ViewId = () => {
     }
   };
   useEffect(() => {
-      getGymScedule();
+    getGymScedule();
   }, [])
   useEffect(() => {
     if (Id) {
@@ -97,103 +97,107 @@ const ViewId = () => {
   }, [showModal, Id])
   useEffect(() => {
     schRef.current?.scheduler.handleState(events, "events")
-}, [events])
+  }, [events])
 
 
-// function getAllDaysOfWeek(d, endDate) {
-//   d = d ? new Date(+d) : new Date();
-//   d.setHours(0, 0, 0, 0);
+  // function getAllDaysOfWeek(d, endDate) {
+  //   d = d ? new Date(+d) : new Date();
+  //   d.setHours(0, 0, 0, 0);
 
-//   var daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  //   var daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-//   var dates = [];
-//   while (d <= endDate) {
-//     dates.push(new Date(d));
-//     d.setDate(d.getDate() + 1);
-//   }
+  //   var dates = [];
+  //   while (d <= endDate) {
+  //     dates.push(new Date(d));
+  //     d.setDate(d.getDate() + 1);
+  //   }
 
-//   var daysWithNames = dates.map(function(date) {
-//     return {
-//       date: date,
-//       dayOfWeek: daysOfWeek[date.getDay()]
-//     };
-//   });
+  //   var daysWithNames = dates.map(function(date) {
+  //     return {
+  //       date: date,
+  //       dayOfWeek: daysOfWeek[date.getDay()]
+  //     };
+  //   });
 
-//   return daysWithNames;
-// }
+  //   return daysWithNames;
+  // }
 
-const getGymScedule = async (id) => {
-  try {
-    setLoading(true)
-    console.log("api calling for schedule")
-    const res = await axiosInterceptor().get(
-      `/api/gym/schedule?gym=1`,
-      // `/api/gym/schedule?gym=${router.query.ViewId}`,
-    );
-    console.log("responsse of schedule ID", res)
-    if (res?.status === 200) {
-      const eventData = res.data.map(item => ({
-        day: item.day,
-        start: item.from,
-        end: item.to,
-        title: item.status,
-      }));
-      const daysOfWeek = [
-        'Sunday',
-        'Monday',
-        'Tuesday',
-        'Wednesday',
-        'Thursday',
-        'Friday',
-        'Saturday',
-      ];
-      const currentYear = new Date().getFullYear();
-      const filteredEvents = [];
-      daysOfWeek.forEach(day => {
-        const eventsForDay = eventData.filter(event => event.day === day);
-        const currentDate = new Date(`${currentYear}-01-01`);
-        while (currentDate.getFullYear() === currentYear) {
-          if (currentDate.getDay() === daysOfWeek.indexOf(day)) {
-            const formattedDate = currentDate.toISOString().split('T')[0];
-            filteredEvents.push(
-              ...eventsForDay.map(event => ({
-                ...event,
-                start: `${formattedDate} ${event.start}`,
-                end: `${formattedDate} ${event.end}`,
-              })),
-            );
+  const getGymScedule = async (id) => {
+    try {
+      setLoading(true)
+      console.log("api calling for schedule")
+      const res = await axiosInterceptor().get(
+        // `/api/gym/schedule?gym=1`,
+        `/api/gym/schedule?gym=${router.query.ViewId}`,
+      );
+      console.log("responsse of schedule ID", res)
+      if (res?.status === 200) {
+        const eventData = res.data.map(item => ({
+          day: item.day,
+          start: item.from,
+          end: item.to,
+          title: item.status,
+        }));
+        const daysOfWeek = [
+          'Sunday',
+          'Monday',
+          'Tuesday',
+          'Wednesday',
+          'Thursday',
+          'Friday',
+          'Saturday',
+        ];
+        const currentYear = new Date().getFullYear();
+        const filteredEvents = [];
+        daysOfWeek.forEach(day => {
+          const eventsForDay = eventData.filter(event => event.day === day);
+          const currentDate = new Date(`${currentYear}-01-01`);
+          while (currentDate.getFullYear() === currentYear) {
+            if (currentDate.getDay() === daysOfWeek.indexOf(day)) {
+              const formattedDate = currentDate.toISOString().split('T')[0];
+              filteredEvents.push(
+                ...eventsForDay.map(event => ({
+                  ...event,
+                  start: new Date(`${formattedDate} ${event.start}`),
+                  end: new Date(`${formattedDate} ${event.end}`),
+                  color: "#50b500",
+                  editable: true,
+                  deletable: false,
+                  title: "Open Hours",
+                })),
+              );
+            }
+            currentDate.setDate(currentDate.getDate() + 1);
           }
-          currentDate.setDate(currentDate.getDate() + 1);
-        }
-      });
-      console.log('Filtered Events======', filteredEvents);
-      setEvents(filteredEvents);
+        });
+        console.log('Filtered Events======', filteredEvents);
+        setEvents(filteredEvents);
+      }
+      // setEvents(res.data);
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      console.log(error)
     }
-    setEvents(res.data);
-    setLoading(false)
-  } catch (error) {
-    setLoading(false)
-    console.log(error)
   }
-}
 
 
-// var startDate = new Date(); // Current date
-// startDate.setFullYear(startDate.getFullYear() - 1); // One year ago
-// var endDate = new Date(); // Current date
+  // var startDate = new Date(); // Current date
+  // startDate.setFullYear(startDate.getFullYear() - 1); // One year ago
+  // var endDate = new Date(); // Current date
 
-// var daysList = getAllDaysOfWeek(startDate, endDate);
+  // var daysList = getAllDaysOfWeek(startDate, endDate);
 
-// daysList.forEach(function(day) {
-//   console.log(day.date.toLocaleString('en-US', {
-//     weekday: 'short',
-//     day: 'numeric',
-//     month: 'short',
-//     year: 'numeric'
-//   }) + ' - ' + day.dayOfWeek);
-// });
+  // daysList.forEach(function(day) {
+  //   console.log(day.date.toLocaleString('en-US', {
+  //     weekday: 'short',
+  //     day: 'numeric',
+  //     month: 'short',
+  //     year: 'numeric'
+  //   }) + ' - ' + day.dayOfWeek);
+  // });
 
-// console.log('There are ' + daysList.length + ' days in the range');
+  // console.log('There are ' + daysList.length + ' days in the range');
 
   return (
     <>
@@ -216,8 +220,8 @@ const getGymScedule = async (id) => {
               display: "flex",
               justifyContent: "space-around",
               textAlign: "center",
-              filter: showModal? 'blur(5px)' : 'none', 
-              pointerEvents:  showModal? 'none' : 'auto' 
+              filter: showModal ? 'blur(5px)' : 'none',
+              pointerEvents: showModal ? 'none' : 'auto'
             }}
           >
             <div style={{ width: "90%", height: "40%", marginTop: "2%" }}>
@@ -233,37 +237,37 @@ const getGymScedule = async (id) => {
                 Gym Schedule{" "}
               </div>
               {events.length > 0 ?
-              <div style={{height: "30rem",overflowY:"auto",borderRadius:"5px"}}>
-                <Scheduler
-                view='week'
-                  onSelectedDateChange={false}
-                  onConfirm={handleConfirm}
-                  events={events}
-                  ref={schRef}
-                  week={{
-                    weekDays: [0, 1, 2, 3, 4, 5, 6],
-                    weekStartOn: 6,
-                    startHour: 0,
-                    endHour: 24,
-                  }}
-                />
-              </div>
+                <div style={{ height: "30rem", overflowY: "auto", borderRadius: "5px" }}>
+                  <Scheduler
+                    view='week'
+                    onSelectedDateChange={false}
+                    onConfirm={handleConfirm}
+                    events={events}
+                    ref={schRef}
+                    week={{
+                      weekDays: [0, 1, 2, 3, 4, 5, 6],
+                      weekStartOn: 6,
+                      startHour: 0,
+                      endHour: 24,
+                    }}
+                  />
+                </div>
                 :
-                <div style={{height: "30rem",overflowY:"auto",borderRadius:"5px"}}>
-                <Scheduler
-                view='week'
-                  onSelectedDateChange={false}
-                  onConfirm={handleConfirm}
-                  events={events}
-                  ref={schRef}
-                  week={{
-                    weekDays: [0, 1, 2, 3, 4, 5, 6],
-                    weekStartOn: 6,
-                    startHour: 0,
-                    endHour: 24,
-                  }}
-                />   
-                </div>           }
+                <div style={{ height: "30rem", overflowY: "auto", borderRadius: "5px" }}>
+                  <Scheduler
+                    view='week'
+                    onSelectedDateChange={false}
+                    onConfirm={handleConfirm}
+                    events={events}
+                    ref={schRef}
+                    week={{
+                      weekDays: [0, 1, 2, 3, 4, 5, 6],
+                      weekStartOn: 6,
+                      startHour: 0,
+                      endHour: 24,
+                    }}
+                  />
+                </div>}
             </div>
           </div>
         ) : (
@@ -276,48 +280,48 @@ const getGymScedule = async (id) => {
                   marginBottom: "1rem",
                   width: "100%",
                   textAlign: "center",
-                  filter: showModal? 'blur(5px)' : 'none', 
-                  pointerEvents:  showModal? 'none' : 'auto' 
+                  filter: showModal ? 'blur(5px)' : 'none',
+                  pointerEvents: showModal ? 'none' : 'auto'
                 }}
               >
                 Gym Schedule{" "}
               </div>
               {events.length > 0 ?
-              <div style={{height: "30rem",overflowY:"auto",borderRadius:"5px"}}>
-                <Scheduler
-                view='week'
-                  ref={schRef}
-                  onSelectedDateChange={false}
-                  onConfirm={handleConfirm}
-                  events={events}
-                  week={{
-                    weekDays: [0, 1, 2, 3, 4, 5, 6],
-                    weekStartOn: 6,
-                    startHour: 0,
-                    endHour: 24,
-                  }}
-                />
+                <div style={{ height: "30rem", overflowY: "auto", borderRadius: "5px" }}>
+                  <Scheduler
+                    view='week'
+                    ref={schRef}
+                    onSelectedDateChange={false}
+                    onConfirm={handleConfirm}
+                    events={events}
+                    week={{
+                      weekDays: [0, 1, 2, 3, 4, 5, 6],
+                      weekStartOn: 6,
+                      startHour: 0,
+                      endHour: 24,
+                    }}
+                  />
                 </div>
                 :
-                <div style={{height: "30rem",overflowY:"auto",borderRadius:"5px"}}>
-                <Scheduler
-                view='week'
-                  ref={schRef}
-                  onSelectedDateChange={false}
-                  onConfirm={handleConfirm}
-                  events={events}
-                  week={{
-                    weekDays: [0, 1, 2, 3, 4, 5, 6],
-                    weekStartOn: 6,
-                    startHour: 0,
-                    endHour: 24,
-                  }}
-                />  
-                </div>            }
+                <div style={{ height: "30rem", overflowY: "auto", borderRadius: "5px" }}>
+                  <Scheduler
+                    view='week'
+                    ref={schRef}
+                    onSelectedDateChange={false}
+                    onConfirm={handleConfirm}
+                    events={events}
+                    week={{
+                      weekDays: [0, 1, 2, 3, 4, 5, 6],
+                      weekStartOn: 6,
+                      startHour: 0,
+                      endHour: 24,
+                    }}
+                  />
+                </div>}
             </div>
           </div>
         )}
-              <Loader isLoading={loading}></Loader>
+        <Loader isLoading={loading}></Loader>
       </div>
     </>
   );
