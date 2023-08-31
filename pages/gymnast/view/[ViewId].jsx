@@ -154,7 +154,7 @@ const ViewId = () => {
 
   }
   useEffect(() => {
-    if (bookingCoach ) {
+    if (bookingCoach) {
       getAvailableTimeSlots();
       console.log("here in time slots")
     }
@@ -213,7 +213,7 @@ const ViewId = () => {
     if (action === "edit") {
 
       let Payload = {
-        gymnastId:router.query.ViewId,
+        gymnastId: router.query.ViewId,
         childrenId: childId[0].id,
         coachId: +event.CoachId,
         from: moment(event.start).format('YYYY-MM-DD HH:mm:ss'),
@@ -303,7 +303,7 @@ const ViewId = () => {
           while (currentDate.getFullYear() === currentYear) {
             if (currentDate.getDay() === daysOfWeek.indexOf(day)) {
               const formattedDate = currentDate.toISOString().split('T')[0];
-              console.log("formattedDate", formattedDate)
+              // console.log("formattedDate", formattedDate)
               filteredEvents.push(
                 ...eventsForDay.map(event => ({
                   ...event,
@@ -497,20 +497,6 @@ const ViewId = () => {
               isSearchable
             />
           </Style.SecondInput>
-          <div style={{ width: "10rem" }}>
-            <Style.Label className="label">Select Date:</Style.Label>
-            <Style.InputDataa
-              type="date"
-              name="date"
-              defaultValue={new Date().toISOString().substring(0, 10)}
-              onChange={(e) => {
-                handleChange(e);
-                console.log("date", e.target.value)
-                setBookingDate(e.target.value)
-              }}
-              value={formData.date}
-            />
-          </div>
         </Style.SecondMain>
 
       </Style.FirstMain>
@@ -590,8 +576,8 @@ const ViewId = () => {
                 step: 30
               }}
             />}
-            {selectedOptionCoach === null &&
-              <>
+          {selectedOptionCoach === null &&
+            <>
               nullcoach schedule
               <Scheduler
                 view='week'
@@ -628,7 +614,49 @@ const ViewId = () => {
               /></>}
         </Style.Schedular>
       </Style.MainDiv>
-
+      <span style={{ display: "flex", alignItems: "center", marginTop: "5%" }} >
+      <Style.SubTitle style={{ marginTop: "1rem" }}>Booking Listing</Style.SubTitle>
+ {/*     <Button style={{ width: "auto", marginTop: "1rem", marginLeft: "1rem" }} onClick={handleAddChildClick}>+</Button>*/}
+    </span>
+    <Style.TableContainer style={{ marginTop: "5%", filter: showModal4 ? 'blur(5px)' : 'none', pointerEvents: showModal4 ? 'none' : 'auto' }} >
+      <Style.TableWrapper>
+        <thead>
+          <Style.TableRow>
+            {/* <Style.TableHead>ID</Style.TableHead> */}
+            <Style.TableHead>CHILD</Style.TableHead>
+            <Style.TableHead>COACH</Style.TableHead>
+            <Style.TableHead>TIME SLOT</Style.TableHead>
+            <Style.TableHead>ACTIONS</Style.TableHead>
+          </Style.TableRow>
+        </thead>
+        <tbody>
+          {role && role === "admin" &&
+            bookingList && bookingList.map((data, index) => (
+              <Style.TableRow key={index}>
+                {/* <Style.TableCell>{data?.id}</Style.TableCell> */}
+                <Style.TableCell>{data?.childrenId}</Style.TableCell>
+                <Style.TableCell>{data?.coachId}</Style.TableCell>
+                <Style.TableCell>{new Date(data?.from).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} {"-"} {new Date(data?.to).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })}</Style.TableCell>
+                <Style.TableCell>
+                  <AcceptButton onClick={() => { console.log(data.id) }}>Cancel</AcceptButton>
+                </Style.TableCell>
+              </Style.TableRow>
+            ))}
+          {role && role === "gymnast" &&
+            gymnastbookingList && gymnastbookingList.map((data, index) => (
+              <Style.TableRow key={index}>
+                <Style.TableCell>{data?.id}</Style.TableCell>
+                <Style.TableCell>{data?.childrenId}</Style.TableCell>
+                <Style.TableCell>{data?.coachId}</Style.TableCell>
+                <Style.TableCell>{new Date(data?.from).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} {"-"} {new Date(data?.to).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })}</Style.TableCell>
+                <Style.TableCell>
+                  <AcceptButton onClick={() => { console.log(data.id) }}>Cancel</AcceptButton>
+                </Style.TableCell>
+              </Style.TableRow>
+            ))}
+        </tbody>
+      </Style.TableWrapper>
+    </Style.TableContainer>
       <Style.SubTitle>Child Listing</Style.SubTitle>
       {showModal4 && <AddChildForm Closed={handleCloseModal4} onSubmit={handleSubmitChild} id={Id} />}
       <Style.TableContainer style={{ marginTop: "3%", filter: showModal4 ? 'blur(5px)' : 'none', pointerEvents: showModal4 ? 'none' : 'auto' }} >
@@ -669,49 +697,7 @@ const ViewId = () => {
           </tbody>
         </Style.TableWrapper>
       </Style.TableContainer>
-      <span style={{ display: "flex", alignItems: "center", marginTop: "5%" }} >
-        <Style.SubTitle style={{ marginTop: "1rem" }}>Booking Listing</Style.SubTitle>
-        <Button style={{ width: "auto", marginTop: "1rem", marginLeft: "1rem" }} onClick={handleAddChildClick}>+</Button>
-      </span>
-      <Style.TableContainer style={{ marginTop: "5%", filter: showModal4 ? 'blur(5px)' : 'none', pointerEvents: showModal4 ? 'none' : 'auto' }} >
-        <Style.TableWrapper>
-          <thead>
-            <Style.TableRow>
-              {/* <Style.TableHead>ID</Style.TableHead> */}
-              <Style.TableHead>CHILD</Style.TableHead>
-              <Style.TableHead>COACH</Style.TableHead>
-              <Style.TableHead>TIME SLOT</Style.TableHead>
-              <Style.TableHead>ACTIONS</Style.TableHead>
-            </Style.TableRow>
-          </thead>
-          <tbody>
-            {role && role === "admin" &&
-              bookingList && bookingList.map((data, index) => (
-                <Style.TableRow key={index}>
-                  {/* <Style.TableCell>{data?.id}</Style.TableCell> */}
-                  <Style.TableCell>{data?.childrenId}</Style.TableCell>
-                  <Style.TableCell>{data?.coachId}</Style.TableCell>
-                  <Style.TableCell>{new Date(data?.from).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} {"-"} {new Date(data?.to).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })}</Style.TableCell>
-                  <Style.TableCell>
-                    <AcceptButton onClick={() => { console.log(data.id) }}>Cancel</AcceptButton>
-                  </Style.TableCell>
-                </Style.TableRow>
-              ))}
-            {role && role === "gymnast" &&
-              gymnastbookingList && gymnastbookingList.map((data, index) => (
-                <Style.TableRow key={index}>
-                  <Style.TableCell>{data?.id}</Style.TableCell>
-                  <Style.TableCell>{data?.childrenId}</Style.TableCell>
-                  <Style.TableCell>{data?.coachId}</Style.TableCell>
-                  <Style.TableCell>{new Date(data?.from).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} {"-"} {new Date(data?.to).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })}</Style.TableCell>
-                  <Style.TableCell>
-                    <AcceptButton onClick={() => { console.log(data.id) }}>Cancel</AcceptButton>
-                  </Style.TableCell>
-                </Style.TableRow>
-              ))}
-          </tbody>
-        </Style.TableWrapper>
-      </Style.TableContainer>
+      
       <Loader isLoading={loading}></Loader>
     </div>
   )

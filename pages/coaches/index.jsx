@@ -174,7 +174,7 @@ const index = () => {
                     while (currentDate.getFullYear() === currentYear) {
                         if (currentDate.getDay() === daysOfWeek.indexOf(day)) {
                             const formattedDate = currentDate.toISOString().split('T')[0];
-                            console.log("formattedDate", formattedDate)
+                            // console.log("formattedDate", formattedDate)
                             filteredEvents.push(
                                 ...eventsForDay.map(event => ({
                                     ...event,

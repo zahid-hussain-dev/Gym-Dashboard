@@ -164,7 +164,7 @@ const index = () => {
           while (currentDate.getFullYear() === currentYear) {
             if (currentDate.getDay() === daysOfWeek.indexOf(day)) {
               const formattedDate = currentDate.toISOString().split('T')[0];
-              console.log("formattedDate", formattedDate)
+              // console.log("formattedDate", formattedDate)
               filteredEvents.push(
                 ...eventsForDay.map(event => ({
                   ...event,
@@ -277,7 +277,7 @@ const index = () => {
   useEffect(() => {
     if (bookingCoach) {
       getAvailableTimeSlots();
-      console.log("gymnastBookingList",gymnastBookingList)
+      console.log("gymnastBookingList", gymnastBookingList)
     }
   }, [bookingCoach])
   const [showModal4, setShowModal4] = useState(false);
@@ -420,7 +420,7 @@ const index = () => {
   return (
     <div closeModal={closeModal4} style={{ marginTop: "10%" }}>
       {role !== "admin" &&
-        <div style={{marginBottom:"2rem"}}>
+        <div style={{ marginBottom: "2rem" }}>
           <Style.FirstMain>
             <Style.SecondMain style={{ flexDirection: "row" }}>
               <Style.SecondInput style={{ width: "10rem" }}>
@@ -435,20 +435,7 @@ const index = () => {
                   isSearchable
                 />
               </Style.SecondInput>
-              <div style={{ width: "10rem" }}>
-                <Style.Label className="label">Select Date:</Style.Label>
-                <Style.InputDataa
-                  type="date"
-                  name="date"
-                  defaultValue={new Date().toISOString().substring(0, 10)}
-                  onChange={(e) => {
-                    handleChange(e);
-                    console.log("date", e.target.value)
-                    setBookingDate(e.target.value)
-                  }}
-                  value={formData.date}
-                />
-              </div>
+
             </Style.SecondMain>
 
           </Style.FirstMain>
@@ -528,45 +515,45 @@ const index = () => {
                 />}
               {newCoachId === null &&
                 <>
-                nullcoach schedule
-                <Scheduler
-                  view='week'
-                  ref={schRef}
-                  onSelectedDateChange={false}
-                  events={events}
-                  onConfirm={handleConfirm}
-                  fields={[
-                    {
-                      name: "Select Child",
-                      type: "select",
-                      // default: "PUBLIC",
-                      options: childrens && childrens,
-                      // options: [
-                      //   { id: 1, text: "Public", value: "PUBLIC" },
-                      //   { id: 2, text: "Private", value: "PRIVATE" }
-                      // ],
-                      config: { label: "Children", required: true, errMsg: "Plz Select child" }
-                    },
-                    {
-                      name: "CoachId",
-                      type: "input",
-                      default: `${newCoachId && newCoachId}`,
-                      config: { label: "CoachId", disabled: true }
-                    },
-                  ]}
-                  week={{
-                    weekDays: [0, 1, 2, 3, 4, 5, 6],
-                    weekStartOn: 0,
-                    startHour: 0,
-                    endHour: 24,
-                    step: 30
-                  }}
-                /></>}
+                  nullcoach schedule
+                  <Scheduler
+                    view='week'
+                    ref={schRef}
+                    onSelectedDateChange={false}
+                    events={events}
+                    onConfirm={handleConfirm}
+                    fields={[
+                      {
+                        name: "Select Child",
+                        type: "select",
+                        // default: "PUBLIC",
+                        options: childrens && childrens,
+                        // options: [
+                        //   { id: 1, text: "Public", value: "PUBLIC" },
+                        //   { id: 2, text: "Private", value: "PRIVATE" }
+                        // ],
+                        config: { label: "Children", required: true, errMsg: "Plz Select child" }
+                      },
+                      {
+                        name: "CoachId",
+                        type: "input",
+                        default: `${newCoachId && newCoachId}`,
+                        config: { label: "CoachId", disabled: true }
+                      },
+                    ]}
+                    week={{
+                      weekDays: [0, 1, 2, 3, 4, 5, 6],
+                      weekStartOn: 0,
+                      startHour: 0,
+                      endHour: 24,
+                      step: 30
+                    }}
+                  /></>}
             </Style.Schedular>
           </Style.MainDiv>
 
           <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} >Bookings</Button>
-              {/*  <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} onClick={handleAddChildClick}>+</Button>*/}
+          {/*  <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} onClick={handleAddChildClick}>+</Button>*/}
         </div>
       }
       {showModal4 && <AddChildForm Closed={handleCloseModal4} onSubmit={handleSubmitChild} />}
