@@ -5,6 +5,11 @@ export const PopupHeading = styled.h2`
   color: rgb(232, 174, 51);
  margin-left:39%;
 `;
+export const MainDiv = styled.div`
+  display: flex;
+  justify-content: space-around;
+  // filter: blur(5px);
+`;
 export const PopupContainer = styled.div`
    background-color: rgb(63, 63, 63);
   padding: 10px;
@@ -50,7 +55,12 @@ align-items:center;
 width:60%;
 
 `;
-
+export const Schedular = styled.div`
+  width: 75%;
+  height: 30rem;
+  overflow-y: auto;
+  border-radius:5px;
+`;
 export const AddChildWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -234,7 +244,7 @@ export const TableRow2 = styled.tr` {
   }
 `
   ;
-  ;
+;
 export const TableCell = styled.td`
   padding: 10px;
   background-color: black;

@@ -11,6 +11,7 @@ const userSlice = createSlice({
     gymName:"",
     gymnastName:"",
     getRequest: false,
+    gymId:"",
 
   },
   reducers: {
@@ -38,9 +39,12 @@ const userSlice = createSlice({
     setGetRequest(state, action) {
       state.getRequest = action.payload;
     },
+    setGymId(state, action) {
+      state.gymId = action.payload;
+    },
   },
 });
 
-export const { setshowDropdown,setloginData,setuserId,setShowCollapse,setCoachName,setGymName,setGymnastName,setGetRequest } = userSlice.actions;
+export const { setshowDropdown,setloginData,setuserId,setShowCollapse,setCoachName,setGymName,setGymnastName,setGetRequest,setGymId } = userSlice.actions;
 
 export default userSlice.reducer;

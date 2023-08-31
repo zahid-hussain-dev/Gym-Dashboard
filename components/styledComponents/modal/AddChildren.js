@@ -103,6 +103,8 @@ const AddChildrensModal = ({ onClose }) => {
                   </div>
               </Styled.MainForm>
       </form>
+      <Loader isLoading={loading}></Loader>
+
     </Styled.PopupContainer>
   );
 };

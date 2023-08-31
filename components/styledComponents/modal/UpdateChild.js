@@ -6,8 +6,8 @@ import { axiosInterceptor } from '../../../axios/axiosInterceptor';
 import Loader from '../../../components/styledComponents/loader/loader';
 import swal from "sweetalert";
 // childUpdate
-const AddChildrensModal = ({ onClose, id ,childUpdate }) => {
-    console.log("new child cild",id)
+const AddChildrensModal = ({ onClose, id, childUpdate }) => {
+  console.log("new child cild", id)
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [childrens, setChildrens] = useState([]);
   const [childData, setChildData] = useState({});
@@ -35,13 +35,12 @@ const AddChildrensModal = ({ onClose, id ,childUpdate }) => {
     setChildData((prevChildData) => ({
       ...prevChildData,
       [name]: value,
-      id:id,
+      id: id,
     }));
   };
 
   const handleSubmitChild = async (event) => {
     event.preventDefault();
-    onClose();
     console.log("ChildData==========", childData)
     try {
       setLoading(true)
@@ -58,6 +57,8 @@ const AddChildrensModal = ({ onClose, id ,childUpdate }) => {
       // swal('Oops!', error.data.message, 'error')
       console.log(error)
     }
+    onClose();
+
   };
   const updateButtonState = (emailValue) => {
     setIsButtonDisabled(emailValue === '');
@@ -69,25 +70,27 @@ const AddChildrensModal = ({ onClose, id ,childUpdate }) => {
         <Image src={close} className="close" onClick={onClose} alt="close" width={20} height={20} />
       </Styled.PopupMainHeading>
       <form>
-      <Styled.MainForm style={{width:'100%',display:"flex", justifyContent:"center",alignItems:"center"}}>
+        <Styled.MainForm style={{ width: '100%', display: "flex", justifyContent: "center", alignItems: "center" }}>
 
-               <div style={{width:"50%"}}>
-                  <Styled.InputData
-                    className="input-dataa"
-                    type="text"
-                    id="message"
-                    name="name"
-                    onChange={handleSelectChild}
-                    defaultValue={childUpdate}
-                  />
-                </div>
-               < div style={{marginBottom:"20px"}}>
-                  <Styled.SubmitForm type="submit" onClick={(e) => handleSubmitChild(e)} disabled={isButtonDisabled}>
-                  Update Child
-                </Styled.SubmitForm>
-                  </div>
-              </Styled.MainForm>
+          <div style={{ width: "50%" }}>
+            <Styled.InputData
+              className="input-dataa"
+              type="text"
+              id="message"
+              name="name"
+              onChange={handleSelectChild}
+              defaultValue={childUpdate}
+            />
+          </div>
+          < div style={{ marginBottom: "20px" }}>
+            <Styled.SubmitForm type="submit" onClick={(e) => handleSubmitChild(e)} disabled={isButtonDisabled}>
+              Update Child
+            </Styled.SubmitForm>
+          </div>
+        </Styled.MainForm>
       </form>
+      <Loader isLoading={loading}></Loader>
+
     </Styled.PopupContainer>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Scheduler } from "@aldabil/react-scheduler";
-import { Button, AcceptButton,RejectButton } from '../../../components/styledComponents/button/Button';
+import { Button, AcceptButton, RejectButton } from '../../../components/styledComponents/button/Button';
 import * as Style from "../../../components/styledComponents/coachesStyle/coaches";
 import AddCoache from '../../../components/styledComponents/modal/AddCoache';
 import { axiosInterceptor } from '../../../axios/axiosInterceptor';
@@ -28,32 +28,68 @@ const ViewId = () => {
         const [hours, minutes] = timePart.slice(0, -1).split(":");
         const adjustedHours = String(Number(hours)).padStart(2, "0");
         return `${year} ${Number(month)} ${Number(day)} ${adjustedHours}:${minutes}`;
-      }
+    }
     const CoachName = useSelector((state) => state.user.coachName);
-    console.log("CoachName", CoachName)
+    const gymId = useSelector((state) => state.user.gymId);
+
+    console.log("gymId", gymId)
+
     const getGymScedule = async (id) => {
         try {
             setLoading(true)
             console.log("api calling for schedule")
             const res = await axiosInterceptor().get(
-                `/api/gym/schedule?gym=${20}`,
+                // `/api/gym/schedule?gym=${gymId}`,
+                `/api/gym/schedule?coachId=${router.query.ViewId}`,
             );
-            console.log("responsse of gym schedule", res.data)
-            res.data.map((item, index) => (
-                item['event_id'] = item.id,
-                item['title'] = "Open Hours",
-                item['start'] = new Date(formatTimestamp(new Date(item.from).toISOString())),
-                item['end'] = new Date(formatTimestamp(new Date(item.to).toISOString())),
-                item['editable'] = true,
-                item['deletable'] = false,
-                item['color'] = "#50b500"
-            ))
-            console.log("ghjgjjhgj", schRef)
-            setEvents(res.data);
+            console.log("responsse of schedule ID", res)
+            if (res?.status === 200) {
+                const eventData = res.data.map(item => ({
+                    day: item.day,
+                    start: item.from,
+                    end: item.to,
+                    title: item.status,
+                }));
+                const daysOfWeek = [
+                    'Sunday',
+                    'Monday',
+                    'Tuesday',
+                    'Wednesday',
+                    'Thursday',
+                    'Friday',
+                    'Saturday',
+                ];
+                const currentYear = new Date().getFullYear();
+                const filteredEvents = [];
+                daysOfWeek.forEach(day => {
+                    const eventsForDay = eventData.filter(event => event.day === day);
+                    const currentDate = new Date(`${currentYear}-01-01`);
+                    while (currentDate.getFullYear() === currentYear) {
+                        if (currentDate.getDay() === daysOfWeek.indexOf(day)) {
+                            const formattedDate = currentDate.toISOString().split('T')[0];
+                            console.log("formattedDate", formattedDate)
+                            filteredEvents.push(
+                                ...eventsForDay.map(event => ({
+                                    ...event,
+                                    start: new Date(`${formattedDate} ${event.start}`),
+                                    end: new Date(`${formattedDate} ${event.end}`),
+                                    // color: "#50b500",
+                                    editable: false,
+                                    deletable: false,
+                                    title: "Open Hours",
+                                })),
+                            );
+                        }
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                });
+                console.log('Filtered Events======', filteredEvents);
+                setEvents(filteredEvents);
+            }
+            //   setEvents(res.data);
             setLoading(false)
         } catch (error) {
             setLoading(false)
-            // swal('Oops!', error.data.message, 'error')
             console.log(error)
         }
     }
@@ -69,8 +105,8 @@ const ViewId = () => {
         );
         console.log("firstDay", firstDay.toISOString().slice(0, 10))
         const Payload = {
-            from: "2023-08-01",
-            to: "2023-08-02"
+            from: firstDay.toISOString().slice(0, 10),
+            to: lastDay.toISOString().slice(0, 10),
         }
         try {
             setLoading(true)
@@ -82,14 +118,17 @@ const ViewId = () => {
             console.log("responsse of schedule ID", res)
             res.data.map((item, index) => (
                 item['event_id'] = item.id,
-                item['title'] = "Events",
+                item['title'] = item.type,
                 item['start'] = new Date(formatTimestamp(new Date(item.from).toISOString())),
-        item['end'] = new Date(formatTimestamp(new Date(item.to).toISOString())),
+                item['end'] = new Date(formatTimestamp(new Date(item.to).toISOString())),
                 item['editable'] = false,
                 item['deletable'] = false,
                 item['color'] = "#50b500"
             ))
-            setEvents(res.data);
+            // setEvents(res.data);
+            console.log("res.data coach", res.data[0])
+            setEvents(prevState => [...prevState, ...res.data])
+            
             // setEvents(prevState => [...prevState, res.data])
             setLoading(false)
         } catch (error) {
@@ -119,7 +158,7 @@ const ViewId = () => {
         console.log("evnets", event)
         if (action === "edit") {
         } else if (action === "create") {
-            console.log("Id query",Id)
+            console.log("Id query", Id)
             const Payload = {
                 from: moment(event.start).format('YYYY-MM-DD HH:mm:ss'),
                 to: moment(event.end).format('YYYY-MM-DD HH:mm:ss'),
@@ -178,11 +217,12 @@ const ViewId = () => {
     }
     useEffect(() => {
         if (Id) {
+            getGymScedule();
             getCoachScedule();
             getCoachBookings();
         }
     }, [showModal2, Id])
-    console.log("events", events);
+    console.log("all events", events);
     const closeModal2 = () => {
         setShowModal2(false);
     };
@@ -192,46 +232,22 @@ const ViewId = () => {
     ];
     useEffect(() => {
         schRef.current?.scheduler.handleState(events, "events")
+        console.log("events in useeffect",events)
     }, [events])
     return (
-        <div style={{marginTop: "5%" }}>
-            
+        <div style={{ marginTop: "5%" }}>
+
             <React.Fragment >
-                <Button style={{ width: "auto",marginLeft:"83%",marginTop:"2%"}} onClick={handleButtonClick2}>+</Button>
+                <Button style={{ width: "auto", marginLeft: "83%", marginTop: "2%" }} onClick={handleButtonClick2}>+</Button>
                 {showModal2 && <AddCoache closeModal={closeModal2} id={Id} />}
                 {showModal2 ?
-                    <Style.MainDiv style={{   filter: showModal2? 'blur(5px)' : 'none', pointerEvents:  showModal2? 'none' : 'auto' }}> 
-                     <div style={{ fontSize: "24px", color: "white",marginBottum:"20%",padding:"1%" }}>Schedule</div>
+                    <Style.MainDiv style={{ filter: showModal2 ? 'blur(5px)' : 'none', pointerEvents: showModal2 ? 'none' : 'auto' }}>
+                        <div style={{ fontSize: "24px", color: "white", marginBottum: "20%", padding: "1%" }}>Schedule</div>
                         <Style.Schedular>
                             {/* <div style={{ fontSize: "24px", color: "white",marginBottum:"20%",padding:"1%" }}>Schedule</div> */}
                             {events.length > 0 ?
-                               <Scheduler
-                               view='week'
-                               fields={[
-                                   {
-                                       name: "TimeStatus",
-                                       type: "select",
-                                       default: "PUBLIC",
-                                       options: [
-                                           { id: 1, text: "Public", value: "PUBLIC" },
-                                           { id: 2, text: "Private", value: "PRIVATE" }
-                                       ],
-                                       config: { label: "Time Status", required: true, errMsg: "Plz Select Status" }
-                                   },
-                               ]}
-                               ref={schRef}
-                               onSelectedDateChange={false}
-                               events={events}
-                               onConfirm={handleConfirm}
-                               week={{
-                                   weekDays: [0, 1, 2, 3, 4, 5, 6],
-                                   weekStartOn: 0,
-                                   startHour: 0,
-                                   endHour: 24
-                               }}/>
-                                :
                                 <Scheduler
-                                view='week'
+                                    view='week'
                                     fields={[
                                         {
                                             name: "TimeStatus",
@@ -243,7 +259,32 @@ const ViewId = () => {
                                             ],
                                             config: { label: "Time Status", required: true, errMsg: "Plz Select Status" }
                                         },
-                                    ]} 
+                                    ]}
+                                    ref={schRef}
+                                    onSelectedDateChange={false}
+                                    events={events}
+                                    onConfirm={handleConfirm}
+                                    week={{
+                                        weekDays: [0, 1, 2, 3, 4, 5, 6],
+                                        weekStartOn: 0,
+                                        startHour: 0,
+                                        endHour: 24
+                                    }} />
+                                :
+                                <Scheduler
+                                    view='week'
+                                    fields={[
+                                        {
+                                            name: "TimeStatus",
+                                            type: "select",
+                                            default: "PUBLIC",
+                                            options: [
+                                                { id: 1, text: "Public", value: "PUBLIC" },
+                                                { id: 2, text: "Private", value: "PRIVATE" }
+                                            ],
+                                            config: { label: "Time Status", required: true, errMsg: "Plz Select Status" }
+                                        },
+                                    ]}
                                     ref={schRef}
                                     onSelectedDateChange={false}
                                     events={events}
@@ -255,55 +296,30 @@ const ViewId = () => {
                                         endHour: 24
                                         // step: 30
                                     }}
-                            />                            }
+                                />}
                         </Style.Schedular>
                     </Style.MainDiv>
                     :
-                    <Style.MainDiv2 style={{ filter: showModal2? 'blur(5px)' : 'none', pointerEvents:  showModal2? 'none' : 'auto',marginTop:"0%"  }} >
-                        <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem",textAlign:"center"  }}>Schedule </div>
+                    <Style.MainDiv2 style={{ filter: showModal2 ? 'blur(5px)' : 'none', pointerEvents: showModal2 ? 'none' : 'auto', marginTop: "0%" }} >
+                        <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem", textAlign: "center" }}>Schedule </div>
                         <Style.Schedular >
                             {/* <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem",textAlign:"center"  }}>Schedule </div> */}
                             {events.length > 0 ?
                                 <Scheduler
-                                view='week'
-                                fields={[
-                                   {
-                                       name: "TimeStatus",
-                                       type: "select",
-                                       default: "PUBLIC",
-                                       options: [
-                                            { id: 1, text: "Public", value: "PUBLIC" },
-                                            { id: 2, text: "Private", value: "PRIVATE" }
-                                       ],
-                                        config: { label: "Time Status", required: true, errMsg: "Plz Select Status" }
-                                    },
-                                ]}
-                                ref={schRef}
-                                onSelectedDateChange={false}
-                                events={events}
-                                onConfirm={handleConfirm}
-                                week={{
-                                    weekDays: [0, 1, 2, 3, 4, 5, 6],
-                                    weekStartOn: 0,
-                                    startHour: 0,
-                                    endHour: 24
-                                }}/>
-                                :
-                                <Scheduler
-                                view='week'
-                                fields={[
-                                    {
-                                        name: "TimeStatus",
-                                        type: "select",
-                                        default: "PUBLIC",
-                                        options: [
-                                            { id: 1, text: "Public", value: "PUBLIC" },
-                                            { id: 2, text: "Private", value: "PRIVATE" }
-                                        ],
-                                        config: { label: "Time Status", required: true, errMsg: "Plz Select Status" }
-                                    },
-                                ]}
-                                ref={schRef}
+                                    view='week'
+                                    fields={[
+                                        {
+                                            name: "TimeStatus",
+                                            type: "select",
+                                            default: "PUBLIC",
+                                            options: [
+                                                { id: 1, text: "Public", value: "PUBLIC" },
+                                                { id: 2, text: "Private", value: "PRIVATE" }
+                                            ],
+                                            config: { label: "Time Status", required: true, errMsg: "Plz Select Status" }
+                                        },
+                                    ]}
+                                    ref={schRef}
                                     onSelectedDateChange={false}
                                     events={events}
                                     onConfirm={handleConfirm}
@@ -312,13 +328,38 @@ const ViewId = () => {
                                         weekStartOn: 0,
                                         startHour: 0,
                                         endHour: 24
-                                    }}/>
+                                    }} />
+                                :
+                                <Scheduler
+                                    view='week'
+                                    fields={[
+                                        {
+                                            name: "TimeStatus",
+                                            type: "select",
+                                            default: "PUBLIC",
+                                            options: [
+                                                { id: 1, text: "Public", value: "PUBLIC" },
+                                                { id: 2, text: "Private", value: "PRIVATE" }
+                                            ],
+                                            config: { label: "Time Status", required: true, errMsg: "Plz Select Status" }
+                                        },
+                                    ]}
+                                    ref={schRef}
+                                    onSelectedDateChange={false}
+                                    events={events}
+                                    onConfirm={handleConfirm}
+                                    week={{
+                                        weekDays: [0, 1, 2, 3, 4, 5, 6],
+                                        weekStartOn: 0,
+                                        startHour: 0,
+                                        endHour: 24
+                                    }} />
                             }
                         </Style.Schedular>
                     </Style.MainDiv2>}
             </React.Fragment>
-            <Style.SubTitle style={{ marginTop: "1rem" ,marginLeft: "5%",filter: showModal2? 'blur(5px)' : 'none', pointerEvents:  showModal2? 'none' : 'auto',marginTop: "10%"}}>Booking Listing</Style.SubTitle>
-            <Style.TableContainer style={{ filter: showModal2? 'blur(5px)' : 'none', pointerEvents:  showModal2? 'none' : 'auto',marginTop: "30%" ,marginTop:"4%"  }}>
+            <Style.SubTitle style={{ marginTop: "1rem", marginLeft: "5%", filter: showModal2 ? 'blur(5px)' : 'none', pointerEvents: showModal2 ? 'none' : 'auto', marginTop: "10%" }}>Booking Listing</Style.SubTitle>
+            <Style.TableContainer style={{ filter: showModal2 ? 'blur(5px)' : 'none', pointerEvents: showModal2 ? 'none' : 'auto', marginTop: "30%", marginTop: "4%" }}>
                 <Style.TableWrapper>
                     <thead>
                         <Style.TableRow>
@@ -336,7 +377,7 @@ const ViewId = () => {
                                 <Style.TableCell>{new Date(data?.from).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} {"-"} {new Date(data?.to).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} </Style.TableCell>
                                 {data.status === "PENDING"
                                     &&
-                                    <Style.TableCell style={{display:"flex",justifyContent:"space-evenly"}} >
+                                    <Style.TableCell style={{ display: "flex", justifyContent: "space-evenly" }} >
                                         <AcceptButton onClick={() => {
                                             handleApprove(data.id);
                                         }}>Accept</AcceptButton>
@@ -347,7 +388,7 @@ const ViewId = () => {
                                 }
                                 {data.status === "ACCEPT"
                                     &&
-                                    <Style.TableCell style={{display:"flex",justifyContent:"space-evenly"}}>
+                                    <Style.TableCell style={{ display: "flex", justifyContent: "space-evenly" }}>
                                         <RejectButton onClick={() => {
                                             handleReject(data.id);
                                         }}>Cancel</RejectButton>
@@ -355,7 +396,7 @@ const ViewId = () => {
                                 }
                                 {data.status === "REJECT"
                                     &&
-                                    <Style.TableCell style={{display:"flex",justifyContent:"space-evenly"}}>
+                                    <Style.TableCell style={{ display: "flex", justifyContent: "space-evenly" }}>
                                         <AcceptButton onClick={() => {
                                             handleApprove(data.id);
                                         }}>Accept</AcceptButton>
