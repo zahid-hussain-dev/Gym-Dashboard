@@ -8,6 +8,8 @@ import { axiosInterceptor } from '../../../axios/axiosInterceptor';
 import Loader from '../../../components/styledComponents/loader/loader';
 import { useSelector } from "react-redux";
 import AddChildForm from '../../../components/styledComponents/modal/Booking';
+import moment from "moment";
+
 const ViewId = () => {
   const router = useRouter();
   const [role, setRole] = useState("");
@@ -16,7 +18,7 @@ const ViewId = () => {
   const schRef = React.createRef()
   const [selectedOptionValue, setSelectedOptionValue] = useState('');
   const [selectedOption, setSelectedOption] = useState('');
-  const [selectedOptionCoach, setSelectedOptionCoach] = useState('');
+  const [selectedOptionCoach, setSelectedOptionCoach] = useState(null);
   const [selectedOptionCoaches, setSelectedOptionCoaches] = useState('');
   const [coaches, setCoaches] = useState([]);
   const [formData, setFormData] = useState({});
@@ -81,13 +83,22 @@ const ViewId = () => {
   const getAvailableTimeSlots = async () => {
     const id = bookingCoach;
     const date = bookingDate;
+    const today = new Date();
+    const firstDay = new Date(
+      today.setDate(today.getDate() - today.getDay()),
+    );
+
+    // ✅ Get the last day of the current week (Saturday)
+    const lastDay = new Date(
+      today.setDate(today.getDate() - today.getDay() + 6),
+    );
     try {
       // setLoading(true)
-      if (bookingCoach && bookingDate) {
+      if (bookingCoach) {
         setLoading(true)
 
         const res = await axiosInterceptor().get(
-          `api/gymnast/coach/info?coachId=${id}&date=${date}`,
+          `api/gymnast/coach/info?coachId=${id}&from=${firstDay.toISOString().slice(0, 10)}&to=${lastDay.toISOString().slice(0, 10)}`,
         );
         console.log("responsse of timeslots", res)
         console.log("here in booking")
@@ -118,14 +129,16 @@ const ViewId = () => {
             );
             if (isSlotAvailable) {
               fetchedSlots.push({
-                from: formatTimeTo12Hour(fromTime),
-                to: formatTimeTo12Hour(toTime),
+                from: fromTime,
+                to: toTime,
               });
             }
             currentSlot = new Date(currentSlot.getTime() + halfHour);
           }
           console.log("fetchedSlots", fetchedSlots)
           setFetchedHours(fetchedSlots);
+          getGymnastScehdule(fetchedSlots);
+
           console.log('ALert', fetchedSlots)
         }
 
@@ -138,14 +151,14 @@ const ViewId = () => {
       // swal('Oops!', error.data.message, 'error')
       console.log(error)
     }
-    getGymnastScehdule();
 
   }
   useEffect(() => {
-    if (bookingCoach && bookingDate) {
+    if (bookingCoach ) {
       getAvailableTimeSlots();
+      console.log("here in time slots")
     }
-  }, [bookingCoach, bookingDate])
+  }, [bookingCoach])
 
   console.log("fetchedHours", fetchedHours)
   const [childData, setChildData] = useState({});
@@ -194,52 +207,66 @@ const ViewId = () => {
   }
   const handleConfirm = async (event, action) => {
     console.log("handleConfirm =", action, event.title);
-    console.log("evnets", event)
+    console.log("evnets in handleconfirm", event)
+    const childId = childList.filter(item => item.name === event["Select Child"]);
+    console.log("childId", childId[0].id)
     if (action === "edit") {
-    } else if (action === "create") {
-      const Payload = {
+
+      let Payload = {
+        gymnastId:router.query.ViewId,
+        childrenId: childId[0].id,
+        coachId: +event.CoachId,
         from: moment(event.start).format('YYYY-MM-DD HH:mm:ss'),
         to: moment(event.end).format('YYYY-MM-DD HH:mm:ss'),
-        type: event.TimeStatus,
       }
-      console.log("payload", Payload)
       try {
         setLoading(true)
         const res = await axiosInterceptor().post(
-          `/api/coach/open/slots`,
+          `/api/bookings`,
           Payload,
         );
-        console.log("responsse of schedule create", res)
-        swal('Success!', res.data.message, 'success')
-        setLoading(false);
+        console.log("responsse of post booking", res)
+        if (res.status == 201) {
+          if (res.data.status === "PENDING") {
+            swal('Success!', "Your Slot has beed booked wait for confirmation ", 'success')
+          }
+        }
+
+        setLoading(false)
         return { ...event, event_id: event.event_id || Math.random() }
       } catch (error) {
         setLoading(false)
-        console.log("error", error)
         swal('Oops!', error.data.message, 'error')
         console.log(error)
-        throw error
       }
+
+
+
+    } else if (action === "create") {
+      return { ...event, event_id: event.event_id || Math.random() }
+
     }
   };
-  const getGymnastScehdule = async () => {
+  const getGymnastScehdule = async (fetchedSlots) => {
     // console.log("booking Date", );
     console.log("fetchedHours in gymnast schedule", fetchedHours)
     let desArr = '';
-    if (fetchedHours) {
-      desArr = bookingDate.split("-")
+    if (fetchedSlots) {
+      // desArr = bookingDate.split("-")
 
-      fetchedHours && fetchedHours.map((item, index) => (
+      fetchedSlots && fetchedSlots.map((item, index) => (
         item['event_id'] = Math.random(),
         item['title'] = "Available Slots",
-        item['start'] = new Date(`${desArr[0]} ${desArr[1]} ${desArr[2]} ${item.from}`),
-        item['end'] = new Date(`${desArr[0]} ${desArr[1]} ${desArr[2]} ${item.to}`),
+        // item['start'] = new Date(`${desArr[0]} ${desArr[1]} ${desArr[2]} ${item.from}`),
+        // item['end'] = new Date(`${desArr[0]} ${desArr[1]} ${desArr[2]} ${item.to}`),
+        item['start'] = item.from,
+        item['end'] = item.to,
         item['editable'] = true,
         item['deletable'] = false,
         item['color'] = "#50b500"
       ))
-      console.log("fetchedHours event", fetchedHours)
-      setEvents(prevState => [...prevState, ...fetchedHours])
+      console.log("fetchedHours event", fetchedSlots)
+      setEvents(prevState => [...prevState, ...fetchedSlots])
     }
   }
 
@@ -312,9 +339,14 @@ const ViewId = () => {
       const res = await axiosInterceptor().get(
         `/api/gymnast/children?gymnast=${router.query.ViewId}`,
       );
-      console.log("responsse of children ID", res)
+
       setLoading(false)
-      setChildList(res?.data?.result)
+      res.data.result.map((item, index) => (
+        item['value'] = item.name,
+        item['text'] = item.name
+      ))
+      console.log("responsse of children ID", res.data.result)
+      setChildList(res.data.result)
     } catch (error) {
       setLoading(false)
       // swal('Oops!', error.data.message, 'error')
@@ -330,10 +362,32 @@ const ViewId = () => {
       setLoading(true)
       console.log("api calling for booking list")
       const res = await axiosInterceptor().get(
-        `api/bookings/all?coach=${router.query.ViewId}`,
+        `api/bookings/all?gymnast=${router.query.ViewId}`,
       );
       console.log("responsse of Booking list", res)
       setBookingList(res?.data?.data)
+
+      res.data.data.map((item, index) => {
+        return item.status === "PENDING" ? (
+          item['event_id'] = item.id,
+          item['title'] = item.status,
+          item['start'] = new Date(formatTimestamp(new Date(item.from).toISOString())),
+          item['end'] = new Date(formatTimestamp(new Date(item.to).toISOString())),
+          item['editable'] = false,
+          item['deletable'] = false,
+          item['color'] = "red"
+        ) : (
+          item['event_id'] = item.id,
+          item['title'] = item.status,
+          item['start'] = new Date(formatTimestamp(new Date(item.from).toISOString())),
+          item['end'] = new Date(formatTimestamp(new Date(item.to).toISOString())),
+          item['editable'] = false,
+          item['deletable'] = false,
+          item['color'] = "#50b500"
+        );
+      })
+      setEvents(prevState => [...prevState, ...res.data.data])
+
       setLoading(false)
     } catch (error) {
       setLoading(false)
@@ -468,7 +522,7 @@ const ViewId = () => {
         <div style={{ fontSize: "24px", color: "white", marginBottum: "20%", padding: "1%" }}>Schedule</div>
         <Style.Schedular>
           {/* <div style={{ fontSize: "24px", color: "white",marginBottum:"20%",padding:"1%" }}>Schedule</div> */}
-          {events.length > 0 ?
+          {events.length > 0 && childList.length > 0 && selectedOptionCoach ?
             <Scheduler
               view='week'
               ref={schRef}
@@ -480,12 +534,18 @@ const ViewId = () => {
                   name: "Select Child",
                   type: "select",
                   // default: "PUBLIC",
-                  options: childList,
+                  options: childList && childList,
                   // options: [
                   //   { id: 1, text: "Public", value: "PUBLIC" },
                   //   { id: 2, text: "Private", value: "PRIVATE" }
                   // ],
                   config: { label: "Children", required: true, errMsg: "Plz Select child" }
+                },
+                {
+                  name: "CoachId",
+                  type: "input",
+                  default: `${selectedOptionCoach && selectedOptionCoach}`,
+                  config: { label: "CoachId", disabled: true }
                 },
               ]}
               week={{
@@ -496,6 +556,7 @@ const ViewId = () => {
                 step: 30,
               }} />
             :
+            childList.length > 0 && selectedOptionCoach &&
             <Scheduler
               view='week'
               ref={schRef}
@@ -507,12 +568,18 @@ const ViewId = () => {
                   name: "Select Child",
                   type: "select",
                   // default: "PUBLIC",
-                  options: childList,
+                  options: childList && childList,
                   // options: [
                   //   { id: 1, text: "Public", value: "PUBLIC" },
                   //   { id: 2, text: "Private", value: "PRIVATE" }
                   // ],
                   config: { label: "Children", required: true, errMsg: "Plz Select child" }
+                },
+                {
+                  name: "CoachId",
+                  type: "input",
+                  default: `${selectedOptionCoach && selectedOptionCoach}`,
+                  config: { label: "CoachId", disabled: true }
                 },
               ]}
               week={{
@@ -523,6 +590,42 @@ const ViewId = () => {
                 step: 30
               }}
             />}
+            {selectedOptionCoach === null &&
+              <>
+              nullcoach schedule
+              <Scheduler
+                view='week'
+                ref={schRef}
+                onSelectedDateChange={false}
+                events={events}
+                onConfirm={handleConfirm}
+                fields={[
+                  {
+                    name: "Select Child",
+                    type: "select",
+                    // default: "PUBLIC",
+                    options: childrens && childrens,
+                    // options: [
+                    //   { id: 1, text: "Public", value: "PUBLIC" },
+                    //   { id: 2, text: "Private", value: "PRIVATE" }
+                    // ],
+                    config: { label: "Children", required: true, errMsg: "Plz Select child" }
+                  },
+                  {
+                    name: "CoachId",
+                    type: "input",
+                    default: `${selectedOptionCoach && selectedOptionCoach}`,
+                    config: { label: "CoachId", disabled: true }
+                  },
+                ]}
+                week={{
+                  weekDays: [0, 1, 2, 3, 4, 5, 6],
+                  weekStartOn: 0,
+                  startHour: 0,
+                  endHour: 24,
+                  step: 30
+                }}
+              /></>}
         </Style.Schedular>
       </Style.MainDiv>
 

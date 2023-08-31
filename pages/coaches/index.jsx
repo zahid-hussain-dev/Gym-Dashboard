@@ -105,15 +105,33 @@ const index = () => {
                 Payload,
             );
             console.log("responsse of schedule", res)
-            res.data.map((item, index) => (
-                item['event_id'] = item.id,
-                item['title'] = "Events",
-                item['start'] = new Date(formatTimestamp(new Date(item.from).toISOString())),
-                item['end'] = new Date(formatTimestamp(new Date(item.to).toISOString())),
-                item['editable'] = false,
-                item['deletable'] = false,
-                item['color'] = "#50b500"
-            ))
+            res.data.map((item, index) => {
+
+                return item.type === "PRIVATE" ? (
+                    item['event_id'] = item.id,
+                    item['title'] = item.type,
+                    item['start'] = new Date(formatTimestamp(new Date(item.from).toISOString())),
+                    item['end'] = new Date(formatTimestamp(new Date(item.to).toISOString())),
+                    item['editable'] = false,
+                    item['deletable'] = false,
+                    item['color'] = "red"
+                ) : (
+                    item['event_id'] = item.id,
+                    item['title'] = item.type,
+                    item['start'] = new Date(formatTimestamp(new Date(item.from).toISOString())),
+                    item['end'] = new Date(formatTimestamp(new Date(item.to).toISOString())),
+                    item['editable'] = false,
+                    item['deletable'] = false,
+                    item['color'] = "#50b500"
+                );
+                // item['event_id'] = item.id,
+                // item['title'] = item.type,
+                // item['start'] = new Date(formatTimestamp(new Date(item.from).toISOString())),
+                // item['end'] = new Date(formatTimestamp(new Date(item.to).toISOString())),
+                // item['editable'] = false,
+                // item['deletable'] = false,
+                // item['color'] = "#50b500"
+            })
             // setEvents(res.data);
             setEvents(prevState => [...prevState, ...res.data])
             setLoading(false)
@@ -251,7 +269,7 @@ const index = () => {
     console.log("evnts all", events)
     useEffect(() => {
         schRef.current?.scheduler.handleState(events, "events")
-        console.log("all events",events)
+        console.log("all events", events)
     }, [events])
     return (
         <div style={{ marginTop: "10%" }}>

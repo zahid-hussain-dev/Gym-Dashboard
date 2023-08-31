@@ -36,7 +36,7 @@ const axiosInterceptor = () => {
         console.log(
             '*********************** HTTP RESPONSE END ***********************',
         );
-        if (response?.data?.status == 200) {
+        if (response?.data?.status == 200 || response?.data?.status == 304) {
             return response;
         } else {
             return response;
@@ -95,7 +95,7 @@ const axiosInterceptor = () => {
                     Authorization: 'Bearer ' + token,
                 };
         }
-        console.log('TOKENNNNN ISSSSS================',token);
+        console.log('TOKENNNNN ISSSSS================', token);
         return config;
     });
     instance.interceptors.response.use(
