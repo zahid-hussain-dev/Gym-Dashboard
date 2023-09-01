@@ -132,6 +132,8 @@ const UpdateCities = ({ onClose, id, cityName,stateName }) => {
                   </div>
               </Styled.MainForm>
       </form>
+      <Loader isLoading={loading}></Loader>
+
     </Styled.PopupContainer>
   );
 };

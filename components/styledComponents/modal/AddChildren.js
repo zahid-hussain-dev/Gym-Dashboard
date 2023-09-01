@@ -58,7 +58,7 @@ const AddChildrensModal = ({ onClose, Id}) => {
     event.preventDefault();
     onClose();
     getChildList()
-    // debugger;
+
     console.log("ChildData")
     // let Payload = {};
     // if (Id) {
@@ -135,6 +135,8 @@ const AddChildrensModal = ({ onClose, Id}) => {
                   </div>
               </Styled.MainForm>
       </form>
+      <Loader isLoading={loading}></Loader>
+
     </Styled.PopupContainer>
   );
 };

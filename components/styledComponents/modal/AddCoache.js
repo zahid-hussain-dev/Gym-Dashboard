@@ -3,6 +3,7 @@ import * as Styled from '../choaches/coaches';
 import Image from "next/image";
 import close from "../../../public/assests/SVGs/close-svgrepo-com (2).svg";
 import { axiosInterceptor } from '../../../axios/axiosInterceptor';
+import Loader from '../../../components/styledComponents/loader/loader';
 import swal from "sweetalert";
 import moment from "moment";
 
@@ -157,6 +158,8 @@ const AddCoachForm = ({ closeModal, id }) => {
           Submit
         </Styled.SubmitForm>
       </form>
+      <Loader isLoading={loading}></Loader>
+
     </Styled.PopupContainer>
   );
 };
