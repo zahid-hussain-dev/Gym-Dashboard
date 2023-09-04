@@ -69,7 +69,7 @@ const index = () => {
     }, [])
     return (
         <div>
-            <Button style={{ width: "auto", marginBottom: "1rem",marginTop: "10%" }}>Approve Private Booking</Button>
+            <Button style={{ width: "auto", marginBottom: "1rem",marginTop: "10%",marginLeft:"30px" }}>Approve Private Booking</Button>
             <Style.TableContainer  style={{ marginTop: "5%" }}>
                 <Style.TableWrapper>
                     <thead>
@@ -82,7 +82,7 @@ const index = () => {
                     <tbody>
                         {privateBookings && privateBookings.map((data, index) => (
                             <Style.TableRow key={index}>
-                                <Style.TableCell>{data.coach.userName}</Style.TableCell>
+                                <Style.TableCell>{data?.children?.name}</Style.TableCell>
                                 <Style.TableCell>{new Date(data?.from).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', })} {"-"} {new Date(data?.to).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', })} </Style.TableCell>
                                 {data.status === "PENDING"
                                     ?

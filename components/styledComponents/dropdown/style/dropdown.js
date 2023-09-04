@@ -5,13 +5,15 @@ export const DropdownContainer = styled.div`
   display: inline-block;
 `;
 export const DropdownButton = styled.button`
-  background-color: transparent;
+  background-color: black;
   color: black;
   padding: 10px;
   font-size:16px;
   font-weight:400;
   border: none;
   cursor: pointer;
+  border-radius:0.5rem;
+  margin-right:5px;
   &:hover {
     background-color: black;
     border-radius:0.5rem;
@@ -20,6 +22,7 @@ export const DropdownButton = styled.button`
 export const DropdownContent = styled.div`
   position: absolute;
   top: 100%;
+  border-radius:0.5rem;
   right:2%;
   background-color: black;
   color:white;
@@ -37,5 +40,6 @@ export const DropdownItem = styled.a`
   &:hover {
     background-color: #E3DC22;
     color:black;
+    border-radius:0.5rem;
   }
 `;

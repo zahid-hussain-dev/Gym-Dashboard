@@ -160,8 +160,8 @@ const index = () => {
                             filteredEvents.push(
                                 ...eventsForDay.map(event => ({
                                     ...event,
-                                    start: new Date(`${formattedDate} ${event.start}`),
-                                    end: new Date(`${formattedDate} ${event.end}`),
+                                    start: moment.utc(`${formattedDate} ${event.start}`).toDate(),  // new Date(formatTimestamp(`${formattedDate} ${event.start}`)),
+                                    end:  moment.utc(`${formattedDate} ${event.end}`).toDate(),    // new Date(formatTimestamp(`${formattedDate} ${event.end}`)),
                                     // color: "#50b500",
                                     editable: false,
                                     deletable: false,
@@ -257,7 +257,7 @@ const index = () => {
         <div style={{ marginTop: "10%" }}>
             {role && role === "admin" &&
                 <React.Fragment >
-                    <h2 style={{ color: "white" }}> Coach Listing</h2>
+                    <h2 style={{ color: "white",marginLeft:"30px" }}> Coach Listing</h2>
                     <Style.TableContainer style={{ marginTop: "5%" }}>
                         <Style.TableWrapper>
                             <thead>
@@ -309,12 +309,12 @@ const index = () => {
                 </React.Fragment>
             }
             {role && role !== "admin" &&
-            <div  style={{ marginTop: "5%" }}>
+            <div>
                 <React.Fragment>
-                    <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "84%", marginTop: "10px" }} onClick={handleButtonClick2}>+</Button>
+                    <Button style={{ width: "auto", marginLeft: "84%", }} onClick={handleButtonClick2}>+</Button>
+                    <div style={{ fontSize: "24px", color: "white", textAlign: "center", filter: showModal2 ? 'blur(5px)' : 'none',padding:"15px" }}>Schedule </div>
                     <Style.MainDiv>
                         <Style.Schedular style={{ filter: showModal2 ? 'blur(5px)' : 'none' }}>
-                            <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem", textAlign: "center", filter: showModal2 ? 'blur(5px)' : 'none' }}>Schedule </div>
                             {events.length > 0 && isMapped ?
                                 <Scheduler
                                     view='week'
@@ -368,7 +368,7 @@ const index = () => {
                                     }}
                                 />}
                         </Style.Schedular>
-                        {showModal2 && <AddCoache style={{ position: "absolute", top: "40%", left: "52%", zIndex: "1" }} closeModal={() => closeModal2()} />}
+                        {/* {showModal2 && <AddCoache style={{ position: "absolute", top: "40%", left: "52%", zIndex: "1" }} closeModal={() => closeModal2()} />} */}
                     </Style.MainDiv>
                 </React.Fragment>
                 </div>

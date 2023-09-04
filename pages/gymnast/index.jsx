@@ -196,7 +196,7 @@ const index = () => {
   return (
     <div closeModal={closeModal4} style={{marginTop: "10%" }}>
       {role!=="admin" &&
-      <div>
+      <div style={{marginLeft: "1%" }}>
 <Button  style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} >Add Bookings</Button>
    <Button  style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} onClick={handleAddChildClick}>+</Button>
       </div>
@@ -204,7 +204,7 @@ const index = () => {
      {showModal4 &&   <AddChildForm  Closed={handleCloseModal4} onSubmit={handleSubmitChild} />}
      {role && role === "admin" &&
 <div style={{display:"flex", justifyContent:"space-between" }}> 
-<h2  style={{ color:"white"}}>Gymnast Listing</h2> 
+<h2  style={{ color:"white",marginLeft:"30px"}}>Gymnast Listing</h2> 
 </div>
 }
 {role && role === "admin"
@@ -248,8 +248,8 @@ const index = () => {
             <tbody>
               {gymnastBookingList && gymnastBookingList.map((data, index) => (
                 <Style.TableRow key={index}>
-                  <Style.TableCell>{data?.['children.name']}</Style.TableCell>
-                  <Style.TableCell>{data?.['coach.firstName'] + data?.['coach.lastName']}</Style.TableCell>
+                  <Style.TableCell>{data?.children.name}</Style.TableCell>
+                  <Style.TableCell>{data?.coach.firstName + " " + data?.coach.lastName}</Style.TableCell>
                   <Style.TableCell>{new Date(data?.from).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} {"-"} {new Date(data?.to).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })}</Style.TableCell>
                   <Style.TableCell>{data.status}</Style.TableCell>
                 </Style.TableRow>
