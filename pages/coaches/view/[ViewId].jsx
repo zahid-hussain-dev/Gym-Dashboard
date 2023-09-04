@@ -48,6 +48,8 @@ const ViewId = () => {
                     day: item.day,
                     start: item.from,
                     end: item.to,
+                //     start: moment.utc(`${formattedDate} ${event.start}`).toDate(),  // new Date(formatTimestamp(`${formattedDate} ${event.start}`)),
+                //   end:  moment.utc(`${formattedDate} ${event.end}`).toDate(),    // new Date(formatTimestamp(`${formattedDate} ${event.end}`)),
                     title: item.status,
                 }));
                 const daysOfWeek = [
@@ -71,8 +73,10 @@ const ViewId = () => {
                             filteredEvents.push(
                                 ...eventsForDay.map(event => ({
                                     ...event,
-                                    start: new Date(`${formattedDate} ${event.start}`),
-                                    end: new Date(`${formattedDate} ${event.end}`),
+                                    // start: new Date(`${formattedDate} ${event.start}`),
+                                    // end: new Date(`${formattedDate} ${event.end}`),
+                                    start: moment.utc(`${formattedDate} ${event.start}`).toDate(),  // new Date(formatTimestamp(`${formattedDate} ${event.start}`)),
+                                    end:  moment.utc(`${formattedDate} ${event.end}`).toDate(),    // new Date(formatTimestamp(`${formattedDate} ${event.end}`)),
                                     // color: "#50b500",
                                     editable: false,
                                     deletable: false,
