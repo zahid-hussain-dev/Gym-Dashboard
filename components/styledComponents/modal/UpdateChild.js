@@ -5,29 +5,16 @@ import close from "../../../public/assests/SVGs/close-svgrepo-com (2).svg";
 import { axiosInterceptor } from '../../../axios/axiosInterceptor';
 import Loader from '../../../components/styledComponents/loader/loader';
 import swal from "sweetalert";
+import { useRouter } from 'next/router';
 // childUpdate
-const AddChildrensModal = ({ onClose, id, childUpdate }) => {
-  console.log("new child cild", id)
+const AddChildrensModal = ({ onClose, childUpdate }) => {
+  // console.log("new child cild", id)
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-  const [childrens, setChildrens] = useState([]);
   const [childData, setChildData] = useState({});
   const [selectedOption, setSelectedOption] = useState('');
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    detail: '',
-    date: '',
-    status: '',
-  });
-
-  // const handleChange = (event) => {
-  //   const { name, value } = event.target;
-  //   setFormData((prevFormData) => ({
-  //     ...prevFormData,
-  //     [name]: value,
-  //   }));
-  // };
-
+  const router = useRouter();
+  const id =  router.query.ViewId;
   const handleSelectChild = (event) => {
     setSelectedOption(event.target.value);
     const { name, value } = event.target;
@@ -39,27 +26,71 @@ const AddChildrensModal = ({ onClose, id, childUpdate }) => {
     }));
   };
 
+  // const handleSubmitChild = async (event) => {
+  //   event.preventDefault();
+  //   console.log("routerrrrrr ", id)
+  //   // const Payload = {
+  //   //  id:id
+  //   // }
+  //   try {
+  //     setLoading(true)
+  //     onClose()
+  //     if(id){
+  //       const res = await axiosInterceptor().put(
+  //         `/api/gymnast/children`,
+  //         childData);
+  //     }else{
+  //       const res = await axiosInterceptor().put(
+  //         `/api/gymnast/children`,
+  //         childData,);
+  //     }
+  //     console.log("responsse of login", res)
+
+  //     swal('Success!', res.data.message, 'success')
+  //     AddChildrensModal();
+  //     onClose();
+  //     setLoading(false)
+  //   } catch (error) {
+  //     setLoading(false)
+  //     // swal('Oops!', error.data.message, 'error')
+  //     console.log(error)
+  //   }
+  //   onClose();
+  // };
   const handleSubmitChild = async (event) => {
     event.preventDefault();
-    console.log("ChildData==========", childData)
+    console.log("routerrrrrr ", id);
+    
     try {
-      setLoading(true)
+      setLoading(true);
+      onClose();
+      
+      const payload = {
+        GymnastId: +id,
+        name:childData.name,
+        id:childData.id,
+        // childData: childData
+      };
+  
       const res = await axiosInterceptor().put(
         `/api/gymnast/children`,
-        childData,
+        payload
       );
-      console.log("responsse of login", res)
-      swal('Success!', res.data.message, 'success')
+  
+      console.log("responsse of login", res);
+  
+      swal('Success!', res.data.message, 'success');
       AddChildrensModal();
-      setLoading(false)
+      onClose();
+      setLoading(false);
     } catch (error) {
-      setLoading(false)
-      // swal('Oops!', error.data.message, 'error')
-      console.log(error)
+      setLoading(false);
+      swal('Oops!', error.data.message, 'error')
+      console.log(error);
     }
     onClose();
-
   };
+  
   const updateButtonState = (emailValue) => {
     setIsButtonDisabled(emailValue === '');
   };

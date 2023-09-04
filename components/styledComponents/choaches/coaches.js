@@ -30,7 +30,7 @@ export const PopupContainer = styled.div`
 `;
 export const MainForm = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   margin-top: 15px;
   padding-right: 4%;
@@ -87,7 +87,7 @@ export const SubmitForm = styled.button`
 `;
 export const Select = styled.select`
 margin: 10px;
-padding: 6px;
+padding: 10px;
 border-radius: 2px;
 border: none;
 width:100%;

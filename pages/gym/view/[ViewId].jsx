@@ -158,8 +158,8 @@ const ViewId = () => {
               filteredEvents.push(
                 ...eventsForDay.map(event => ({
                   ...event,
-                  start: new Date(`${formattedDate} ${event.start}`),
-                  end: new Date(`${formattedDate} ${event.end}`),
+                  start: moment.utc(`${formattedDate} ${event.start}`).toDate(),  // new Date(formatTimestamp(`${formattedDate} ${event.start}`)),
+                  end:  moment.utc(`${formattedDate} ${event.end}`).toDate(),    // new Date(formatTimestamp(`${formattedDate} ${event.end}`)),
                   color: "#50b500",
                   editable: true,
                   deletable: false,

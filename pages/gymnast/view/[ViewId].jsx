@@ -2,12 +2,16 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router';
 import { Scheduler } from "@aldabil/react-scheduler";
 import Select from 'react-select';
-import { Button, RejectButton, AcceptButton } from '../../../components/styledComponents/button/Button';
+import { Button, RejectButton, AcceptButton, UpdateButton } from '../../../components/styledComponents/button/Button';
 import * as Style from '../../../components/styledComponents/gymnast/Gymnast';
 import { axiosInterceptor } from '../../../axios/axiosInterceptor';
 import Loader from '../../../components/styledComponents/loader/loader';
 import { useSelector } from "react-redux";
 import AddChildForm from '../../../components/styledComponents/modal/Booking';
+import AddChildren from "../../../components/styledComponents/modal/AddChildren"
+import UpdateChild from "../../../components/styledComponents/modal/UpdateChild"
+import swal from "sweetalert";
+import moment from "moment";
 const ViewId = () => {
   const router = useRouter();
   const [role, setRole] = useState("");
@@ -73,7 +77,7 @@ const ViewId = () => {
       setLoading(false)
     } catch (error) {
       setLoading(false)
-      // swal('Oops!', error.data.message, 'error')
+      swal('Oops!', error.data.message, 'error')
       console.log(error)
     }
   }
@@ -135,7 +139,7 @@ const ViewId = () => {
       // setLoading(false)
     } catch (error) {
       setLoading(false)
-      // swal('Oops!', error.data.message, 'error')
+      swal('Oops!', error.data.message, 'error')
       console.log(error)
     }
     getGymnastScehdule();
@@ -150,12 +154,15 @@ const ViewId = () => {
   console.log("fetchedHours", fetchedHours)
   const [childData, setChildData] = useState({});
   const [childrens, setChildrens] = useState([]);
-  const Id = router.query.ViewId;
   const [loading, setLoading] = useState(false);
   const [childList, setChildList] = useState([]);
   const [bookingList, setBookingList] = useState([]);
   const [gymnastchildList, setGymnastChildList] = useState([]);
   const [gymnastbookingList, setGymnastBookingList] = useState([]);
+  const [showModalUpdate, setshowModalUpdate] = useState(false);
+  const [clickedId, setClickedId]= useState();
+  const Id = router.query.ViewId;
+  const [clickUpdateChild, setClickUpdateChild]= useState();
   useEffect(() => {
     const userRole = JSON.parse(localStorage.getItem("Userrole"))
     setRole(userRole);
@@ -280,8 +287,9 @@ const ViewId = () => {
               filteredEvents.push(
                 ...eventsForDay.map(event => ({
                   ...event,
-                  start: new Date(`${formattedDate} ${event.start}`),
-                  end: new Date(`${formattedDate} ${event.end}`),
+                  start: moment.utc(`${formattedDate} ${event.start}`).toDate(),  // new Date(formatTimestamp(`${formattedDate} ${event.start}`)),
+                  end:  moment.utc(`${formattedDate} ${event.end}`).toDate(),    // new Date(formatTimestamp(`${formattedDate} ${event.end}`)),
+                  // color: "#50b500",
                   // color: "#50b500",
                   editable: false,
                   deletable: false,
@@ -317,7 +325,7 @@ const ViewId = () => {
       setChildList(res?.data?.result)
     } catch (error) {
       setLoading(false)
-      // swal('Oops!', error.data.message, 'error')
+      swal('Oops!', error.data.message, 'error')
       console.log(error)
     }
   }
@@ -325,7 +333,7 @@ const ViewId = () => {
     setShowModal4(true);
     console.log("modal click")
   };
-  const getBookingList = async (id) => {
+  const getBookingList = async () => {
     try {
       setLoading(true)
       console.log("api calling for booking list")
@@ -337,7 +345,7 @@ const ViewId = () => {
       setLoading(false)
     } catch (error) {
       setLoading(false)
-      // swal('Oops!', error.data.message, 'error')
+      swal('Oops!', error.data.message, 'error')
       console.log(error)
     }
   }
@@ -368,7 +376,7 @@ const ViewId = () => {
       setLoading(false)
     } catch (error) {
       setLoading(false)
-      // swal('Oops!', error.data.message, 'error')
+      swal('Oops!', error.data.message, 'error')
       console.log(error)
     }
   }
@@ -383,18 +391,23 @@ const ViewId = () => {
       setLoading(false)
     } catch (error) {
       setLoading(false)
-      // swal('Oops!', error.data.message, 'error')
+      swal('Oops!', error.data.message, 'error')
       console.log(error)
     }
   }
   const handleSubmitChild = async (event) => {
     event.preventDefault();
     console.log("ChildData", childData)
+    const payload={
+      gymnastId:router.query.ViewId,
+      name:childData
+    }
     try {
       setLoading(true)
       const res = await axiosInterceptor().post(
-        `/api/gymnast/children`,
-        childData,
+        `/api/gymnast/children?gymnast=${router.query.ViewId}`,
+        payload,
+
       );
       console.log("responsse of login", res)
       swal('Success!', res.data.message, 'success')
@@ -427,8 +440,33 @@ const ViewId = () => {
     schRef.current?.scheduler.handleState(events, "events")
     console.log("events in useeffect", events)
   }, [events])
+  const deleteChild = async (id) => {
+    try {
+      setLoading(true)
+      console.log("api calling for child list")
+      const res = await axiosInterceptor().delete(
+        `/api/gymnast/children?id=${id}`,
+      );
+      console.log("responsse of children ID", res)
+      setLoading(false)
+      getChildList();
+    } catch (error) {
+      setLoading(false)
+      swal('Oops!', error.data.message, 'error')
+      console.log(error)
+    }
+  }
+  const handleUpdateChildClick = () => {
+    setshowModalUpdate(true);
+  };
+  const handleCloseModalUpdate = () => {
+    setshowModalUpdate(false);
+    setLoading(true);
+    getChildList();
+  };
   return (
     <div style={{ marginTop: "10%" }}>
+            {showModalUpdate && <UpdateChild onClose={handleCloseModalUpdate} id={clickedId} childUpdate={clickUpdateChild} />}
       <Style.FirstMain>
         <Style.SecondMain style={{ flexDirection: "row" }}>
           <Style.SecondInput style={{ width: "10rem" }}>
@@ -443,7 +481,7 @@ const ViewId = () => {
               isSearchable
             />
           </Style.SecondInput>
-          <div style={{ width: "10rem" }}>
+          {/* <div style={{ width: "10rem" }}>
             <Style.Label className="label">Select Date:</Style.Label>
             <Style.InputDataa
               type="date"
@@ -456,7 +494,7 @@ const ViewId = () => {
               }}
               value={formData.date}
             />
-          </div>
+          </div> */}
         </Style.SecondMain>
 
       </Style.FirstMain>
@@ -544,7 +582,12 @@ const ViewId = () => {
                   {/* <Style.TableCell>{data?.id}</Style.TableCell> */}
                   <Style.TableCell>{data?.name}</Style.TableCell>
                   <Style.TableCell>
-                    <RejectButton onClick={() => { console.log(data.id) }}>Delete</RejectButton>
+                    <RejectButton onClick={() => { console.log(data.id); deleteChild(data.id) }}>Delete</RejectButton>
+                    <UpdateButton onClick={()=>{
+                      handleUpdateChildClick(); 
+                      setClickUpdateChild(data?.name)
+                      setClickedId(data?.id)
+                    }}>Update</UpdateButton>
                   </Style.TableCell>
                 </Style.TableRow>
               ))}
@@ -585,7 +628,7 @@ const ViewId = () => {
             {role && role === "admin" &&
               bookingList && bookingList.map((data, index) => (
                 <Style.TableRow key={index}>
-                  {/* <Style.TableCell>{data?.id}</Style.TableCell> */}
+                  <Style.TableCell>{data?.id}</Style.TableCell>
                   <Style.TableCell>{data?.childrenId}</Style.TableCell>
                   <Style.TableCell>{data?.coachId}</Style.TableCell>
                   <Style.TableCell>{new Date(data?.from).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} {"-"} {new Date(data?.to).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })}</Style.TableCell>

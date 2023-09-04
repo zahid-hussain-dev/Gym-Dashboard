@@ -309,7 +309,8 @@ const index = () => {
                 </React.Fragment>
             }
             {role && role !== "admin" &&
-                <React.Fragment style={{ marginTop: "5%" }}>
+            <div  style={{ marginTop: "5%" }}>
+                <React.Fragment>
                     <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "84%", marginTop: "10px" }} onClick={handleButtonClick2}>+</Button>
                     <Style.MainDiv>
                         <Style.Schedular style={{ filter: showModal2 ? 'blur(5px)' : 'none' }}>
@@ -370,6 +371,7 @@ const index = () => {
                         {showModal2 && <AddCoache style={{ position: "absolute", top: "40%", left: "52%", zIndex: "1" }} closeModal={() => closeModal2()} />}
                     </Style.MainDiv>
                 </React.Fragment>
+                </div>
             }
             <Loader isLoading={loading}></Loader>
         </div>

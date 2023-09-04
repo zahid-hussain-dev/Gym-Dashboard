@@ -166,7 +166,6 @@ const getCity = async () => {
                       placeholder="Select State"
                       isSearchable
                     />
-
             </div>
             <div style={{margin:"20px",width:"30%"}}>
             <div  style={{marginBottom: "5%"}}>
@@ -175,13 +174,12 @@ const getCity = async () => {
             <Select
                       name='cityId'
                       value={formData.City}
-                    onChange={handleSelectChangeCity}
+                      onChange={handleSelectChangeCity}
                       options={city.map(option => ({ value: option.id, label: option.name }))}
                       placeholder="Select City"
                       isSearchable
                     />
             </div>
-
         </Styled.MainGymForm>
         <Styled.SubmitForm type="submit">
           Submit
