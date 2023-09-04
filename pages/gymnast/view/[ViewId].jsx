@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router';
 import { Scheduler } from "@aldabil/react-scheduler";
 import Select from 'react-select';
-import { Button, RejectButton, AcceptButton, UpdateButton } from '../../../components/styledComponents/button/Button';
+import {RejectButton, AcceptButton, UpdateButton } from '../../../components/styledComponents/button/Button';
 import * as Style from '../../../components/styledComponents/gymnast/Gymnast';
 import { axiosInterceptor } from '../../../axios/axiosInterceptor';
 import Loader from '../../../components/styledComponents/loader/loader';
@@ -313,7 +313,7 @@ const ViewId = () => {
 
   const GymnastName = useSelector((state) => state.user.gymnastName);
   console.log("GymnastName", GymnastName)
-  const getChildList = async (id) => {
+  const getChildList = async () => {
     try {
       setLoading(true)
       console.log("api calling for child list")
@@ -445,7 +445,7 @@ const ViewId = () => {
       setLoading(true)
       console.log("api calling for child list")
       const res = await axiosInterceptor().delete(
-        `/api/gymnast/children?id=${id}`,
+        `/api/gymnast/children?id=${id}&gymnastId=${142}`,
       );
       console.log("responsse of children ID", res)
       setLoading(false)
@@ -468,6 +468,7 @@ const ViewId = () => {
     <div style={{ marginTop: "10%" }}>
             {showModalUpdate && <UpdateChild onClose={handleCloseModalUpdate} id={clickedId} childUpdate={clickUpdateChild} />}
       <Style.FirstMain>
+      <div style={{ fontSize: "24px", color: "white", marginBottum: "20%", padding: "1%" }}>Schedule</div>
         <Style.SecondMain style={{ flexDirection: "row" }}>
           <Style.SecondInput style={{ width: "10rem" }}>
             <Style.Labeled className="label" >Select Coach:</Style.Labeled>
@@ -496,14 +497,8 @@ const ViewId = () => {
             />
           </div> */}
         </Style.SecondMain>
-
       </Style.FirstMain>
-
-
-
       <Style.MainDiv >
-
-        <div style={{ fontSize: "24px", color: "white", marginBottum: "20%", padding: "1%" }}>Schedule</div>
         <Style.Schedular>
           {/* <div style={{ fontSize: "24px", color: "white",marginBottum:"20%",padding:"1%" }}>Schedule</div> */}
           {events.length > 0 ?
@@ -611,7 +606,7 @@ const ViewId = () => {
       </Style.TableContainer>
       <span style={{ display: "flex", alignItems: "center", marginTop: "5%" }} >
         <Style.SubTitle style={{ marginTop: "1rem" }}>Booking Listing</Style.SubTitle>
-        <Button style={{ width: "auto", marginTop: "1rem", marginLeft: "1rem" }} onClick={handleAddChildClick}>+</Button>
+        {/* <Button style={{ width: "auto", marginTop: "1rem", marginLeft: "1rem" }} onClick={handleAddChildClick}>+</Button> */}
       </span>
       <Style.TableContainer style={{ marginTop: "5%", filter: showModal4 ? 'blur(5px)' : 'none', pointerEvents: showModal4 ? 'none' : 'auto' }} >
         <Style.TableWrapper>

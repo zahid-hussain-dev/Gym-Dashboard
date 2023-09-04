@@ -7,14 +7,14 @@ import Loader from '../../../components/styledComponents/loader/loader';
 import swal from "sweetalert";
 import { useRouter } from 'next/router';
 // childUpdate
-const AddChildrensModal = ({ onClose, childUpdate }) => {
-  // console.log("new child cild", id)
+const AddChildrensModal = ({ onClose, childUpdate, id }) => {
+  console.log("new child cild", id , childUpdate)
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [childData, setChildData] = useState({});
   const [selectedOption, setSelectedOption] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const id =  router.query.ViewId;
+  // const id =  router.query.ViewId;
   const handleSelectChild = (event) => {
     setSelectedOption(event.target.value);
     const { name, value } = event.target;
@@ -66,14 +66,14 @@ const AddChildrensModal = ({ onClose, childUpdate }) => {
       onClose();
       
       const payload = {
-        GymnastId: +id,
+        // GymnastId: +router.query.ViewId,
         name:childData.name,
-        id:childData.id,
+        id:+childData.id,
         // childData: childData
       };
   
       const res = await axiosInterceptor().put(
-        `/api/gymnast/children`,
+        `/api/gymnast/children?GymnastId=${router.query.ViewId}`,
         payload
       );
   
