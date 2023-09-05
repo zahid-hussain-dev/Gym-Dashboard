@@ -8,6 +8,7 @@ import Loader from '../../../components/styledComponents/loader/loader';
 import { useSelector } from "react-redux";
 import moment from "moment";
 
+
 const ViewId = () => {
   const router = useRouter();
   const Id = router.query.ViewId;
@@ -51,7 +52,47 @@ const ViewId = () => {
     console.log("get gym schedule on close")
     getGymScedule();
   };
+
+
+  function padTo2Digits(num) {
+    return num.toString().padStart(2, '0');
+  }
+  function formatDate(date) {
+    console.log("timestampdate",date)
+    let localtime= date.getTime();
+    console.log(localtime)
+    let localOffset=date.getTimezoneOffset()*60000;
+    console.log(localOffset)
+    let timezoneOffset=date.getTimezoneOffset()
+    console.log("loaclOffset",timezoneOffset)
+    let utc = localtime+ localOffset
+    const timestampInUTC = moment.tz(date, Intl.DateTimeFormat().resolvedOptions().timeZone).utc().toString()
+    console.log("timestampInUTC",timestampInUTC,utc)
+    return (
+      [
+        date.getFullYear(),
+        padTo2Digits(date.getUTCMonth() + 1),
+        padTo2Digits(date.getUTCDate()),
+      ].join('-') +
+      ' ' +
+      [
+        padTo2Digits(date.getUTCHours()),
+        padTo2Digits(date.getUTCMinutes()),
+        padTo2Digits(date.getUTCSeconds()),
+      ].join(':')
+    );
+  }
+  // :point_down:️ "2022-12-17 14:57:28"
+  // console.log(formatDate(new Date()));
+
+
   function formatTimestamp(timestamp) {
+    console.log("timestamp", timestamp)
+    // new Date(new Date(timestamp).getTime() + 18000000) = hours added
+    let local=moment.utc(timestamp).toDate();
+    console.log("local",local)
+    let date = new Date(timestamp).getHours();
+    console.log("date",date)
     const [datePart, timePart] = timestamp.split("T");
     const [year, month, day] = datePart.split("-");
     const [hours, minutes] = timePart.slice(0, -1).split(":");
@@ -158,8 +199,8 @@ const ViewId = () => {
               filteredEvents.push(
                 ...eventsForDay.map(event => ({
                   ...event,
-                  start: new Date(`${formattedDate} ${event.start}`),
-                  end: new Date(`${formattedDate} ${event.end}`),
+                  start: moment.utc(`${formattedDate} ${event.start}`).toDate(),  // new Date(formatTimestamp(`${formattedDate} ${event.start}`)),
+                  end:  moment.utc(`${formattedDate} ${event.end}`).toDate(),    // new Date(formatTimestamp(`${formattedDate} ${event.end}`)),
                   color: "#50b500",
                   editable: true,
                   deletable: false,
