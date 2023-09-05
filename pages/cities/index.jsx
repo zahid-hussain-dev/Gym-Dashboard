@@ -77,7 +77,7 @@ const index = () => {
     return (
         <div style={{ marginTop: "10%" }}>
                 <div style={{marginTop: "10%", display:"flex", justifyContent:"space-between",alignItems:"center" }}>
-                <h2 style={{color:"white",marginRight:"40%"}}> City Listing</h2>
+                <h2 style={{color:"white",marginRight:"40%",marginLeft:"30px"}}> City Listing</h2>
                 <div style={{marginRight:"10%"}}>
                 <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} >Add Cities</Button>
                 <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem"  }} onClick={handleAddChildClick} >+</Button>

@@ -48,6 +48,8 @@ const ViewId = () => {
                     day: item.day,
                     start: item.from,
                     end: item.to,
+                //     start: moment.utc(`${formattedDate} ${event.start}`).toDate(),  // new Date(formatTimestamp(`${formattedDate} ${event.start}`)),
+                //   end:  moment.utc(`${formattedDate} ${event.end}`).toDate(),    // new Date(formatTimestamp(`${formattedDate} ${event.end}`)),
                     title: item.status,
                 }));
                 const daysOfWeek = [
@@ -71,8 +73,10 @@ const ViewId = () => {
                             filteredEvents.push(
                                 ...eventsForDay.map(event => ({
                                     ...event,
-                                    start: new Date(`${formattedDate} ${event.start}`),
-                                    end: new Date(`${formattedDate} ${event.end}`),
+                                    // start: new Date(`${formattedDate} ${event.start}`),
+                                    // end: new Date(`${formattedDate} ${event.end}`),
+                                    start: moment.utc(`${formattedDate} ${event.start}`).toDate(),  // new Date(formatTimestamp(`${formattedDate} ${event.start}`)),
+                                    end:  moment.utc(`${formattedDate} ${event.end}`).toDate(),    // new Date(formatTimestamp(`${formattedDate} ${event.end}`)),
                                     // color: "#50b500",
                                     editable: false,
                                     deletable: false,
@@ -164,6 +168,7 @@ const ViewId = () => {
                 to: moment(event.end).format('YYYY-MM-DD HH:mm:ss'),
                 type: event.TimeStatus,
                 coach: router.query.ViewId,
+                timeZone:Intl.DateTimeFormat().resolvedOptions().timeZone,
             }
             console.log("payload", Payload)
             try {
@@ -372,8 +377,8 @@ const ViewId = () => {
                     <tbody>
                         {bookings && bookings.map((data, index) => (
                             <Style.TableRow key={index}>
-                                <Style.TableCell>{data.childrenId}</Style.TableCell>
-                                <Style.TableCell>{data.coachId}</Style.TableCell>
+                                <Style.TableCell>{data.children.name}</Style.TableCell>
+                                <Style.TableCell>{data.coach.firstName}</Style.TableCell>
                                 <Style.TableCell>{new Date(data?.from).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} {"-"} {new Date(data?.to).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} </Style.TableCell>
                                 {data.status === "PENDING"
                                     &&

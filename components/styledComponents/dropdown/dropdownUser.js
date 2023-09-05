@@ -10,7 +10,9 @@ const DropdownUser = () => {
     useEffect(() => {
         // Perform localStorage action
         let data = JSON.parse(localStorage.getItem("userData"));
-        const user = data?.user?.userName;
+       
+        const user = data?.userName;
+        console.log("heloooo=======",data)
         setUserName(user)
 
     }, [])
@@ -36,8 +38,8 @@ const DropdownUser = () => {
     return (
         <Style.DropdownContainer>
             <Style.DropdownButton onClick={handleDropdownClick}>
-                <span>{userName} </span>
-                <Image style={{ verticalAlign: "middle", cursor: "pointer" }} src={user} height="25" width="30" alt="asset-planet-logo" />
+                <span style={{color:"white"}}>{userName} </span>
+                <Image style={{ verticalAlign: "middle", cursor: "pointer",color:"black" }} src={user} height="25" width="30" alt="asset-planet-logo" />
             </Style.DropdownButton>
             <Style.DropdownContent open={isOpen}>
                 <Style.DropdownItem onClick={handleLogoutClick}>Logout</Style.DropdownItem>

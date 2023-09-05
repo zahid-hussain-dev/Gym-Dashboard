@@ -8,6 +8,7 @@ export const PopupHeading = styled.h2`
 export const MainDiv = styled.div`
   display: flex;
   justify-content: space-around;
+  width:100%;
   // filter: blur(5px);
 `;
 export const PopupContainer = styled.div`
@@ -175,12 +176,10 @@ row-gap:2rem;
 margin-bottom:15px;
 `;
 export const FirstMain = styled.label`
-
-width:32%;
-
 display:flex;
-flex-direction:column;
-row-gap:2rem;
+width: 87%;
+justify-content: space-between;
+
 `;
 export const Mains = styled.label`
 margin-right:15px;
@@ -266,5 +265,6 @@ font-weight: 500;
 line-height: 1.5;
 letter-spacing: 0.087rem;
 margin-left:5%;
+margin-top: 35px;
 
 `;

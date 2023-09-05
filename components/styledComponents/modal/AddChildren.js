@@ -6,10 +6,11 @@ import { axiosInterceptor } from '../../../axios/axiosInterceptor';
 import Loader from '../../../components/styledComponents/loader/loader';
 import swal from "sweetalert";
 
-const AddChildrensModal = ({ onClose }) => {
+const AddChildrensModal = ({ onClose, Id}) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [childrens, setChildrens] = useState([]);
   const [childData, setChildData] = useState({});
+
   const [selectedOption, setSelectedOption] = useState('');
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -18,6 +19,7 @@ const AddChildrensModal = ({ onClose }) => {
     date: '',
     status: '',
   });
+  console.log("this is id =======", Id)
   const getChildList = async (id) => {
     try {
       setLoading(true)
@@ -55,20 +57,50 @@ const AddChildrensModal = ({ onClose }) => {
   const handleSubmitChild = async (event) => {
     event.preventDefault();
     onClose();
-    console.log("ChildData", childData)
+    getChildList()
+
+    console.log("ChildData")
+    // let Payload = {};
+    // if (Id) {
+    //   Payload = {
+    //     // type: childData.type,
+    //     name:childData.name,
+    //     gymnastId:Id,
+         
+    //   }
+    //   console.log("with id")
+    // }
+    // else {
+    //   Payload = {
+    //     name:childData.name,
+    //   }
+    //   console.log("without id")
+    // }
     try {
       setLoading(true)
-      getChildList()
-      const res = await axiosInterceptor().post(
-        `/api/gymnast/children`,
-        childData,
-      );
+      // getChildList()
+      if(Id){
+        const res = await axiosInterceptor().post(
+          `/api/gymnast/children?gymnastId=${Id}`,
+          childData,
+          // getChildList()
+        );
+      }
+      else{
+        const res = await axiosInterceptor().post(
+          `/api/gymnast/children`,
+          childData,
+          // getChildList()
+        );
+      }
+      
       console.log("responsse of login", res)
       swal('Success!', res.data.message, 'success')
       onClose();
+      // getChildList()
       AddChildrensModal();
       setLoading(true)
-      getChildList()
+      
     } catch (error) {
       setLoading(false)
       // swal('Oops!', error.data.message, 'error')
