@@ -63,20 +63,20 @@ const AddChildrensModal = ({ onClose, childUpdate, id }) => {
     
     try {
       setLoading(true);
-      onClose();
+      // onClose();
       
       const payload = {
-        // GymnastId: +router.query.ViewId,
+        gymnastId: +router.query.ViewId,
         name:childData.name,
         id:+childData.id,
         // childData: childData
       };
   
       const res = await axiosInterceptor().put(
-        `/api/gymnast/children?GymnastId=${router.query.ViewId}`,
+        `/api/gymnast/children`,
         payload
       );
-  
+      onClose();
       console.log("responsse of login", res);
   
       swal('Success!', res.data.message, 'success');
@@ -85,7 +85,7 @@ const AddChildrensModal = ({ onClose, childUpdate, id }) => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      swal('Oops!', error.data.message, 'error')
+      // swal('Oops!', error.data.message, 'error')
       console.log(error);
     }
     onClose();

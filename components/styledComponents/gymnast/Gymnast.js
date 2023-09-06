@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const PopupHeading = styled.h2`
 
   color: rgb(232, 174, 51);
- margin-left:39%;
+  margin-left: 37%;
 `;
 export const MainDiv = styled.div`
   display: flex;
@@ -123,6 +123,7 @@ margin-left: 20px;
 width: 100%;
 background-color: #f8f8f8; /* Optional: Add background color to the dropdown */
 `;
+
 export const InputDataa = styled.input`
 margin: 20px;
 padding: 6px;
@@ -194,6 +195,12 @@ export const SecondInput = styled.label`
 
 
 `;
+// export const SecondInputf = styled.label`
+
+//   display: flex;
+// justify-content:center;
+// alignitems:center;
+// `;
 export const Select = styled.select`
   margin: 20px;
   padding: 6px;

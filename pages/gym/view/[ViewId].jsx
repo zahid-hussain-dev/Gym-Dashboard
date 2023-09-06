@@ -202,17 +202,33 @@ const ViewId = () => {
   return (
     <>
       <div style={{ marginTop: "10%" }}>
-        <Button
+<div style={{ display:"flex",justifyContent:"space-between",alignItems:"center" }}>
+<div
+                style={{
+                  fontSize: "24px",
+                  color: "white",
+                  filter: showModal ? 'blur(5px)' : 'none',
+                  pointerEvents: showModal ? 'none' : 'auto'
+                }}
+              >
+                Gym Schedule{" "}
+              </div>
+              <div style={{ marginRight:"5%" }}>
+              <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }}>
+                Add Schedule
+              </Button>
+              <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }}
+                 onClick={handleButtonClick}>
+                  +
+              </Button>
+{/* <Button
           style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }}
         >
           Add Gym Schedule
-        </Button>
-        <Button
-          style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }}
-          onClick={handleButtonClick}
-        >
-          +
-        </Button>
+        </Button> */}
+              </div>
+</div>
+
         {showModal && <AddGymSchedule closeModal={closeModal} id={Id} />}
         {showModal ? (
           <div
@@ -273,19 +289,7 @@ const ViewId = () => {
         ) : (
           <div style={{ display: "flex", justifyContent: "space-around" }}>
             <div style={{ width: "90%", height: "50%", marginTop: "2%" }}>
-              <div
-                style={{
-                  fontSize: "24px",
-                  color: "white",
-                  marginBottom: "1rem",
-                  width: "100%",
-                  textAlign: "center",
-                  filter: showModal ? 'blur(5px)' : 'none',
-                  pointerEvents: showModal ? 'none' : 'auto'
-                }}
-              >
-                Gym Schedule{" "}
-              </div>
+
               {events.length > 0 ?
                 <div style={{ height: "30rem", overflowY: "auto", borderRadius: "5px" }}>
                   <Scheduler
