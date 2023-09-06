@@ -243,11 +243,16 @@ const ViewId = () => {
         <div style={{ marginTop: "5%" }}>
 
             <React.Fragment >
-                <Button style={{ width: "auto", marginLeft: "83%", marginTop: "2%" }} onClick={handleButtonClick2}>+</Button>
+                <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:"10%" }}>
+                    <div style={{ fontSize: "24px", color: "white", marginBottum: "20%", padding: "1%" }}>Schedule</div>
+                <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginRight:"8%"}}>
+                    <Button style={{ width: "auto" ,marginRight:"8px"}} >Add schedule</Button>
+                    <Button style={{ width: "auto" }} onClick={handleButtonClick2}>+</Button>
+                </div>
+                </div>
                 {showModal2 && <AddCoache closeModal={closeModal2} id={Id} />}
                 {showModal2 ?
-                    <Style.MainDiv style={{ filter: showModal2 ? 'blur(5px)' : 'none', pointerEvents: showModal2 ? 'none' : 'auto' }}>
-                        <div style={{ fontSize: "24px", color: "white", marginBottum: "20%", padding: "1%" }}>Schedule</div>
+                    <Style.MainDiv style={{ filter: showModal2 ? 'blur(5px)' : 'none', pointerEvents: showModal2 ? 'none' : 'auto',marginTop:"10%"  }}>
                         <Style.Schedular>
                             {/* <div style={{ fontSize: "24px", color: "white",marginBottum:"20%",padding:"1%" }}>Schedule</div> */}
                             {events.length > 0 ?
@@ -305,8 +310,8 @@ const ViewId = () => {
                         </Style.Schedular>
                     </Style.MainDiv>
                     :
-                    <Style.MainDiv2 style={{ filter: showModal2 ? 'blur(5px)' : 'none', pointerEvents: showModal2 ? 'none' : 'auto', marginTop: "0%" }} >
-                        <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem", textAlign: "center" }}>Schedule </div>
+                    <Style.MainDiv2 style={{ filter: showModal2 ? 'blur(5px)' : 'none', pointerEvents: showModal2 ? 'none' : 'auto',marginTop:"8%"  }} >
+                        {/* <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem", textAlign: "center" }}>Schedule </div> */}
                         <Style.Schedular >
                             {/* <div style={{ fontSize: "24px", color: "white", marginBottom: "1rem",textAlign:"center"  }}>Schedule </div> */}
                             {events.length > 0 ?

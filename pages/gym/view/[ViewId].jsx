@@ -214,12 +214,13 @@ const ViewId = () => {
                 Gym Schedule{" "}
               </div>
               <div style={{ marginRight:"5%" }}>
-              <Button
-          style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }}
-          onClick={handleButtonClick}
-        >
-          +
-        </Button>
+              <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }}>
+                Add Schedule
+              </Button>
+              <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }}
+                 onClick={handleButtonClick}>
+                  +
+              </Button>
 {/* <Button
           style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }}
         >

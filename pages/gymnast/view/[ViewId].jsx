@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router';
 import { Scheduler } from "@aldabil/react-scheduler";
 import Select from 'react-select';
-import {RejectButton, AcceptButton, UpdateButton } from '../../../components/styledComponents/button/Button';
+import {RejectButton, AcceptButton, UpdateButton, Button } from '../../../components/styledComponents/button/Button';
 import * as Style from '../../../components/styledComponents/gymnast/Gymnast';
 import { axiosInterceptor } from '../../../axios/axiosInterceptor';
 import Loader from '../../../components/styledComponents/loader/loader';
@@ -320,7 +320,11 @@ const ViewId = () => {
       const res = await axiosInterceptor().get(
         `/api/gymnast/children?gymnast=${router.query.ViewId}`,
       );
-      console.log("responsse of children ID", res)
+      res?.data?.result.map((item,index)=>{
+        item['text']=item.name,
+        item['value']=item.name
+      }),
+      console.log("responsse of children ID========", res)
       setLoading(false)
       setChildList(res?.data?.result)
     } catch (error) {
@@ -338,7 +342,7 @@ const ViewId = () => {
       setLoading(true)
       console.log("api calling for booking list")
       const res = await axiosInterceptor().get(
-        `api/bookings/all?coach=${router.query.ViewId}`,
+        `api/bookings/all?gymnast=${router.query.ViewId}`,
       );
       console.log("responsse of Booking list", res)
       setBookingList(res?.data?.data)
@@ -386,12 +390,17 @@ const ViewId = () => {
       const res = await axiosInterceptor().get(
         `/api/gymnast/children`,
       );
-      console.log("children data", res)
+    
+      res.data.result.map((item,index)=>{
+        item['text']=item.name,
+        item['value']=item.name
+      }),
+        console.log("children data=============", res.data.result)
       setChildrens(res.data.result)
       setLoading(false)
     } catch (error) {
       setLoading(false)
-      swal('Oops!', error.data.message, 'error')
+      // swal('Oops!', error.data.message, 'error')
       console.log(error)
     }
   }
@@ -445,7 +454,7 @@ const ViewId = () => {
       setLoading(true)
       console.log("api calling for child list")
       const res = await axiosInterceptor().delete(
-        `/api/gymnast/children?id=${id}&gymnastId=${142}`,
+        `/api/gymnast/children?id=${id}`,
       );
       console.log("responsse of children ID", res)
       setLoading(false)
@@ -482,26 +491,12 @@ const ViewId = () => {
               isSearchable
             />
           </Style.SecondInput>
-          {/* <div style={{ width: "10rem" }}>
-            <Style.Label className="label">Select Date:</Style.Label>
-            <Style.InputDataa
-              type="date"
-              name="date"
-              defaultValue={new Date().toISOString().substring(0, 10)}
-              onChange={(e) => {
-                handleChange(e);
-                console.log("date", e.target.value)
-                setBookingDate(e.target.value)
-              }}
-              value={formData.date}
-            />
-          </div> */}
         </Style.SecondMain>
       </Style.FirstMain>
       <Style.MainDiv >
         <Style.Schedular>
           {/* <div style={{ fontSize: "24px", color: "white",marginBottum:"20%",padding:"1%" }}>Schedule</div> */}
-          {events.length > 0 ?
+          {events.length > 0 &&  childList.length>0 ?
             <Scheduler
               view='week'
               ref={schRef}
@@ -512,12 +507,7 @@ const ViewId = () => {
                 {
                   name: "Select Child",
                   type: "select",
-                  // default: "PUBLIC",
                   options: childList,
-                  // options: [
-                  //   { id: 1, text: "Public", value: "PUBLIC" },
-                  //   { id: 2, text: "Private", value: "PRIVATE" }
-                  // ],
                   config: { label: "Children", required: true, errMsg: "Plz Select child" }
                 },
               ]}
@@ -528,7 +518,8 @@ const ViewId = () => {
                 endHour: 24,
                 step: 30,
               }} />
-            :
+            : 
+            childList.length>0 &&
             <Scheduler
               view='week'
               ref={schRef}
@@ -539,12 +530,30 @@ const ViewId = () => {
                 {
                   name: "Select Child",
                   type: "select",
-                  // default: "PUBLIC",
                   options: childList,
-                  // options: [
-                  //   { id: 1, text: "Public", value: "PUBLIC" },
-                  //   { id: 2, text: "Private", value: "PRIVATE" }
-                  // ],
+                  config: { label: "Children", required: true, errMsg: "Plz Select child" }
+                },
+              ]}
+              week={{
+                weekDays: [0, 1, 2, 3, 4, 5, 6],
+                weekStartOn: 0,
+                startHour: 0,
+                endHour: 24,
+                step: 30
+              }}
+            />}
+             {childList.length===0 && 
+             <Scheduler
+              view='week'
+              ref={schRef}
+              onSelectedDateChange={false}
+              events={events}
+              onConfirm={handleConfirm}
+              fields={[
+                {
+                  name: "Select Child",
+                  type: "select",
+                  options: childList,
                   config: { label: "Children", required: true, errMsg: "Plz Select child" }
                 },
               ]}
@@ -623,9 +632,9 @@ const ViewId = () => {
             {role && role === "admin" &&
               bookingList && bookingList.map((data, index) => (
                 <Style.TableRow key={index}>
-                  <Style.TableCell>{data?.id}</Style.TableCell>
-                  <Style.TableCell>{data?.childrenId}</Style.TableCell>
-                  <Style.TableCell>{data?.coachId}</Style.TableCell>
+                  <Style.TableCell>{data?.children.name}</Style.TableCell>
+                  <Style.TableCell>{data?.coach.firstName}</Style.TableCell>
+                  {/* <Style.TableCell>{data?.coachId}</Style.TableCell> */}
                   <Style.TableCell>{new Date(data?.from).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} {"-"} {new Date(data?.to).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })}</Style.TableCell>
                   <Style.TableCell>
                     <AcceptButton onClick={() => { console.log(data.id) }}>Cancel</AcceptButton>
@@ -635,9 +644,9 @@ const ViewId = () => {
             {role && role === "gymnast" &&
               gymnastbookingList && gymnastbookingList.map((data, index) => (
                 <Style.TableRow key={index}>
-                  <Style.TableCell>{data?.id}</Style.TableCell>
-                  <Style.TableCell>{data?.childrenId}</Style.TableCell>
-                  <Style.TableCell>{data?.coachId}</Style.TableCell>
+                  <Style.TableCell>{data?.children.name}</Style.TableCell>
+                  <Style.TableCell>{data?.coach.firstName}</Style.TableCell>
+                  {/* <Style.TableCell>{data?.coachId}</Style.TableCell> */}
                   <Style.TableCell>{new Date(data?.from).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} {"-"} {new Date(data?.to).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })}</Style.TableCell>
                   <Style.TableCell>
                     <AcceptButton onClick={() => { console.log(data.id) }}>Cancel</AcceptButton>

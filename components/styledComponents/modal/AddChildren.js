@@ -56,8 +56,9 @@ const AddChildrensModal = ({ onClose, Id}) => {
 
   const handleSubmitChild = async (event) => {
     event.preventDefault();
+    setLoading(true)
     onClose();
-    getChildList()
+    // getChildList()
 
     console.log("ChildData")
     // let Payload = {};
@@ -78,6 +79,7 @@ const AddChildrensModal = ({ onClose, Id}) => {
     // }
     try {
       setLoading(true)
+      onClose();
       // getChildList()
       if(Id){
         const res = await axiosInterceptor().post(

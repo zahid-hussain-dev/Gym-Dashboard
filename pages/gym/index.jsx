@@ -148,7 +148,10 @@ useEffect(() => {
       {role && role === "admin" &&
 <div style={{display:"flex", justifyContent:"space-between" }}> 
 <h2  style={{ color:"white",marginLeft:"30px"}}>Gym Listing</h2> 
+<div>
+<Button style={{ width: "auto" ,marginRight: "8px" }} >Add Gym </Button>
 <Button style={{ width: "auto" ,marginRight: "10rem" }} onClick={handleAddGym} >+</Button>
+</div>
 </div>
 }
 </div>
