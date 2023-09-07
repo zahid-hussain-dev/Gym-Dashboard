@@ -198,6 +198,7 @@ const ViewId = () => {
                 `/api/bookings?id=${id}&status=ACCEPT`
             );
             setLoading(false)
+            getCoachBookings();
             console.log("responsse of Approved", res)
         } catch (error) {
             setLoading(false)
@@ -212,7 +213,8 @@ const ViewId = () => {
             const res = await axiosInterceptor().put(
                 `/api/bookings?id=${id}&status=REJECT`,
             );
-            setLoading(false)
+            setLoading(false);
+            getCoachBookings();
             console.log("responsse of Reject", res)
         } catch (error) {
             setLoading(false)
