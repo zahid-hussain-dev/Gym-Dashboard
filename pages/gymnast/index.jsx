@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button ,ViewButton } from '../../components/styledComponents/button/Button';
+import { Button, ViewButton } from '../../components/styledComponents/button/Button';
 import * as Style from '../../components/styledComponents/gymnast/Gymnast';
 import { useRouter } from 'next/navigation';
 import { axiosInterceptor } from '../../axios/axiosInterceptor';
@@ -12,7 +12,7 @@ import Select from 'react-select';
 import { Scheduler } from "@aldabil/react-scheduler";
 const index = () => {
 
-  
+
   const schRef = React.createRef()
   const [childList, setChildList] = useState([]);
   const [role, setRole] = useState("");
@@ -108,10 +108,10 @@ const index = () => {
       const res = await axiosInterceptor().get(
         `/api/gymnast/children`,
       );
-    
-      res.data.result.map((item,index)=>{
-        item['text']=item.name,
-        item['value']=item.name
+
+      res.data.result.map((item, index) => {
+        item['text'] = item.name,
+          item['value'] = item.name
       }),
         console.log("children data=============", res.data.result)
       setChildrens(res.data.result)
@@ -266,27 +266,31 @@ const index = () => {
   //     console.log(error)
   //   }
   // }
-  const getGymnastScehdule = async () => {
+  const getGymnastScehdule = async (fetchedSlots) => {
     // console.log("booking Date", );
+    console.log("fetchedSlots in hour", fetchedSlots)
     console.log("fetchedHours in gymnast schedule", fetchedHours)
-    getChildList();
     let desArr = '';
-    if (fetchedHours) {
-      desArr = bookingDate.split("-")
-
-      fetchedHours && fetchedHours.map((item, index) => (
+    if (fetchedSlots) {
+      // desArr = bookingDate.split("-")
+      fetchedSlots && fetchedSlots.map((item, index) => (
         item['event_id'] = Math.random(),
         item['title'] = "Available Slots",
-        item['start'] = new Date(`${desArr[0]} ${desArr[1]} ${desArr[2]} ${item.from}`),
-        item['end'] = new Date(`${desArr[0]} ${desArr[1]} ${desArr[2]} ${item.to}`),
+        // item['start'] = new Date(`${desArr[0]} ${desArr[1]} ${desArr[2]} ${item.from}`),
+        // item['end'] = new Date(`${desArr[0]} ${desArr[1]} ${desArr[2]} ${item.to}`),
+        // item['start'] = item.from,
+        // item['end'] = item.to,
+        item['start'] = new Date(formatTimestamp(new Date(item.from).toISOString())),
+        item['end'] = new Date(formatTimestamp(new Date(item.to).toISOString())),
         item['editable'] = true,
         item['deletable'] = false,
         item['color'] = "#50b500"
       ))
-      console.log("fetchedHours event", fetchedHours)
-      setEvents(prevState => [...prevState, ...fetchedHours])
+      console.log("fetchedHours event", fetchedSlots)
+      setEvents(prevState => [...prevState, ...fetchedSlots])
     }
   }
+
   const getGymScedule = async (id) => {
     try {
       setLoading(true)
@@ -326,7 +330,7 @@ const index = () => {
                 ...eventsForDay.map(event => ({
                   ...event,
                   start: moment.utc(`${formattedDate} ${event.start}`).toDate(),  // new Date(formatTimestamp(`${formattedDate} ${event.start}`)),
-                  end:  moment.utc(`${formattedDate} ${event.end}`).toDate(),    // new Date(formatTimestamp(`${formattedDate} ${event.end}`)),
+                  end: moment.utc(`${formattedDate} ${event.end}`).toDate(),    // new Date(formatTimestamp(`${formattedDate} ${event.end}`)),
                   // color: "#50b500",
                   // color: "#50b500",
                   editable: false,
@@ -351,30 +355,39 @@ const index = () => {
   const getAvailableTimeSlots = async () => {
     const id = bookingCoach;
     const date = bookingDate;
+    const today = new Date();
+    const firstDay = new Date(
+      today.setDate(today.getDate() - today.getDay()),
+    );
+
+    // ✅ Get the last day of the current week (Saturday)
+    const lastDay = new Date(
+      today.setDate(today.getDate() - today.getDay() + 6),
+    );
     try {
-      // setLoading(true)
-      if (bookingCoach && bookingDate) {
+      if (bookingCoach) {
         setLoading(true)
 
         const res = await axiosInterceptor().get(
-          `api/gymnast/coach/info?coachId=${id}&date=${date}`,
+          `api/gymnast/coach/info?coachId=${id}&from=${firstDay.toISOString().slice(0, 10)}&to=${lastDay.toISOString().slice(0, 10)}`,
         );
         console.log("responsse of timeslots", res)
-        console.log("here in booking")
-
         if (res.status === 200) {
           const coachAvailability = res.data.privateAllowedSlots[0];
           const startTime = new Date(coachAvailability.from);
           const endTime = new Date(coachAvailability.to);
           const bookingSlots = res.data.bookings;
+          console.log("bookingSlots", bookingSlots)
           const localBookingSlots = bookingSlots.map(booking => {
             const bookingStart = new Date(booking.currentFrom);
             const bookingEnd = new Date(booking.currentTo);
+            const bookingDay = booking.day;
             return {
               currentFrom: bookingStart,
               currentTo: bookingEnd,
             };
           });
+          console.log("localBookingSlots", localBookingSlots)
           const fetchedSlots = [];
           const halfHour = 30 * 60 * 1000;
           let currentSlot = new Date(startTime);
@@ -388,34 +401,32 @@ const index = () => {
             );
             if (isSlotAvailable) {
               fetchedSlots.push({
-                from: formatTimeTo12Hour(fromTime),
-                to: formatTimeTo12Hour(toTime),
+                from: fromTime,
+                to: toTime,
               });
             }
             currentSlot = new Date(currentSlot.getTime() + halfHour);
           }
-          console.log("fetchedSlots", fetchedSlots)
           setFetchedHours(fetchedSlots);
           console.log('ALert', fetchedSlots)
+          getGymnastScehdule(fetchedSlots);
+          setLoading(false);
+
         }
 
-        setLoading(false)
-
       }
-      // setLoading(false)
     } catch (error) {
       setLoading(false)
-      swal('Oops!', error.data.message, 'error')
+      // swal('Oops!', error.data.message, 'error')
       console.log(error)
     }
-    getGymnastScehdule();
 
   }
   useEffect(() => {
-    if (bookingCoach && bookingDate) {
+    if (bookingCoach) {
       getAvailableTimeSlots();
     }
-  }, [bookingCoach, bookingDate])
+  }, [bookingCoach])
   const getChildList = async () => {
     try {
       setLoading(true)
@@ -451,116 +462,116 @@ const index = () => {
     console.log("events in useeffect", events)
   }, [events])
   return (
-    <div closeModal={closeModal4} style={{marginTop: "10%" }}>
-      {role!=="admin" &&
-      <div style={{marginLeft: "1%" }}>
-              <Style.FirstMain>
-      <div style={{ fontSize: "24px", color: "white", marginBottum: "20%", padding: "1%" }}>Schedule</div>
-        <Style.SecondMain style={{ flexDirection: "row" }}>
-          <Style.SecondInput style={{ width: "10rem" }}>
-            <Style.Labeled className="label" >Select Coach:</Style.Labeled>
-            <Select
-              style={{ marginTop: "4px" }}
-              name='coachId'
-              value={selectedOptionCoaches}
-              onChange={handleSelectChangeCoach}
-              options={coaches.map(option => ({ value: option.id, label: option.userName }))}
-              placeholder="Select Coach"
-              isSearchable
-            />
-          </Style.SecondInput>
-        </Style.SecondMain>
-      </Style.FirstMain>
-      <Style.MainDiv >
-        <Style.Schedular>
-          {/* <div style={{ fontSize: "24px", color: "white",marginBottum:"20%",padding:"1%" }}>Schedule</div> */}
-          {events.length > 0 &&  childrens.length>0 ?
-            <Scheduler
-              view='week'
-              ref={schRef}
-              onSelectedDateChange={false}
-              events={events}
-              onConfirm={handleConfirm}
-              fields={[
-                {
-                  name: "Select Child",
-                  type: "select",
-                  options: childrens,
-                  config: { label: "Children", required: true, errMsg: "Plz Select child" }
-                },
-              ]}
-              week={{
-                weekDays: [0, 1, 2, 3, 4, 5, 6],
-                weekStartOn: 0,
-                startHour: 0,
-                endHour: 24,
-                step: 30,
-              }} />
-            :
-            childrens.length > 0 &&
-            <Scheduler
-              view='week'
-              ref={schRef}
-              onSelectedDateChange={false}
-              events={events}
-              onConfirm={handleConfirm}
-              fields={[
-                {
-                  name: "Select Child",
-                  type: "select",
-                  options: childrens,
-                  config: { label: "Children", required: true, errMsg: "Plz Select child" }
-                },
-              ]}
-              week={{
-                weekDays: [0, 1, 2, 3, 4, 5, 6],
-                weekStartOn: 0,
-                startHour: 0,
-                endHour: 24,
-                step: 30
-              }}
-            />}
-            {childrens.lenght>0 && 
-              <Scheduler
-              view='week'
-              ref={schRef}
-              onSelectedDateChange={false}
-              events={events}
-              onConfirm={handleConfirm}
-              fields={[
-                {
-                  name: "Select Child",
-                  type: "select",
-                  options: childrens,
-                  config: { label: "Children", required: true, errMsg: "Plz Select child" }
-                },
-              ]}
-              week={{
-                weekDays: [0, 1, 2, 3, 4, 5, 6],
-                weekStartOn: 0,
-                startHour: 0,
-                endHour: 24,
-                step: 30
-              }}
-            />
-            }
-            
-        </Style.Schedular>
-      </Style.MainDiv>
-<Button  style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem",marginTop:"5%" }} >Add Bookings</Button>
-   {/* <Button  style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} onClick={handleAddChildClick}>+</Button> */}
-   
-      </div>
-     }   
-     {showModal4 &&   <AddChildForm  Closed={handleCloseModal4} onSubmit={handleSubmitChild} />}
-     {role && role === "admin" &&
-<div style={{display:"flex", justifyContent:"space-between" }}> 
-<h2  style={{ color:"white",marginLeft:"30px"}}>Gymnast Listing</h2> 
-</div>
-}
-{role && role === "admin"
+    <div closeModal={closeModal4} style={{ marginTop: "10%" }}>
+      {role !== "admin" &&
+        <div style={{ marginLeft: "1%" }}>
+          <Style.FirstMain>
+            <div style={{ fontSize: "24px", color: "white", marginBottum: "20%", padding: "1%" }}>Schedule</div>
+            <Style.SecondMain style={{ flexDirection: "row" }}>
+              <Style.SecondInput style={{ width: "10rem" }}>
+                <Style.Labeled className="label" >Select Coach:</Style.Labeled>
+                <Select
+                  style={{ marginTop: "4px" }}
+                  name='coachId'
+                  value={selectedOptionCoaches}
+                  onChange={handleSelectChangeCoach}
+                  options={coaches.map(option => ({ value: option.id, label: option.userName }))}
+                  placeholder="Select Coach"
+                  isSearchable
+                />
+              </Style.SecondInput>
+            </Style.SecondMain>
+          </Style.FirstMain>
+          <Style.MainDiv >
+            <Style.Schedular>
+              {/* <div style={{ fontSize: "24px", color: "white",marginBottum:"20%",padding:"1%" }}>Schedule</div> */}
+              {events.length > 0 && childrens.length > 0 ?
+                <Scheduler
+                  view='week'
+                  ref={schRef}
+                  onSelectedDateChange={false}
+                  events={events}
+                  onConfirm={handleConfirm}
+                  fields={[
+                    {
+                      name: "Select Child",
+                      type: "select",
+                      options: childrens,
+                      config: { label: "Children", required: true, errMsg: "Plz Select child" }
+                    },
+                  ]}
+                  week={{
+                    weekDays: [0, 1, 2, 3, 4, 5, 6],
+                    weekStartOn: 0,
+                    startHour: 0,
+                    endHour: 24,
+                    step: 30,
+                  }} />
+                :
+                childrens.length > 0 &&
+                <Scheduler
+                  view='week'
+                  ref={schRef}
+                  onSelectedDateChange={false}
+                  events={events}
+                  onConfirm={handleConfirm}
+                  fields={[
+                    {
+                      name: "Select Child",
+                      type: "select",
+                      options: childrens,
+                      config: { label: "Children", required: true, errMsg: "Plz Select child" }
+                    },
+                  ]}
+                  week={{
+                    weekDays: [0, 1, 2, 3, 4, 5, 6],
+                    weekStartOn: 0,
+                    startHour: 0,
+                    endHour: 24,
+                    step: 30
+                  }}
+                />}
+              {childrens.lenght > 0 &&
+                <Scheduler
+                  view='week'
+                  ref={schRef}
+                  onSelectedDateChange={false}
+                  events={events}
+                  onConfirm={handleConfirm}
+                  fields={[
+                    {
+                      name: "Select Child",
+                      type: "select",
+                      options: childrens,
+                      config: { label: "Children", required: true, errMsg: "Plz Select child" }
+                    },
+                  ]}
+                  week={{
+                    weekDays: [0, 1, 2, 3, 4, 5, 6],
+                    weekStartOn: 0,
+                    startHour: 0,
+                    endHour: 24,
+                    step: 30
+                  }}
+                />
+              }
+
+            </Style.Schedular>
+          </Style.MainDiv>
+          <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem", marginTop: "5%" }} >Add Bookings</Button>
+          {/* <Button  style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} onClick={handleAddChildClick}>+</Button> */}
+
+        </div>
+      }
+      {showModal4 && <AddChildForm Closed={handleCloseModal4} onSubmit={handleSubmitChild} />}
+      {role && role === "admin" &&
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <h2 style={{ color: "white", marginLeft: "30px" }}>Gymnast Listing</h2>
+        </div>
+      }
+      {role && role === "admin"
         ?
-        <Style.TableContainer style={{ filter: showModal4 ? 'blur(5px)' : 'none',marginTop: "5%" }} >
+        <Style.TableContainer style={{ filter: showModal4 ? 'blur(5px)' : 'none', marginTop: "5%" }} >
           <Style.TableWrapper>
             <thead>
               <Style.TableRow>
@@ -609,7 +620,7 @@ const index = () => {
           </Style.TableWrapper>
         </Style.TableContainer>
       }
-<Loader isLoading={loading}></Loader>
+      <Loader isLoading={loading}></Loader>
     </div>
   )
 }
