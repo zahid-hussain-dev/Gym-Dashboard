@@ -123,8 +123,8 @@ const ViewId = () => {
             res.data.map((item, index) => (
                 item['event_id'] = item.id,
                 item['title'] = item.type,
-                item['start'] = new Date(formatTimestamp(new Date(item.from).toISOString())),
-                item['end'] = new Date(formatTimestamp(new Date(item.to).toISOString())),
+                item['start'] = moment.utc(`${item.from}`).toDate(),// new Date(formatTimestamp(new Date(item.from).toISOString())),
+                item['end'] = moment.utc(`${item.to}`).toDate(),// new Date(formatTimestamp(new Date(item.to).toISOString())),
                 item['editable'] = false,
                 item['deletable'] = false,
                 item['color'] = "#50b500"
