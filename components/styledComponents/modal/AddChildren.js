@@ -113,7 +113,7 @@ const AddChildrensModal = ({ onClose, Id}) => {
     setIsButtonDisabled(emailValue === '');
   };
   return (
-    <Styled.PopupContainer>
+    <Styled.PopupContainer style={{marginTop: Id && Id ? "-24%" : "10%"}}>
       <Styled.PopupMainHeading>
         <Styled.PopupHeading>Add New Child</Styled.PopupHeading>
         <Image src={close} className="close" onClick={onClose} alt="close" width={20} height={20} />

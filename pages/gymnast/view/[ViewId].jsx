@@ -28,6 +28,8 @@ const ViewId = () => {
   const [bookingCoach, setBookingCoach] = useState();
   const [fetchedHours, setFetchedHours] = useState([]);
   const [adminchildrens, setAdminChildrens] = useState([]);
+  const [showModal5, setShowModal5] = useState(false);
+  // const [showInput, setShowInput ]= useState(res.data.coaches);
 
 
   const formatTimeTo12Hour = date => {
@@ -500,6 +502,14 @@ const ViewId = () => {
     setLoading(true);
     getChildList();
   };
+  const handleCloseModal5 = () => {
+    setShowModal5(false);
+    getChildList();
+  };
+  const handleAddChildren = ( ) =>{
+    setShowModal5(true);
+    getChildList();
+  }
   return (
     <div style={{ marginTop: "10%" }}>
       {showModalUpdate && <UpdateChild onClose={handleCloseModalUpdate} id={clickedId} childUpdate={clickUpdateChild} />}
@@ -515,6 +525,7 @@ const ViewId = () => {
               onChange={handleSelectChangeCoach}
               options={coaches.map(option => ({ value: option.id, label: option.userName }))}
               placeholder="Select Coach"
+              // defaultValue={showInput}
               isSearchable
             />
           </Style.SecondInput>
@@ -629,9 +640,11 @@ const ViewId = () => {
         </Style.Schedular>
       </Style.MainDiv>
 
-      <Style.SubTitle>Child Listing</Style.SubTitle>
+      <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} >Child Listing</Button>
+      <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem"  }} onClick={handleAddChildren} >+</Button>
+      {showModal5 && <AddChildren onClose={handleCloseModal5} Id={Id}/>}
       {showModal4 && <AddChildForm Closed={handleCloseModal4} onSubmit={handleSubmitChild} id={Id} />}
-      <Style.TableContainer style={{ marginTop: "3%", filter: showModal4 ? 'blur(5px)' : 'none', pointerEvents: showModal4 ? 'none' : 'auto' }} >
+      <Style.TableContainer style={{ marginTop: "3%", filter: showModal5 ? 'blur(5px)' : 'none', pointerEvents: showModal5 ? 'none' : 'auto' }} >
         <Style.TableWrapper>
           <thead>
             <Style.TableRow>
@@ -658,7 +671,7 @@ const ViewId = () => {
               ))}
             {childList.length <= 0 &&
               (<Style.TableRow style={{ fontSize: "18px", textAlign: "center" }}>
-                <p style={{ fontSize: "18px", color: "#E3DC22", marginTop: "35%", marginLeft: "38%", textAlign: "center", filter: showModal4 ? 'blur(5px)' : 'none', pointerEvents: showModal4 ? 'none' : 'auto' }}>No Listing Exist for this Coach {GymnastName} </p>
+                <p style={{ fontSize: "18px", color: "#E3DC22", marginTop: "35%", marginLeft: "38%", textAlign: "center", filter: showModal5 ? 'blur(5px)' : 'none', pointerEvents: showModal5 ? 'none' : 'auto' }}>No Listing Exist for this Coach {GymnastName} </p>
               </Style.TableRow>)
             }
             {role && role === "gymnast" &&
@@ -678,7 +691,7 @@ const ViewId = () => {
         <Style.SubTitle style={{ marginTop: "1rem" }}>Booking Listing</Style.SubTitle>
         {/* <Button style={{ width: "auto", marginTop: "1rem", marginLeft: "1rem" }} onClick={handleAddChildClick}>+</Button> */}
       </span>
-      <Style.TableContainer style={{ marginTop: "5%", filter: showModal4 ? 'blur(5px)' : 'none', pointerEvents: showModal4 ? 'none' : 'auto' }} >
+      <Style.TableContainer style={{ marginTop: "5%", filter: showModal5 ? 'blur(5px)' : 'none', pointerEvents: showModal5 ? 'none' : 'auto' }} >
         <Style.TableWrapper>
           <thead>
             <Style.TableRow>
