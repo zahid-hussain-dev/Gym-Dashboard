@@ -47,6 +47,7 @@ const ViewId = () => {
     }));
   };
   const handleSelectChangeCoach = (event) => {
+    console.log("aaaaa ", event.name, " ---  ", event.value)
     setSelectedOptionCoach(event.value);
     setSelectedOptionCoaches(event.name)
     setBookingCoach(event.value);
@@ -76,6 +77,8 @@ const ViewId = () => {
       );
       console.log("children data===========", res)
       setCoaches(res.data.coaches)
+      setSelectedOptionCoach(res.data.coaches[0].id);
+      // setSelectedOptionCoaches(res.data.coaches[0].name)
       setLoading(false)
     } catch (error) {
       setLoading(false)
@@ -83,7 +86,79 @@ const ViewId = () => {
       console.log(error)
     }
   }
+  const getAvailableTimeSlotsfirst = async () => {
+    const id = bookingCoach;
+    const date = bookingDate;
+    const today = new Date();
+    const firstDay = new Date(
+      today.setDate(today.getDate() - today.getDay()),
+    );
 
+    // ✅ Get the last day of the current week (Saturday)
+    const lastDay = new Date(
+      today.setDate(today.getDate() - today.getDay() + 6),
+    );
+    try {
+      // setLoading(true)
+      if (bookingCoach) {
+        setLoading(true)
+
+        const res = await axiosInterceptor().get(
+          `api/gymnast/coach/info?coachId=${selectedOptionCoach}&from=${firstDay.toISOString().slice(0, 10)}&to=${lastDay.toISOString().slice(0, 10)}`,
+        );
+        console.log("responsse of timeslots", res)
+        console.log("here in booking")
+
+        if (res.status === 200) {
+          const coachAvailability = res.data.privateAllowedSlots[0];
+          const startTime = new Date(coachAvailability.from);
+          const endTime = new Date(coachAvailability.to);
+          const bookingSlots = res.data.bookings;
+          const localBookingSlots = bookingSlots.map(booking => {
+            const bookingStart = new Date(booking.currentFrom);
+            const bookingEnd = new Date(booking.currentTo);
+            return {
+              currentFrom: bookingStart,
+              currentTo: bookingEnd,
+            };
+          });
+          const fetchedSlots = [];
+          const halfHour = 30 * 60 * 1000;
+          let currentSlot = new Date(startTime);
+          while (currentSlot.getTime() + halfHour <= endTime.getTime()) {
+            const fromTime = new Date(currentSlot);
+            const toTime = new Date(currentSlot.getTime() + halfHour);
+            const isSlotAvailable = !localBookingSlots.some(
+              booking =>
+                currentSlot >= booking.currentFrom &&
+                currentSlot < booking.currentTo,
+            );
+            if (isSlotAvailable) {
+              fetchedSlots.push({
+                from: fromTime,
+                to: toTime,
+              });
+            }
+            currentSlot = new Date(currentSlot.getTime() + halfHour);
+          }
+          console.log("fetchedSlots", fetchedSlots)
+          setFetchedHours(fetchedSlots);
+          getGymnastScehdule(fetchedSlots);
+
+          console.log('ALert', fetchedSlots)
+        }
+
+        setLoading(false)
+
+      }
+      // setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      swal('Oops!', error.data.message, 'error')
+      console.log(error)
+    }
+
+  }
   const getAvailableTimeSlots = async () => {
     const id = bookingCoach;
     const date = bookingDate;
@@ -468,6 +543,7 @@ const ViewId = () => {
       getGymScedule();
       getChildList();
       getBookingList();
+      getAvailableTimeSlotsfirst();
     }
     if (Id && role == "gymnast") {
       getGymnastChildList();
@@ -525,7 +601,7 @@ const ViewId = () => {
               onChange={handleSelectChangeCoach}
               options={coaches.map(option => ({ value: option.id, label: option.userName }))}
               placeholder="Select Coach"
-              // defaultValue={showInput}
+              defaultValue={coaches.option}
               isSearchable
             />
           </Style.SecondInput>
@@ -533,7 +609,7 @@ const ViewId = () => {
       </Style.FirstMain>
       <Style.MainDiv >
         <Style.Schedular>
-          {/* <div style={{ fontSize: "24px", color: "white",marginBottum:"20%",padding:"1%" }}>Schedule</div> */}
+
           {events.length > 0 && childList.length > 0 && selectedOptionCoach ?
             <Scheduler
               view='week'
