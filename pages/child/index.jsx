@@ -89,7 +89,7 @@ const Index = () => {
   return (
     <div style={{marginTop: "10%" }}>
         {Id}
-      <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} >Add Child</Button>
+      <Button  style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }} >Add Child</Button>
       <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem"  }} onClick={handleAddChildClick} >+</Button>
       <div>
         {showModal5 && <AddChildren onClose={handleCloseModal5} />}

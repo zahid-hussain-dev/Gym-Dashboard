@@ -37,7 +37,7 @@ const DropdownUser = () => {
     }
     return (
         <Style.DropdownContainer>
-            <Style.DropdownButton onClick={handleDropdownClick}>
+            <Style.DropdownButton className='animate' onClick={handleDropdownClick}>
                 <span style={{color:"white"}}>{userName} </span>
                 <Image style={{ verticalAlign: "middle", cursor: "pointer",color:"black" }} src={user} height="25" width="30" alt="asset-planet-logo" />
             </Style.DropdownButton>

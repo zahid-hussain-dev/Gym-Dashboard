@@ -4,7 +4,6 @@ export const Button = styled.button`
 min-width: 54px;
 width: 100%;
 padding: 10px 16px;
-// background-image: linear-gradient(to bottom right, #39b54a, #0d723b);
 background:#E3DC22;
 color: black;
 border: 0;

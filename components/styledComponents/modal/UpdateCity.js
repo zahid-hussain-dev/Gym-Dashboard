@@ -21,6 +21,7 @@ const UpdateCities = ({ onClose, id, cityName,stateName }) => {
     name: '',
    
   });
+  console.log("state-name#########", stateName)
   const handleSelectChange = (event) => {
     console.log(event)
     // setSelectedOption(event.value);
@@ -108,7 +109,7 @@ const UpdateCities = ({ onClose, id, cityName,stateName }) => {
                       defaultValue={stateName}
                       onChange={handleSelectChange}
                       options={state && state.map(option => ({ value: option.id, label: option.name }))}
-                      placeholder="Select State"
+                      placeholder={stateName? stateName:"Select State"}
                       isSearchable
                     />
                 </div>

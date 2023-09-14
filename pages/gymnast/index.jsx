@@ -571,7 +571,7 @@ const index = () => {
       }
       {role && role === "admin"
         ?
-        <Style.TableContainer style={{ filter: showModal4 ? 'blur(5px)' : 'none', marginTop: "5%" }} >
+        <Style.TableContainer style={{ filter: showModal4 ? 'blur(5px)' : 'none', marginTop: "5%", borderBottom:" 2px solid rgb(213, 185, 59)" }} >
           <Style.TableWrapper>
             <thead>
               <Style.TableRow>

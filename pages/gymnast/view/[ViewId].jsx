@@ -18,8 +18,7 @@ const ViewId = () => {
   const [showModal4, setShowModal4] = useState(false);
   const [events, setEvents] = useState([]);
   const schRef = React.createRef()
-  const [selectedOptionValue, setSelectedOptionValue] = useState('');
-  const [selectedOption, setSelectedOption] = useState('');
+  const [selectedOption, setSelectedOption] = useState('defaultOptionValue');
   const [selectedOptionCoach, setSelectedOptionCoach] = useState('');
   const [selectedOptionCoaches, setSelectedOptionCoaches] = useState('');
   const [coaches, setCoaches] = useState([]);
@@ -29,27 +28,13 @@ const ViewId = () => {
   const [fetchedHours, setFetchedHours] = useState([]);
   const [adminchildrens, setAdminChildrens] = useState([]);
   const [showModal5, setShowModal5] = useState(false);
-  // const [showInput, setShowInput ]= useState(res.data.coaches);
 
 
-  const formatTimeTo12Hour = date => {
-    return date.toLocaleTimeString([], {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true,
-    });
-  };
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-  };
   const handleSelectChangeCoach = (event) => {
-    console.log("aaaaa ", event.name, " ---  ", event.value)
+    console.log("aaaaa ", event)
     setSelectedOptionCoach(event.value);
-    setSelectedOptionCoaches(event.name)
+    
+    setSelectedOptionCoaches(event.id)
     setBookingCoach(event.value);
 
     setFormData((prevFormData) => ({
@@ -57,18 +42,7 @@ const ViewId = () => {
       coachId: event.value,
     }));
   };
-  const handleSelectChange = (event) => {
-    console.log(event)
-    setSelectedOption(event.value);
-    setSelectedOptionValue(event.name)
-
-    // const { name, value } = event.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      childrenId: event.value,
-    }));
-  };
-
+  console.log("search input======", selectedOptionCoach)
   const getAdminCoach = async () => {
     try {
       setLoading(true)
@@ -78,7 +52,6 @@ const ViewId = () => {
       console.log("children data===========", res)
       setCoaches(res.data.coaches)
       setSelectedOptionCoach(res.data.coaches[0].id);
-      // setSelectedOptionCoaches(res.data.coaches[0].name)
       setLoading(false)
     } catch (error) {
       setLoading(false)
@@ -86,79 +59,73 @@ const ViewId = () => {
       console.log(error)
     }
   }
+  console.log("heeeeee====",selectedOptionCoaches)
   const getAvailableTimeSlotsfirst = async () => {
-    const id = bookingCoach;
-    const date = bookingDate;
-    const today = new Date();
+
+    if(!selectedOptionCoach) return
+        const today = new Date();
     const firstDay = new Date(
-      today.setDate(today.getDate() - today.getDay()),
-    );
-
-    // ✅ Get the last day of the current week (Saturday)
-    const lastDay = new Date(
-      today.setDate(today.getDate() - today.getDay() + 6),
-    );
-    try {
-      // setLoading(true)
-      if (bookingCoach) {
-        setLoading(true)
-
-        const res = await axiosInterceptor().get(
-          `api/gymnast/coach/info?coachId=${selectedOptionCoach}&from=${firstDay.toISOString().slice(0, 10)}&to=${lastDay.toISOString().slice(0, 10)}`,
+          today.setDate(today.getDate() - today.getDay()),
         );
-        console.log("responsse of timeslots", res)
-        console.log("here in booking")
 
-        if (res.status === 200) {
-          const coachAvailability = res.data.privateAllowedSlots[0];
-          const startTime = new Date(coachAvailability.from);
-          const endTime = new Date(coachAvailability.to);
-          const bookingSlots = res.data.bookings;
-          const localBookingSlots = bookingSlots.map(booking => {
-            const bookingStart = new Date(booking.currentFrom);
-            const bookingEnd = new Date(booking.currentTo);
-            return {
-              currentFrom: bookingStart,
-              currentTo: bookingEnd,
-            };
+        const lastDay = new Date(
+          today.setDate(today.getDate() - today.getDay() + 6),
+        );
+    try {
+      setLoading(true);
+  console.log("heeeeee====",selectedOptionCoaches)
+      const res = await axiosInterceptor().get(
+        `api/gymnast/coach/info?coachId=${selectedOptionCoach}&from=${firstDay.toISOString().slice(0, 10)}&to=${lastDay.toISOString().slice(0, 10)}`,
+      );
+      console.log("response of timeslots", res);
+      console.log("here in booking");
+  
+      const coachAvailability = res.data.privateAllowedSlots[0];
+      const startTime = new Date(coachAvailability.from);
+      const endTime = new Date(coachAvailability.to);
+      const bookingSlots = res.data.bookings;
+      const localBookingSlots = bookingSlots.map(booking => {
+        const bookingStart = new Date(booking.currentFrom);
+        const bookingEnd = new Date(booking.currentTo);
+        return {
+          currentFrom: bookingStart,
+          currentTo: bookingEnd,
+        };
+      });
+      const fetchedSlots = [];
+      const halfHour = 30 * 60 * 1000;
+      let currentSlot = new Date(startTime);
+      while (currentSlot.getTime() + halfHour <= endTime.getTime()) {
+        const fromTime = new Date(currentSlot);
+        const toTime = new Date(currentSlot.getTime() + halfHour);
+        const isSlotAvailable = !localBookingSlots.some(
+          booking =>
+            currentSlot >= booking.currentFrom &&
+            currentSlot < booking.currentTo,
+        );
+        if (isSlotAvailable) {
+          fetchedSlots.push({
+            from: fromTime,
+            to: toTime,
           });
-          const fetchedSlots = [];
-          const halfHour = 30 * 60 * 1000;
-          let currentSlot = new Date(startTime);
-          while (currentSlot.getTime() + halfHour <= endTime.getTime()) {
-            const fromTime = new Date(currentSlot);
-            const toTime = new Date(currentSlot.getTime() + halfHour);
-            const isSlotAvailable = !localBookingSlots.some(
-              booking =>
-                currentSlot >= booking.currentFrom &&
-                currentSlot < booking.currentTo,
-            );
-            if (isSlotAvailable) {
-              fetchedSlots.push({
-                from: fromTime,
-                to: toTime,
-              });
-            }
-            currentSlot = new Date(currentSlot.getTime() + halfHour);
-          }
-          console.log("fetchedSlots", fetchedSlots)
-          setFetchedHours(fetchedSlots);
-          getGymnastScehdule(fetchedSlots);
-
-          console.log('ALert', fetchedSlots)
         }
-
-        setLoading(false)
-
+        currentSlot = new Date(currentSlot.getTime() + halfHour);
       }
-      // setLoading(false)
+      console.log("fetchedSlots", fetchedSlots);
+      setFetchedHours(fetchedSlots);
+      getGymnastScehdule(fetchedSlots);
+  
+      console.log('Alert', fetchedSlots);
+  
+      setLoading(false);
     } catch (error) {
-      setLoading(false)
-      swal('Oops!', error.data.message, 'error')
-      console.log(error)
+      setLoading(false);
+      swal('Oops!', error.data.message, 'error');
+      console.log(error);
     }
+  };
+  
 
-  }
   const getAvailableTimeSlots = async () => {
     const id = bookingCoach;
     const date = bookingDate;
@@ -166,8 +133,6 @@ const ViewId = () => {
     const firstDay = new Date(
       today.setDate(today.getDate() - today.getDay()),
     );
-
-    // ✅ Get the last day of the current week (Saturday)
     const lastDay = new Date(
       today.setDate(today.getDate() - today.getDay() + 6),
     );
@@ -330,21 +295,14 @@ const ViewId = () => {
     }
   };
   const getGymnastScehdule = async (fetchedSlots) => {
-    // console.log("booking Date", );
     console.log("fetchedHours in gymnast schedule", fetchedHours)
     let desArr = '';
     if (fetchedSlots) {
-      // desArr = bookingDate.split("-")
-
       fetchedSlots && fetchedSlots.map((item, index) => (
         item['event_id'] = Math.random(),
         item['title'] = "Available Slots",
-        // item['start'] = new Date(`${desArr[0]} ${desArr[1]} ${desArr[2]} ${item.from}`),
-        // item['end'] = new Date(`${desArr[0]} ${desArr[1]} ${desArr[2]} ${item.to}`),
         item['start'] = new Date(formatTimestamp(new Date(item.from).toISOString())),
         item['end'] = new Date(formatTimestamp(new Date(item.to).toISOString())),
-        // item['start'] = item.from,
-        // item['end'] = item.to,
         item['editable'] = true,
         item['deletable'] = false,
         item['color'] = "#50b500"
@@ -393,8 +351,6 @@ const ViewId = () => {
                   ...event,
                   start: moment.utc(`${formattedDate} ${event.start}`).toDate(),  // new Date(formatTimestamp(`${formattedDate} ${event.start}`)),
                   end: moment.utc(`${formattedDate} ${event.end}`).toDate(),    // new Date(formatTimestamp(`${formattedDate} ${event.end}`)),
-                  // color: "#50b500",
-                  // color: "#50b500",
                   editable: false,
                   deletable: false,
                   title: "Open Hours",
@@ -437,10 +393,6 @@ const ViewId = () => {
       console.log(error)
     }
   }
-  const handleAddChildClick = () => {
-    setShowModal4(true);
-    console.log("modal click")
-  };
   const getBookingList = async () => {
     try {
       setLoading(true)
@@ -537,7 +489,7 @@ const ViewId = () => {
   };
   useEffect(() => {
     if (Id && role == "admin") {
-      console.log("here in admin site")
+      console.log("here in admin site",selectedOptionCoach)
       getAdminCoach();
       getAdminChildren();
       getGymScedule();
@@ -549,7 +501,7 @@ const ViewId = () => {
       getGymnastChildList();
       getGymnastBookingList();
     }
-  }, [Id, role])
+  }, [Id, role,selectedOptionCoach])
   useEffect(() => {
     schRef.current?.scheduler.handleState(events, "events")
     console.log("events in useeffect", events)
@@ -595,14 +547,13 @@ const ViewId = () => {
           <Style.SecondInput style={{ width: "10rem" }}>
             <Style.Labeled className="label" >Select Coach:</Style.Labeled>
             <Select
-              style={{ marginTop: "4px" }}
+             style={{ marginTop: "4px" }}
               name='coachId'
-              value={selectedOptionCoaches}
-              onChange={handleSelectChangeCoach}
-              options={coaches.map(option => ({ value: option.id, label: option.userName }))}
+               value={selectedOptionCoach ? { value: selectedOptionCoach, label: coaches[0].userName } : null}
+                onChange={handleSelectChangeCoach}
+               options={coaches.map(option => ({ value: option.id, label: option.userName }))}
               placeholder="Select Coach"
-              defaultValue={coaches.option}
-              isSearchable
+             isSearchable
             />
           </Style.SecondInput>
         </Style.SecondMain>
@@ -621,12 +572,7 @@ const ViewId = () => {
                 {
                   name: "Select Child",
                   type: "select",
-                  // default: "PUBLIC",
                   options: childList && childList,
-                  // options: [
-                  //   { id: 1, text: "Public", value: "PUBLIC" },
-                  //   { id: 2, text: "Private", value: "PRIVATE" }
-                  // ],
                   config: { label: "Children", required: true, errMsg: "Plz Select child" }
                 },
                 {
@@ -655,12 +601,7 @@ const ViewId = () => {
                 {
                   name: "Select Child",
                   type: "select",
-                  // default: "PUBLIC",
                   options: childList && childList,
-                  // options: [
-                  //   { id: 1, text: "Public", value: "PUBLIC" },
-                  //   { id: 2, text: "Private", value: "PRIVATE" }
-                  // ],
                   config: { label: "Children", required: true, errMsg: "Plz Select child" }
                 },
                 {
@@ -690,12 +631,7 @@ const ViewId = () => {
                   {
                     name: "Select Child",
                     type: "select",
-                    // default: "PUBLIC",
                     options: childrens && childrens,
-                    // options: [
-                    //   { id: 1, text: "Public", value: "PUBLIC" },
-                    //   { id: 2, text: "Private", value: "PRIVATE" }
-                    // ],
                     config: { label: "Children", required: true, errMsg: "Plz Select child" }
                   },
                   {
@@ -724,7 +660,6 @@ const ViewId = () => {
         <Style.TableWrapper>
           <thead>
             <Style.TableRow>
-              {/* <Style.TableHead>ID</Style.TableHead> */}
               <Style.TableHead>CHILD</Style.TableHead>
               <Style.TableHead>ACTIONS</Style.TableHead>
             </Style.TableRow>
@@ -733,7 +668,6 @@ const ViewId = () => {
             {role && role === "admin" &&
               childList && childList.map((data, index) => (
                 <Style.TableRow key={index}>
-                  {/* <Style.TableCell>{data?.id}</Style.TableCell> */}
                   <Style.TableCell>{data?.name}</Style.TableCell>
                   <Style.TableCell>
                     <RejectButton onClick={() => { console.log(data.id); deleteChild(data.id) }}>Delete</RejectButton>
@@ -745,15 +679,10 @@ const ViewId = () => {
                   </Style.TableCell>
                 </Style.TableRow>
               ))}
-            {childList.length <= 0 &&
-              (<Style.TableRow style={{ fontSize: "18px", textAlign: "center" }}>
-                <p style={{ fontSize: "18px", color: "#E3DC22", marginTop: "35%", marginLeft: "38%", textAlign: "center", filter: showModal5 ? 'blur(5px)' : 'none', pointerEvents: showModal5 ? 'none' : 'auto' }}>No Listing Exist for this Coach {GymnastName} </p>
-              </Style.TableRow>)
-            }
+
             {role && role === "gymnast" &&
               gymnastchildList && gymnastchildList.map((data, index) => (
                 <Style.TableRow key={index}>
-                  {/* <Style.TableCell>{data?.id}</Style.TableCell> */}
                   <Style.TableCell>{data?.name}</Style.TableCell>
                   <Style.TableCell>
                     <RejectButton onClick={() => { console.log(data.id) }}>Delete</RejectButton>
@@ -764,14 +693,12 @@ const ViewId = () => {
         </Style.TableWrapper>
       </Style.TableContainer>
       <span style={{ display: "flex", alignItems: "center", marginTop: "5%" }} >
-        <Style.SubTitle style={{ marginTop: "1rem" }}>Booking Listing</Style.SubTitle>
-        {/* <Button style={{ width: "auto", marginTop: "1rem", marginLeft: "1rem" }} onClick={handleAddChildClick}>+</Button> */}
+        <Style.SubTitles style={{ marginTop: "1rem" }}>Booking Listing</Style.SubTitles>
       </span>
       <Style.TableContainer style={{ marginTop: "5%", filter: showModal5 ? 'blur(5px)' : 'none', pointerEvents: showModal5 ? 'none' : 'auto' }} >
         <Style.TableWrapper>
           <thead>
             <Style.TableRow>
-              {/* <Style.TableHead>ID</Style.TableHead> */}
               <Style.TableHead>CHILD</Style.TableHead>
               <Style.TableHead>COACH</Style.TableHead>
               <Style.TableHead>TIME SLOT</Style.TableHead>
@@ -784,7 +711,6 @@ const ViewId = () => {
                 <Style.TableRow key={index}>
                   <Style.TableCell>{data?.children.name}</Style.TableCell>
                   <Style.TableCell>{data?.coach.firstName}</Style.TableCell>
-                  {/* <Style.TableCell>{data?.coachId}</Style.TableCell> */}
                   <Style.TableCell>{new Date(data?.from).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} {"-"} {new Date(data?.to).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })}</Style.TableCell>
                   <Style.TableCell>
                     <RejectButton onClick={() => { console.log(data.id) }}>Cancel</RejectButton>
@@ -796,7 +722,6 @@ const ViewId = () => {
                 <Style.TableRow key={index}>
                   <Style.TableCell>{data?.children.name}</Style.TableCell>
                   <Style.TableCell>{data?.coach.firstName}</Style.TableCell>
-                  {/* <Style.TableCell>{data?.coachId}</Style.TableCell> */}
                   <Style.TableCell>{new Date(data?.from).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} {"-"} {new Date(data?.to).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })}</Style.TableCell>
                   <Style.TableCell>
                     <RejectButton onClick={() => { console.log(data.id) }}>Cancel</RejectButton>
@@ -806,6 +731,9 @@ const ViewId = () => {
           </tbody>
         </Style.TableWrapper>
       </Style.TableContainer>
+      {childList.length <= 0 &&
+            <p style={{ fontSize: "18px", color: "#E3DC22", marginTop: "35%", marginLeft: "38%", textAlign: "center", filter: showModal5 ? 'blur(5px)' : 'none', pointerEvents: showModal5 ? 'none' : 'auto' }}>No Listing Exist for this Coach {GymnastName} </p> 
+        }
       <Loader isLoading={loading}></Loader>
     </div>
   )

@@ -2,18 +2,16 @@ import dashboardSVG from "../../public/assests/SVGs/gym-dashboard-black.svg";
 import coachSVG from "../../public/assests/SVGs/coach-black.svg";
 import gymSVG from "../../public/assests/SVGs/gym-black.svg";
 import gymnastSVG from "../../public/assests/SVGs/gymnast-black.svg";
-import dashboardWhiteSVG from "../../public/assests/SVGs/gym-dashboard-white.svg";
 import coachWhiteSVG from "../../public/assests/SVGs/coach-white.svg";
 import gymWhiteSVG from "../../public/assests/SVGs/gym-white.svg";
 import gymnastWhiteSVG from "../../public/assests/SVGs/gymnast-white.svg";
+import stateBlack from "../../public/assests/SVGs/state-black.svg";
+import stateWhite from "../../public/assests/SVGs/state-white.svg";
+import cityBlack from "../../public/assests/SVGs/city-black.svg";
+import cityWhite from "../../public/assests/SVGs/city-white.svg";
 
 export const sideItemsAdmin = [
-    // {
-    //     href: "/dashboard",
-    //     title: "Dashboard",
-    //     image: dashboardSVG,
-    //     imageWhite: dashboardWhiteSVG,
-    // },
+
     {
         href: "/coaches",
         title: "Coaches",
@@ -35,14 +33,14 @@ export const sideItemsAdmin = [
     {
         href: "/state",
         title: "State",
-        image: gymnastSVG,
-        imageWhite: gymnastWhiteSVG,
+        image: stateBlack,
+        imageWhite: stateWhite,
     },
     {
         href: "/cities",
         title: "Cities",
-        image: gymnastSVG,
-        imageWhite: gymnastWhiteSVG,
+        image: cityBlack,
+        imageWhite: cityWhite,
     }
 ];
 export const sideItemsCoach = [
@@ -53,12 +51,6 @@ export const sideItemsCoach = [
         imageWhite: coachWhiteSVG,
 
     },
-    // {
-    //     href: "/gym",
-    //     title: "Gym",
-    //     image: dashboardSVG,
-    //     imageWhite: gymWhiteSVG,
-    // },
     {
         href: "/privateBookings",
         title: "Private Booking",
