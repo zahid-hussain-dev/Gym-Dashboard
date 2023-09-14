@@ -59,18 +59,49 @@ const ViewId = () => {
     return `${year} ${Number(month)} ${Number(day)} ${adjustedHours}:${minutes}`;
   }
   const handleConfirm = async (event, action) => {
-    console.log("handleConfirm =", action, event.title);
+    console.log("handleConfirm =", action, event);
     if (action === "edit") {
+      console.log("here in edit action", event)
+      // Payload = {
+      //   from: moment(event.start).format('YYYY-MM-DD HH:mm:ss'),
+      //   to: moment(event.end).format('YYYY-MM-DD HH:mm:ss'),
+      //   day: event.day,
+      //   gym: Id,
+      //   timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      // }
+      // console.log("payload", Payload)
+      // try {
+      //   setLoading(true)
+      //   const res = await axiosInterceptor().put(
+      //     `/api/gym/schedule`,
+      //     Payload,
+      //   );
+      //   console.log("responsse of schedule create", res)
+      //   swal('Success!', res.data.message, 'success')
+      //   setLoading(false);
+      //   return { ...event, event_id: event.event_id || Math.random() }
+      // } catch (error) {
+      //   setLoading(false)
+      //   console.log("error", error)
+      //   swal('Oops!', error.data.message, 'error')
+      //   console.log(error)
+      //   throw error
+      // }
+
+
+
     } else if (action === "create") {
       const Payload = {
-        from: moment(event.start).format('YYYY-MM-DD HH:mm:ss'),
-        to: moment(event.end).format('YYYY-MM-DD HH:mm:ss'),
+        from: moment(event.start).format('HH:mm'),
+        to: moment(event.end).format('HH:mm'),
+        day: event.Day,
         gym: Id,
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       }
       console.log("payload", Payload)
       try {
         setLoading(true)
-        const res = await axiosInterceptor().post(
+        const res = await axiosInterceptor().put(
           `/api/gym/schedule`,
           Payload,
         );
@@ -159,8 +190,8 @@ const ViewId = () => {
                 ...eventsForDay.map(event => ({
                   ...event,
                   start: moment.utc(`${formattedDate} ${event.start}`).toDate(),  // new Date(formatTimestamp(`${formattedDate} ${event.start}`)),
-                  end:  moment.utc(`${formattedDate} ${event.end}`).toDate(),    // new Date(formatTimestamp(`${formattedDate} ${event.end}`)),
-                  color: "#50b500",
+                  end: moment.utc(`${formattedDate} ${event.end}`).toDate(),    // new Date(formatTimestamp(`${formattedDate} ${event.end}`)),
+                  // color: "#50b500",
                   editable: true,
                   deletable: false,
                   title: "Open Hours",
@@ -202,32 +233,32 @@ const ViewId = () => {
   return (
     <>
       <div style={{ marginTop: "10%" }}>
-<div style={{ display:"flex",justifyContent:"space-between",alignItems:"center" }}>
-<div
-                style={{
-                  fontSize: "24px",
-                  color: "white",
-                  filter: showModal ? 'blur(5px)' : 'none',
-                  pointerEvents: showModal ? 'none' : 'auto'
-                }}
-              >
-                Gym Schedule{" "}
-              </div>
-              <div style={{ marginRight:"5%" }}>
-              <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }}>
-                Add Schedule
-              </Button>
-              <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }}
-                 onClick={handleButtonClick}>
-                  +
-              </Button>
-{/* <Button
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div
+            style={{
+              fontSize: "24px",
+              color: "white",
+              filter: showModal ? 'blur(5px)' : 'none',
+              pointerEvents: showModal ? 'none' : 'auto'
+            }}
+          >
+            Gym Schedule{" "}
+          </div>
+          <div style={{ marginRight: "5%" }}>
+            <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }}>
+              Add Schedule
+            </Button>
+            <Button style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }}
+              onClick={handleButtonClick}>
+              +
+            </Button>
+            {/* <Button
           style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }}
         >
           Add Gym Schedule
         </Button> */}
-              </div>
-</div>
+          </div>
+        </div>
 
         {showModal && <AddGymSchedule closeModal={closeModal} id={Id} />}
         {showModal ? (
@@ -253,13 +284,30 @@ const ViewId = () => {
                 Gym Schedule{" "}
               </div>
               {events.length > 0 ?
-                <div style={{ height: "30rem", overflowY: "auto", borderRadius: "5px" }}>
+                <div style={{ height: "45rem", overflowY: "auto", borderRadius: "5px" }}>
                   <Scheduler
                     view='week'
                     onSelectedDateChange={false}
                     onConfirm={handleConfirm}
                     events={events}
                     ref={schRef}
+                    fields={[
+                      {
+                        name: "Day",
+                        type: "select",
+                        default: "Monday",
+                        options: [
+                          { id: 1, text: "Monday", value: "Monday" },
+                          { id: 2, text: "Tuesday", value: "Tuesday" },
+                          { id: 3, text: "Wednesday", value: "Wednesday" },
+                          { id: 4, text: "Thursday", value: "Thursday" },
+                          { id: 5, text: "Friday", value: "Friday" },
+                          { id: 6, text: "Saturday", value: "Saturday" },
+                          { id: 6, text: "Sunday", value: "Sunday" },
+                        ],
+                        config: { label: "Day", required: true, errMsg: "Plz Select Status" }
+                      },
+                    ]}
                     week={{
                       weekDays: [0, 1, 2, 3, 4, 5, 6],
                       weekStartOn: 6,
@@ -269,13 +317,33 @@ const ViewId = () => {
                   />
                 </div>
                 :
-                <div style={{ height: "30rem", overflowY: "auto", borderRadius: "5px" }}>
+                <div style={{ height: "345rem", overflowY: "auto", borderRadius: "5px" }}>
                   <Scheduler
                     view='week'
                     onSelectedDateChange={false}
                     onConfirm={handleConfirm}
                     events={events}
                     ref={schRef}
+                    fields={[
+                      {
+                        name: "Day",
+                        type: "select",
+                        default: "Monday",
+                        options: [
+                          { id: 1, text: "Monday", value: "Monday" },
+                          { id: 2, text: "Tuesday", value: "Tuesday" },
+                          { id: 3, text: "Wednesday", value: "Wednesday" },
+                          { id: 4, text: "Thursday", value: "Thursday" },
+                          { id: 5, text: "Friday", value: "Friday" },
+                          { id: 6, text: "Saturday", value: "Saturday" },
+                          { id: 6, text: "Sunday", value: "Sunday" },
+
+
+
+                        ],
+                        config: { label: "Day", required: true, errMsg: "Plz Select Status" }
+                      },
+                    ]}
                     week={{
                       weekDays: [0, 1, 2, 3, 4, 5, 6],
                       weekStartOn: 6,
@@ -291,13 +359,30 @@ const ViewId = () => {
             <div style={{ width: "90%", height: "50%", marginTop: "2%" }}>
 
               {events.length > 0 ?
-                <div style={{ height: "30rem", overflowY: "auto", borderRadius: "5px" }}>
+                <div style={{ height: "45rem", overflowY: "auto", borderRadius: "5px" }}>
                   <Scheduler
                     view='week'
                     ref={schRef}
                     onSelectedDateChange={false}
                     onConfirm={handleConfirm}
-                    events={events}
+                      events={events}
+                      fields={[
+                        {
+                          name: "Day",
+                          type: "select",
+                          default: "Monday",
+                          options: [
+                            { id: 1, text: "Monday", value: "Monday" },
+                            { id: 2, text: "Tuesday", value: "Tuesday" },
+                            { id: 3, text: "Wednesday", value: "Wednesday" },
+                            { id: 4, text: "Thursday", value: "Thursday" },
+                            { id: 5, text: "Friday", value: "Friday" },
+                            { id: 6, text: "Saturday", value: "Saturday" },
+                            { id: 6, text: "Sunday", value: "Sunday" },
+                          ],
+                          config: { label: "Day", required: true, errMsg: "Plz Select Status" }
+                        },
+                      ]}
                     week={{
                       weekDays: [0, 1, 2, 3, 4, 5, 6],
                       weekStartOn: 6,
@@ -307,13 +392,30 @@ const ViewId = () => {
                   />
                 </div>
                 :
-                <div style={{ height: "30rem", overflowY: "auto", borderRadius: "5px" }}>
+                <div style={{ height: "45rem", overflowY: "auto", borderRadius: "5px" }}>
                   <Scheduler
                     view='week'
                     ref={schRef}
                     onSelectedDateChange={false}
                     onConfirm={handleConfirm}
-                    events={events}
+                      events={events}
+                      fields={[
+                        {
+                          name: "Day",
+                          type: "select",
+                          default: "Monday",
+                          options: [
+                            { id: 1, text: "Monday", value: "Monday" },
+                            { id: 2, text: "Tuesday", value: "Tuesday" },
+                            { id: 3, text: "Wednesday", value: "Wednesday" },
+                            { id: 4, text: "Thursday", value: "Thursday" },
+                            { id: 5, text: "Friday", value: "Friday" },
+                            { id: 6, text: "Saturday", value: "Saturday" },
+                            { id: 6, text: "Sunday", value: "Sunday" },
+                          ],
+                          config: { label: "Day", required: true, errMsg: "Plz Select Status" }
+                        },
+                      ]}
                     week={{
                       weekDays: [0, 1, 2, 3, 4, 5, 6],
                       weekStartOn: 6,

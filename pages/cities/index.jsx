@@ -87,7 +87,7 @@ const index = () => {
       </div>
             {role && role === "admin" &&
                 <React.Fragment >
-                    <Style.TableContainer style={{ marginTop: "5%", filter: showCitiesModal || showUpdateCitiesModal ? 'blur(5px)' : 'none', pointerEvents: showCitiesModal || showUpdateCitiesModal ? 'none' : 'auto',borderBottom:" 2px solid #d5b93b" }}>
+                    <Style.TableContainer style={{ marginTop: "5%", filter: showCitiesModal || showUpdateCitiesModal ? 'blur(5px)' : 'none', pointerEvents: showCitiesModal || showUpdateCitiesModal ? 'none' : 'auto',borderBottom:" 2px solid #d5b93b",borderBottom: "2px solid rgb(213, 185, 59)"}}>
                         <Style.TableWrapper >
                             <thead>
                                 <Style.TableRow>

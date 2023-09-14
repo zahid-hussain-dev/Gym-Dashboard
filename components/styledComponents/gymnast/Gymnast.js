@@ -9,6 +9,7 @@ export const MainDiv = styled.div`
   display: flex;
   justify-content: space-around;
   width:100%;
+  margin-bottom: 1.5rem;
   // filter: blur(5px);
 `;
 export const PopupContainer = styled.div`
@@ -170,13 +171,13 @@ flex-direction:column;
  row-gap:1rem;
 
 `;
-export const SecondMain = styled.label`
+export const SecondMain = styled.div`
 display:flex;
 flex-direction:column;
 row-gap:2rem;
 margin-bottom:15px;
 `;
-export const FirstMain = styled.label`
+export const FirstMain = styled.div`
 display:flex;
 width: 87%;
 justify-content: space-between;
@@ -187,7 +188,7 @@ margin-right:15px;
 width:32%;
 
 `;
-export const SecondInput = styled.label`
+export const SecondInput = styled.div`
 
   display: flex;
   flex-direction: column;
@@ -273,5 +274,21 @@ line-height: 1.5;
 letter-spacing: 0.087rem;
 margin-left:5%;
 margin-top: 35px;
-
+`;
+export const SubTitles = styled.p`
+// min-width: 54px;
+width: fit-content;
+padding: 10px 16px;
+background:#E3DC22;
+color: black;
+border: 0;
+border-radius: 4px;
+font-family: gilroy;
+outline: none;
+font-size: 1.2rem;
+font-weight: 500;
+line-height: 1.5;
+letter-spacing: 0.087rem;
+margin-left:1%;
+margin-top: 35px;
 `;

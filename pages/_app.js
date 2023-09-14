@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import store from "../store/ConfigureStore";
 import "../styles/global.css";
 import "../app/globals.css";
+import Head from 'next/head';
 
 export default function App({ Component, pageProps }) {
   const router = useRouter();
@@ -12,6 +13,10 @@ export default function App({ Component, pageProps }) {
   return (
     <>
     <Provider store={store}>
+      <Head>
+        <title>GYM</title>
+        <link rel="icon" href="favicon.ico"/>
+      </Head>
       {router.asPath === "/signup" || router.asPath === "/login" ?
         <>
           <Navbar />

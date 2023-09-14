@@ -163,7 +163,7 @@ useEffect(() => {
               <Style.TableRow>
                 {/* <Style.TableHead>Gym Id</Style.TableHead> */}
                 <Style.TableHead>Gym Name</Style.TableHead>
-                <Style.TableHead>Actions</Style.TableHead>
+                <Style.TableHead>Schedule</Style.TableHead>
               </Style.TableRow>
             </thead>
             <tbody>

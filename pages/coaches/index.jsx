@@ -258,7 +258,7 @@ const index = () => {
             {role && role === "admin" &&
                 <React.Fragment >
                     <h2 style={{ color: "white",marginLeft:"30px" }}> Coach Listing</h2>
-                    <Style.TableContainer style={{ marginTop: "5%" }}>
+                    <Style.TableContainer style={{ marginTop: "5%",borderBottom: "2px solid rgb(213, 185, 59)" }}>
                         <Style.TableWrapper>
                             <thead>
                                 <Style.TableRow>
