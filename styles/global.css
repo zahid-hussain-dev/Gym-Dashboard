@@ -151,7 +151,7 @@ td.Gymnast__TableCell-sc-640eb6ae-29.gHfBoA {
 
 .animate:before {
   content: '';
-  background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+  background: linear-gradient(45deg,  #e9e512, white, black);
   position: absolute;
   top: -2px;
   left:-2px;
@@ -170,9 +170,9 @@ td.Gymnast__TableCell-sc-640eb6ae-29.gHfBoA {
   color: #5e2222
 }
 
-.animate:active:after {
+/* .animate:active:after {
   background: transparent;
-}
+} */
 
 .animate:hover:before {
   opacity: 1;

@@ -11,148 +11,50 @@ import moment from "moment";
 const ViewId = () => {
   const router = useRouter();
   const Id = router.query.ViewId;
+  // console.log("id here==>", Id)
   const [showModal, setShowModal] = useState(false);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
   const schRef = React.createRef()
   const handleButtonClick = () => {
     setShowModal(true);
-    console.log("modal click");
+  };
+  const handleId = async (event, action, Id) => {
+    console.log("id here==>", Id)
+    const Payload = {
+      from: moment(event.start).format("HH:mm"),
+      to: moment(event.end).format("HH:mm"),
+      day: event.Day,
+      gym:router.query.ViewId,
+      Id:Id,
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    };
+    try {
+      setLoading(true);
+      const res = await axiosInterceptor().put(
+        `/api/gym/schedule?id=${Id}`, // Use event.scheduleId as the ID of the gym schedule to update
+        Payload
+      );
+      console.log("response of schedule create", res);
+      swal("Success!", res.data.message, "success");
+      setLoading(false);
+      // Return the updated event object
+      return { ...event };
+    } catch (error) {
+      setLoading(false);
+      console.log("error", error);
+      swal("Oops!", error.data.message, "error");
+      console.log(error);
+      throw error;
+    }
   };
   const GymName = useSelector((state) => state.user.gymName);
   console.log("CoachName", GymName)
-  // const getGymScedule = async (id) => {
-  //   try {
-  //     setLoading(true)
-  //     console.log("api calling for schedule")
-  //     const res = await axiosInterceptor().get(
-  //       `/api/gym/schedule?gym=${router.query.ViewId}`,
-  //     );
-  //     console.log("responsse of schedule ID", res)
-  //     res.data.map((item, index) => (
-  //       item['event_id'] = item.id,
-  //       item['title'] = "Open Hours",
-  //       item['start'] = new time(item.from),
-  //       item['end'] = new time(item.to),
-  //       item['day'] = new day(days),
-  //       item['editable'] = true,
-  //       item['deletable'] = false,
-  //       item['color'] = "#50b500"
-  //     ))
-  //     setEvents(res.data);
-  //     setLoading(false)
-  //   } catch (error) {
-  //     setLoading(false)
-  //     console.log(error)
-  //   }
-  // }
   const closeModal = () => {
     setShowModal(false);
     console.log("get gym schedule on close")
     getGymScedule();
   };
-  function formatTimestamp(timestamp) {
-    const [datePart, timePart] = timestamp.split("T");
-    const [year, month, day] = datePart.split("-");
-    const [hours, minutes] = timePart.slice(0, -1).split(":");
-    const adjustedHours = String(Number(hours)).padStart(2, "0");
-    return `${year} ${Number(month)} ${Number(day)} ${adjustedHours}:${minutes}`;
-  }
-  const handleConfirm = async (event, action) => {
-    console.log("handleConfirm =", action, event);
-    if (action === "edit") {
-      console.log("here in edit action", event)
-      // Payload = {
-      //   from: moment(event.start).format('YYYY-MM-DD HH:mm:ss'),
-      //   to: moment(event.end).format('YYYY-MM-DD HH:mm:ss'),
-      //   day: event.day,
-      //   gym: Id,
-      //   timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      // }
-      // console.log("payload", Payload)
-      // try {
-      //   setLoading(true)
-      //   const res = await axiosInterceptor().put(
-      //     `/api/gym/schedule`,
-      //     Payload,
-      //   );
-      //   console.log("responsse of schedule create", res)
-      //   swal('Success!', res.data.message, 'success')
-      //   setLoading(false);
-      //   return { ...event, event_id: event.event_id || Math.random() }
-      // } catch (error) {
-      //   setLoading(false)
-      //   console.log("error", error)
-      //   swal('Oops!', error.data.message, 'error')
-      //   console.log(error)
-      //   throw error
-      // }
-
-
-
-    } else if (action === "create") {
-      const Payload = {
-        from: moment(event.start).format('HH:mm'),
-        to: moment(event.end).format('HH:mm'),
-        day: event.Day,
-        gym: Id,
-        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      }
-      console.log("payload", Payload)
-      try {
-        setLoading(true)
-        const res = await axiosInterceptor().put(
-          `/api/gym/schedule`,
-          Payload,
-        );
-        console.log("responsse of schedule create", res)
-        swal('Success!', res.data.message, 'success')
-        setLoading(false);
-        return { ...event, event_id: event.event_id || Math.random() }
-      } catch (error) {
-        setLoading(false)
-        console.log("error", error)
-        swal('Oops!', error.data.message, 'error')
-        console.log(error)
-        throw error
-      }
-    }
-  };
-  useEffect(() => {
-    getGymScedule();
-  }, [])
-  useEffect(() => {
-    if (Id) {
-      getGymScedule();
-    }
-  }, [showModal, Id])
-  useEffect(() => {
-    schRef.current?.scheduler.handleState(events, "events")
-  }, [events])
-
-
-  // function getAllDaysOfWeek(d, endDate) {
-  //   d = d ? new Date(+d) : new Date();
-  //   d.setHours(0, 0, 0, 0);
-
-  //   var daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
-  //   var dates = [];
-  //   while (d <= endDate) {
-  //     dates.push(new Date(d));
-  //     d.setDate(d.getDate() + 1);
-  //   }
-
-  //   var daysWithNames = dates.map(function(date) {
-  //     return {
-  //       date: date,
-  //       dayOfWeek: daysOfWeek[date.getDay()]
-  //     };
-  //   });
-
-  //   return daysWithNames;
-  // }
-
   const getGymScedule = async (id) => {
     try {
       setLoading(true)
@@ -168,7 +70,9 @@ const ViewId = () => {
           start: item.from,
           end: item.to,
           title: item.status,
+          scheduleId:item.id
         }));
+        console.log("eventdata",eventData)
         const daysOfWeek = [
           'Sunday',
           'Monday',
@@ -189,12 +93,14 @@ const ViewId = () => {
               filteredEvents.push(
                 ...eventsForDay.map(event => ({
                   ...event,
-                  start: moment.utc(`${formattedDate} ${event.start}`).toDate(),  // new Date(formatTimestamp(`${formattedDate} ${event.start}`)),
-                  end: moment.utc(`${formattedDate} ${event.end}`).toDate(),    // new Date(formatTimestamp(`${formattedDate} ${event.end}`)),
-                  // color: "#50b500",
+                  start: moment.utc(`${formattedDate} ${event.start}`).toDate(),
+                  end: moment.utc(`${formattedDate} ${event.end}`).toDate(), 
                   editable: true,
                   deletable: false,
                   title: "Open Hours",
+                  // scheduleId:event.scheduleId,
+                  // id:event.scheduleId,
+                  admin_id:event.scheduleId,
                 })),
               );
             }
@@ -211,25 +117,86 @@ const ViewId = () => {
       console.log(error)
     }
   }
+  const handleConfirm = async (event, action) => {
+    handleId(event, action)
+    console.log("handleConfirm =", action, event);
+    if (action === "edit") {
+      console.log("here in edit action", event);
+    } else if (action === "create") {
+      console.log("heloooooo", event);
+      // const Payload = {
+      //   from: moment(event.start).format("HH:mm"),
+      //   to: moment(event.end).format("HH:mm"),
+      //   day: event.Day,
+      //   gym:router.query.ViewId,
+      //   Id:Id,
+      //   timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      // };
+      console.log("payload88888", Payload);
+      // try {
+      //   setLoading(true);
+      //   const res = await axiosInterceptor().put(
+      //     `/api/gym/schedule?id=${Id}`, // Use event.scheduleId as the ID of the gym schedule to update
+      //     Payload
+      //   );
+      //   console.log("response of schedule create", res);
+      //   swal("Success!", res.data.message, "success");
+      //   setLoading(false);
+      //   // Return the updated event object
+      //   return { ...event };
+      // } catch (error) {
+      //   setLoading(false);
+      //   console.log("error", error);
+      //   swal("Oops!", error.data.message, "error");
+      //   console.log(error);
+      //   throw error;
+      // }
+    }
+  };
+  useEffect(() => {
+    if (Id) {
+      getGymScedule();
+    }
+  }, [showModal, Id])
+  useEffect(() => {
+    schRef.current?.scheduler.handleState(events, "events")
+  }, [events])
 
+  // const handleConfirm = async (event, action ,Id) => {
+  //   console.log("handleConfirm =", action, event);
+  //   console.log("router*-*", router.query.ViewId);
+  //   if (action === "edit") {
+  //     console.log("here in edit action", event)
+  //   } else if (action === "create") {
 
-  // var startDate = new Date(); // Current date
-  // startDate.setFullYear(startDate.getFullYear() - 1); // One year ago
-  // var endDate = new Date(); // Current date
-
-  // var daysList = getAllDaysOfWeek(startDate, endDate);
-
-  // daysList.forEach(function(day) {
-  //   console.log(day.date.toLocaleString('en-US', {
-  //     weekday: 'short',
-  //     day: 'numeric',
-  //     month: 'short',
-  //     year: 'numeric'
-  //   }) + ' - ' + day.dayOfWeek);
-  // });
-
-  // console.log('There are ' + daysList.length + ' days in the range');
-
+  //     console.log("heloooooo", event)
+  //     const Payload = {
+  //       from: moment(event.start).format('HH:mm'),
+  //       to: moment(event.end).format('HH:mm'),
+  //       day: event.Day,
+  //       gym: router.query.ViewId,
+  //       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  //     }
+  //     console.log("payload88888", Payload)
+  //     try {
+  //       setLoading(true)
+  //       const res = await axiosInterceptor().put(
+  //         `/api/gym/schedule?id=${Id}`,
+  //         Payload,
+  //       );
+  //       console.log("responsse of schedule create", res)
+  //       swal('Success!', res.data.message, 'success')
+  //       setLoading(false);
+  //       return { ...event, event_id: event.event_id || Math.random() }
+  //     } catch (error) {
+  //       setLoading(false)
+  //       console.log("error", error)
+  //       swal('Oops!', error.data.message, 'error')
+  //       console.log(error)
+  //       throw error
+  //     }
+  //   }
+  // };
   return (
     <>
       <div style={{ marginTop: "10%" }}>
@@ -252,11 +219,6 @@ const ViewId = () => {
               onClick={handleButtonClick}>
               +
             </Button>
-            {/* <Button
-          style={{ width: "auto", marginBottom: "1rem", marginLeft: "1rem" }}
-        >
-          Add Gym Schedule
-        </Button> */}
           </div>
         </div>
 
@@ -308,6 +270,7 @@ const ViewId = () => {
                         config: { label: "Day", required: true, errMsg: "Plz Select Status" }
                       },
                     ]}
+                    
                     week={{
                       weekDays: [0, 1, 2, 3, 4, 5, 6],
                       weekStartOn: 6,
@@ -318,6 +281,7 @@ const ViewId = () => {
                 </div>
                 :
                 <div style={{ height: "345rem", overflowY: "auto", borderRadius: "5px" }}>
+                  admin
                   <Scheduler
                     view='week'
                     onSelectedDateChange={false}
