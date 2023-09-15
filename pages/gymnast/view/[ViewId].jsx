@@ -30,9 +30,12 @@ const ViewId = () => {
   const [showModal5, setShowModal5] = useState(false);
 
 
+  console.log("---ggg---", selectedOptionCoaches)
+  // console.log("search0000*", coaches[0].userName)
+
   const handleSelectChangeCoach = (event) => {
     console.log("aaaaa ", event)
-    setSelectedOptionCoach(event.value);
+    setSelectedOptionCoaches(event.value);
     
     setSelectedOptionCoaches(event.id)
     setBookingCoach(event.value);
@@ -50,7 +53,9 @@ const ViewId = () => {
         `/api/coach/private?gymnastId=${router.query.ViewId}`,
       );
       console.log("children data===========", res)
+      console.log("coaches000",coaches)
       setCoaches(res.data.coaches)
+      setSelectedOptionCoaches(res.data.coaches[0].id);
       setSelectedOptionCoach(res.data.coaches[0].id);
       setLoading(false)
     } catch (error) {
@@ -546,15 +551,38 @@ const ViewId = () => {
         <Style.SecondMain style={{ flexDirection: "row" }}>
           <Style.SecondInput style={{ width: "10rem" }}>
             <Style.Labeled className="label" >Select Coach:</Style.Labeled>
-            <Select
-             style={{ marginTop: "4px" }}
+            {/* <Select
+  style={{ marginTop: "4px" }}
+  name="coachId"
+  value={selectedOptionCoach}
+  // value={selectedOptionCoach ? { value: selectedOptionCoach, label: coaches[0].userName } : { value: coaches[0].id, label: coaches[0].userName }}
+  onChange={handleSelectChangeCoach}
+  options={coaches.map((option) => ({ value: option.id, label: option.userName }))}
+  placeholder="Select Coach"
+  isSearchable
+/> */}
+            {/* <Select
+              style={{ marginTop: "4px" }}
               name='coachId'
-               value={selectedOptionCoach ? { value: selectedOptionCoach, label: coaches[0].userName } : null}
-                onChange={handleSelectChangeCoach}
-               options={coaches.map(option => ({ value: option.id, label: option.userName }))}
+              // value={coaches[0].id}
+              onChange={handleSelectChangeCoach}
+              options={coaches.map(option => ({ value: option.id, label: option.userName }))}
               placeholder="Select Coach"
-             isSearchable
-            />
+              isSearchable
+            /> */}
+<Select
+  style={{ marginTop: "4px" }}
+  name='coachId'
+ value={
+    selectedOptionCoaches
+      ? { value: selectedOptionCoach, label: coaches[0].userName }
+      : selectedOptionCoaches
+  }
+  onChange={handleSelectChangeCoach}
+  options={coaches.map(option => ({ value: option.id, label: option.userName }))}
+  placeholder="Select Coach"
+  isSearchable
+/>
           </Style.SecondInput>
         </Style.SecondMain>
       </Style.FirstMain>
